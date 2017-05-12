@@ -160,6 +160,7 @@ public class SeeProfileView extends AbsoluteLayout implements View {
         mailLabel.setWidthUndefined();
         userLayout.addComponent(mailLabel);
         NativeButton seeSchedule=new NativeButton(String.format("Go to %s's schedule",customer.getName()), (Button.ClickListener) event -> {
+            VaadinSession.getCurrent().setAttribute("customerToSee",customer);
             currentUI.getNavigator().navigateTo("scheduleView");
         });
         seeSchedule.setStyleName("panelButton");

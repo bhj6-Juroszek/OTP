@@ -588,8 +588,8 @@ public class ScheduleView extends SecuredView implements View {
              ArrayList<Training> trainings=trainingManager.getTrainingsFromDate(weekDates[i-1],customer.getProfileId());
              for(Training training:trainings)
              {
-                 double hour=training.getLength()%1;
-                 double minute=(training.getLength()-hour)*60;
+                 double minute=training.getLength()%1*60;
+                 double hour=training.getLength()-(minute/60);
                  NativeButton trainingButton=new NativeButton(String.format("%s :length: %.0f:%.0f",catManager.getCategory(training.getCategory()).getName(),hour,minute), (Button.ClickListener) event -> {
 
                      this.training=training;

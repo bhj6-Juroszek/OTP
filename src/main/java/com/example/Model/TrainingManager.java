@@ -72,8 +72,8 @@ public class TrainingManager {
         training.setTakenById(fromId);
         Customer reservedBy=(CustomersDAO.getInstance().getCustomerById(training.getTakenById()));
         trainingsRep.updateRecord(training);
-        double hours=training.getHour()%1;
-        double minutes=(training.getHour()-hours)*60;
+        double minutes=training.getHour()%1*60;
+        double hours=training.getHour()-(minutes/60);
         mailManager.sendMail("OTP",training.getOwner().getMail(),
                 String.format("Training on %s %f.0-%f.0 %s  has been reserved!",training.getDate().toString(),hours,minutes,training.getCity()),
                 String.format("User data: %s %s . Contact: %s",reservedBy.getName(),reservedBy.getSurname(),reservedBy.getMail()));
