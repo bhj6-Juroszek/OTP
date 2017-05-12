@@ -1,0 +1,10 @@
+Requirements
+
+Java Platform (JDK) 7
+Apache Maven 3.x
+
+Quick start:
+
+mvn package
+java -jar target/executable-1.jar
+Point your browser to http://localhost:8181

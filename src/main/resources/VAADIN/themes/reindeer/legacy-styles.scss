@@ -1,0 +1,6 @@
+@import "reindeer.scss";
+// For legacy VAADIN.themes; does not wrap styles in .themename
+// Creates legacy-styles.css that can be imported into non-sass VAADIN.themes.
+// NOTE: can not be used in scenarios where multiple VAADIN.themes are used on the
+// same page (e.g portals).
+@include reindeer;

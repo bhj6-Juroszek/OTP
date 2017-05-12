@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+        <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+            <property name="host" value="smtp.gmail.com" />
+            <property name="port" value="587" />
+            <property name="username" value="juroszeksender@gmail.com" />
+            <property name="password" value="DefaultPassword" />
+
+            <property name="javaMailProperties">
+                <props>
+                    <prop key="mail.smtp.auth">true</prop>
+                    <prop key="mail.smtp.starttls.enable">true</prop>
+                </props>
+            </property>
+        </bean>
+
+
+
+
+
+    <bean id="customer" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://sql11.freemysqlhosting.net/sql11154942?useUnicode=true&amp;characterEncoding=UTF-8" />
+    <property name="username" value="sql11154942" />
+    <property name="password" value="axa3PDfpRB" />
+</bean>
+
+</beans>

@@ -1,0 +1,197 @@
+@import "../reindeer/reindeer.scss";
+@mixin mytheme {
+  @include reindeer;
+
+  .backColor {
+    background-image: url("background2.jpg");
+    background-repeat: inherit;
+    .v-datefield-calendarpanel-body tr > td:last-child {
+      pointer-events: none;
+      color: red;
+    }
+    .v-textfield {
+      font-family: 'sans-serif';
+      font-size: 13px;
+      color: #E7DFDD;
+      background-color: #0C0032;
+    }
+    .v-button-link {
+      color: #E7DFDD;
+
+
+    }
+
+    color: #E7DFDD;
+  }
+
+  .v-app .v-filterselect-input {
+    background-image: linear-gradient(to bottom, #290061, #282828);
+    color: #E7DFDD;
+  }
+  .v-filterselect-input {
+    background-image: linear-gradient(to bottom, #290061, #282828);
+    color: #E7DFDD;
+  }
+  .v-app .v-filterselect-suggestpopup {
+    background-color: #282828;
+    color: #E7DFDD;
+    .popupContent {
+      background-color: #282828;
+      color: #E7DFDD;
+    }
+  }
+  .v-filterselect-suggestpopup {
+    background-color: #282828;
+    color: #E7DFDD;
+    .popupContent {
+      background-color: #282828;
+      color: #E7DFDD;
+    }
+  }
+
+  .mainMenu {
+    color: #E7DFDD;
+    background-color: #282828;
+    .v-menubar {
+      background-color: #282828;
+      .v-menubar-submenu {
+        background-color: #3500D3;
+      }
+
+    }
+  }
+
+  .panelButton {
+    .v-nativebutton-caption {
+      font-weight: bold;
+      color: #E7DFDD;
+      font-family: "Courier New";
+      font-size: 25px;
+    }
+    border: none;
+    background-image: linear-gradient(to bottom, #190061, #240090);
+
+    //
+    .v-nativebutton-caption:hover {
+      text-shadow: 1px 1px 2px #950740;
+      background-image: linear-gradient(to bottom, #290061, #340090);
+    }
+    .v-button-link {
+      color: #E7DFDD;
+
+    }
+
+  }
+
+  .panelButtonSmall {
+    border-radius: 25%;
+    .v-nativebutton-caption {
+      font-weight: bold;
+      color: #E7DFDD;
+      font-family: "Courier New";
+      font-size: 14px;
+    }
+    border: none;
+    background-image: linear-gradient(to bottom, #190061, #240090);
+
+    //
+    .v-nativebutton-caption:hover {
+      text-shadow: 1px 1px 2px #950740;
+      background-image: linear-gradient(to bottom, #290061, #340090);
+    }
+  }
+   
+
+    
+
+  
+  .roundImage {
+    border-radius: 50%;
+  }
+
+  .usersView {
+    background-image:  linear-gradient(to bottom, #0C0032, #190061);
+  }
+
+  .filters {
+    background-image:  linear-gradient(to right, rgba(30,0,107,1) 0%, rgba(45,0,158,0.93) 32%, rgba(15,0,56,0.89) 52%, rgba(59,0,209,0.8) 93%, rgba(66,0,235,0.8) 100%);
+    border-radius: 7%;
+    border-color: #282828;
+    color: #E7DFDD;
+    font-family: "Courier New";
+    font-size: 14px;
+    .styles.v-panel-caption {
+      border: none;
+      font-family: "Courier New";
+      font-size: large;
+    }
+    .v-textfield {
+      font-family: 'sans-serif';
+      font-size: 13px;
+      color: #E7DFDD;
+      background-color: #0C0032;
+    }
+  }
+
+  .loginPanel {
+    border-radius: 50%;
+    background-image:  linear-gradient(to right, rgb(30,0,107) 0%, rgb(45,0,158) 32%, rgb(15,0,56) 52%, rgb(59,0,209) 93%, rgb(66,0,235) 100%);
+    font-weight: bold;
+    color: #E7DFDD;
+    font-family: "Courier New";
+    font-size: large;
+    .styles.v-panel-caption {
+      border: none;
+      font-family: "Courier New";
+      font-size: large;
+    }
+    .v-textfield {
+      font-family: 'sans-serif';
+      font-size: 13px;
+      color: #E7DFDD;
+      background-color: #282828;
+    }
+    .v-button-link {
+      color: #E7DFDD;
+    }
+  }
+  .myTextField {
+
+    .v-textfield {
+      font-family: 'sans-serif';
+      font-size: 13px;
+      color: #E7DFDD;
+      background-color: #0C0032;
+    }
+  }
+
+  .freeTrainingButton {
+
+    background: #116466;
+    font-weight: bold;
+    color: darkgreen;
+    font-family: "Courier New";
+    border:none;
+  }
+
+  .takenTrainingButton {
+    background: #D9B08c;
+    font-weight: bold;
+    color: darkred;
+    font-family: "Courier New";
+    border:none;
+  }
+
+  .whiteBigText {
+    color: #E7DFDD;
+    font-weight: 200;
+    font-size: 20px;
+  }
+  .hourLabel {
+    border: 6px solid #0C0032;
+    background-color: #3500D3;
+    text-align: center;
+
+  }
+}
+
