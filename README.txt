@@ -1,6 +1,6 @@
 Requirements
 
-Java Platform (JDK) 7
+Java Platform (JDK) 8
 Apache Maven 3.x
 
 Quick start:
