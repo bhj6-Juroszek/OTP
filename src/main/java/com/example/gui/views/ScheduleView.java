@@ -96,9 +96,9 @@ public class ScheduleView extends SecuredView implements View {
         userLayout.setHeightUndefined();
         userLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         Image img=new Image();
-        if(UserManager.testImage(training.getOwner().getImageUrl()))
+        if(UserManager.testImage(customer.getImageUrl()))
         {
-            img.setSource(new ExternalResource(training.getOwner().getImageUrl()));
+            img.setSource(new ExternalResource(customer.getImageUrl()));
         }
         else{
             img.setSource(new ExternalResource(DEFAULT_IMAGE_PATH));
