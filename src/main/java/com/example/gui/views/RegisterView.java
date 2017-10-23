@@ -1,9 +1,9 @@
 package com.example.gui.views;
 
-import com.example.daos.CitiesDAO;
-import com.example.daos.CustomersDAO;
-import com.example.daos.SimpleMailManager;
-import com.example.entities.Customer;
+import com.example.daoLayer.daos.CitiesDAO;
+import com.example.daoLayer.daos.CustomersDAO;
+import com.example.daoLayer.daos.SimpleMailManager;
+import com.example.daoLayer.entities.Customer;
 import com.example.gui.ui.DashboardUI;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
@@ -32,7 +32,7 @@ public class RegisterView extends VerticalLayout implements View {
     CitiesDAO dao= CitiesDAO.getInstance();
     TextField city = new TextField("City");
     private TextField postCode=new TextField("Post code");
-    private TextField apartamentNumber=new TextField("Apartament/House number");
+    private TextField apartamentNumber=new TextField("Apartment/House number");
     private Button backButton=null;
     private DashboardUI currentUI=(DashboardUI)UI.getCurrent();
     private Button registerButton=null;

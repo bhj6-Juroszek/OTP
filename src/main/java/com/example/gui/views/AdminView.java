@@ -1,8 +1,8 @@
 package com.example.gui.views;
 
 
-import com.example.daos.CustomersDAO;
-import com.example.entities.*;
+import com.example.daoLayer.daos.CustomersDAO;
+import com.example.daoLayer.entities.*;
 import com.example.gui.ui.DashboardUI;
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.View;

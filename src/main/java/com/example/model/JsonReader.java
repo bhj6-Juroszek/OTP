@@ -1,6 +1,6 @@
 package com.example.model;
 
-import com.example.daos.CitiesDAO;
+import com.example.daoLayer.daos.CitiesDAO;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

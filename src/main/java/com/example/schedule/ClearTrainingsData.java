@@ -1,6 +1,6 @@
 package com.example.schedule;
 
-import com.example.daos.TrainingsDAO;
+import com.example.daoLayer.daos.TrainingsDAO;
 
 /**
  * Created by Bartek on 2017-05-08.

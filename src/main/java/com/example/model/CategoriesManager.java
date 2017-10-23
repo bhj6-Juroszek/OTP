@@ -1,9 +1,9 @@
 package com.example.model;
 
-import com.example.daos.CategoriesDAO;
-import com.example.daos.CustomersDAO;
-import com.example.entities.Category;
-import com.example.entities.Customer;
+import com.example.daoLayer.daos.CategoriesDAO;
+import com.example.daoLayer.daos.CustomersDAO;
+import com.example.daoLayer.entities.Category;
+import com.example.daoLayer.entities.Customer;
 
 import java.util.ArrayList;
 

@@ -1,9 +1,9 @@
 package com.example.model;
 
-import com.example.daos.RatesDAO;
-import com.example.entities.Customer;
-import com.example.entities.Profile;
-import com.example.entities.Rate;
+import com.example.daoLayer.daos.RatesDAO;
+import com.example.daoLayer.entities.Customer;
+import com.example.daoLayer.entities.Profile;
+import com.example.daoLayer.entities.Rate;
 
 import java.sql.Date;
 import java.util.ArrayList;

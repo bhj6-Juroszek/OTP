@@ -1,12 +1,12 @@
 package com.example.gui.views;
 
-import com.example.daos.CustomersDAO;
+import com.example.daoLayer.daos.CustomersDAO;
 import com.example.model.ProfilesManager;
 import com.example.model.RatesManager;
 import com.example.model.UserManager;
-import com.example.entities.Customer;
-import com.example.entities.Profile;
-import com.example.entities.Rate;
+import com.example.daoLayer.entities.Customer;
+import com.example.daoLayer.entities.Profile;
+import com.example.daoLayer.entities.Rate;
 import com.example.gui.ui.DashboardUI;
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.View;

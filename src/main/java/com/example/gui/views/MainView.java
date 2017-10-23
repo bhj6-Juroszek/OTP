@@ -1,10 +1,10 @@
 package com.example.gui.views;
 
-import com.example.daos.*;
+import com.example.daoLayer.daos.*;
 import com.example.model.*;
-import com.example.entities.Category;
-import com.example.entities.Customer;
-import com.example.entities.Training;
+import com.example.daoLayer.entities.Category;
+import com.example.daoLayer.entities.Customer;
+import com.example.daoLayer.entities.Training;
 import com.example.gui.ui.DashboardUI;
 import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import com.vaadin.annotations.PreserveOnRefresh;

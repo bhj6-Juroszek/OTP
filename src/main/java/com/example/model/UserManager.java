@@ -1,7 +1,7 @@
 package com.example.model;
 
-import com.example.daos.CustomersDAO;
-import com.example.entities.Customer;
+import com.example.daoLayer.daos.CustomersDAO;
+import com.example.daoLayer.entities.Customer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

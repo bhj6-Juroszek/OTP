@@ -1,9 +1,9 @@
 package com.example.model;
 
-import com.example.daos.CustomersDAO;
-import com.example.daos.ProfilesDAO;
-import com.example.entities.Customer;
-import com.example.entities.Profile;
+import com.example.daoLayer.daos.CustomersDAO;
+import com.example.daoLayer.daos.ProfilesDAO;
+import com.example.daoLayer.entities.Customer;
+import com.example.daoLayer.entities.Profile;
 
 /**
  * Created by Bartek on 2017-03-10.

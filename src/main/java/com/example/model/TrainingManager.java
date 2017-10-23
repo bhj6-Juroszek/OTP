@@ -1,11 +1,11 @@
 package com.example.model;
 
-import com.example.daos.CustomersDAO;
-import com.example.daos.SimpleMailManager;
-import com.example.daos.TrainingsDAO;
-import com.example.entities.Category;
-import com.example.entities.Customer;
-import com.example.entities.Training;
+import com.example.daoLayer.daos.CustomersDAO;
+import com.example.daoLayer.daos.SimpleMailManager;
+import com.example.daoLayer.daos.TrainingsDAO;
+import com.example.daoLayer.entities.Category;
+import com.example.daoLayer.entities.Customer;
+import com.example.daoLayer.entities.Training;
 
 import java.util.ArrayList;
 import java.util.Calendar;

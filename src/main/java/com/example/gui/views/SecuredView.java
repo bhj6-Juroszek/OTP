@@ -1,11 +1,9 @@
 package com.example.gui.views;
 
-import com.example.entities.Customer;
+import com.example.daoLayer.entities.Customer;
 import com.example.gui.ui.DashboardUI;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.AbsoluteLayout;
-import com.vaadin.ui.UI;
-
 
 public abstract class SecuredView extends AbsoluteLayout {
 
