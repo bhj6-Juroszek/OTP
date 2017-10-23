@@ -1,18 +1,14 @@
-package com.example.DAOS;
+package com.example.daos;
 
 import com.example.entities.Category;
 import com.example.entities.Customer;
-import com.example.entities.Rate;
 import com.example.mappers.CustomerMapper;
-import com.example.mappers.RateMapper;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;

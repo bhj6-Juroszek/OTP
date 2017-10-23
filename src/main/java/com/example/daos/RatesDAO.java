@@ -1,8 +1,6 @@
-package com.example.DAOS;
+package com.example.daos;
 
-import com.example.entities.Profile;
 import com.example.entities.Rate;
-import com.example.mappers.ProfileMapper;
 import com.example.mappers.RateMapper;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Bartek on 2017-03-10.

@@ -1,6 +1,5 @@
-package com.example.DAOS;
+package com.example.daos;
 
-import com.example.entities.Customer;
 import com.example.entities.Profile;
 import com.example.mappers.ProfileMapper;
 import org.springframework.beans.factory.annotation.Configurable;

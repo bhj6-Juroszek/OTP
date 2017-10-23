@@ -1,9 +1,9 @@
 package com.example.gui.views;
 
-import com.example.DAOS.CustomersDAO;
-import com.example.Model.ProfilesManager;
-import com.example.Model.RatesManager;
-import com.example.Model.UserManager;
+import com.example.daos.CustomersDAO;
+import com.example.model.ProfilesManager;
+import com.example.model.RatesManager;
+import com.example.model.UserManager;
 import com.example.entities.Customer;
 import com.example.entities.Profile;
 import com.example.entities.Rate;

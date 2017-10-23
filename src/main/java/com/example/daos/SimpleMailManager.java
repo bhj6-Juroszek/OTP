@@ -1,4 +1,4 @@
-package com.example.DAOS;
+package com.example.daos;
 
 import com.vaadin.ui.Notification;
 import org.springframework.context.ApplicationContext;

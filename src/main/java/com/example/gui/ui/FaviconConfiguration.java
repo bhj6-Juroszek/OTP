@@ -29,7 +29,7 @@ public  class FaviconConfiguration {
     protected ResourceHttpRequestHandler faviconRequestHandler() {
         ResourceHttpRequestHandler requestHandler = new ResourceHttpRequestHandler();
         requestHandler.setLocations(Arrays
-                .<Resource> asList(new ClassPathResource("/")));
+            .<Resource> asList(new ClassPathResource("/")));
         return requestHandler;
     }
 }

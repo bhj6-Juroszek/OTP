@@ -1,8 +1,8 @@
-package com.example.Model;
+package com.example.model;
 
-import com.example.DAOS.CustomersDAO;
-import com.example.DAOS.SimpleMailManager;
-import com.example.DAOS.TrainingsDAO;
+import com.example.daos.CustomersDAO;
+import com.example.daos.SimpleMailManager;
+import com.example.daos.TrainingsDAO;
 import com.example.entities.Category;
 import com.example.entities.Customer;
 import com.example.entities.Training;

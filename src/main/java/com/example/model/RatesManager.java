@@ -1,15 +1,11 @@
-package com.example.Model;
+package com.example.model;
 
-import com.example.DAOS.CustomersDAO;
-import com.example.DAOS.ProfilesDAO;
-import com.example.DAOS.RatesDAO;
+import com.example.daos.RatesDAO;
 import com.example.entities.Customer;
 import com.example.entities.Profile;
 import com.example.entities.Rate;
 
 import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 

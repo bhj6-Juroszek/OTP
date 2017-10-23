@@ -1,4 +1,4 @@
-package com.example.DAOS;
+package com.example.daos;
 
 /**
  * Created by Bartek on 2017-05-04.

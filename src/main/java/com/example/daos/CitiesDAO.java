@@ -1,6 +1,5 @@
-package com.example.DAOS;
+package com.example.daos;
 
-import com.example.entities.Category;
 import com.example.entities.City;
 import com.example.mappers.CityMapper;
 import org.springframework.context.ApplicationContext;
@@ -11,11 +10,11 @@ import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Bartek on 2017-05-04.
  */
+
 public class CitiesDAO {
 
     protected CitiesDAO()

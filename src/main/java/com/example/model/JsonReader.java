@@ -1,15 +1,12 @@
-package com.example.Model;
+package com.example.model;
 
-import com.example.DAOS.CitiesDAO;
-import com.example.entities.City;
+import com.example.daos.CitiesDAO;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.Iterator;
 
 /**
  * Created by Bartek on 2017-05-03.

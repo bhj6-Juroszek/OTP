@@ -1,9 +1,8 @@
-package com.example.Model;
+package com.example.model;
 
-import com.example.DAOS.CustomersDAO;
-import com.example.DAOS.SimpleMailManager;
+import com.example.daos.CustomersDAO;
+import com.example.daos.SimpleMailManager;
 import com.example.entities.Customer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

@@ -1,9 +1,7 @@
 package com.example.entities;
 
-import com.example.DAOS.CustomersDAO;
-import com.example.DAOS.ProfilesDAO;
+import com.example.daos.CustomersDAO;
 
-import javax.persistence.*;
 import java.sql.Date;
 
 

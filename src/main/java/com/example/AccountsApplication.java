@@ -1,6 +1,5 @@
 package com.example;
 
-import javafx.application.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -29,19 +28,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 @PropertySource({ "classpath:application.properties" })
 @EnableJpaRepositories
 public class AccountsApplication extends SpringBootServletInitializer {
-
-	@Bean
-	public Docket simpleDiffServiceApi() {
-		return new Docket(DocumentationType.SWAGGER_2)
-				.groupName("trainers")
-				.apiInfo(apiInfo())
-				.select()
-				.apis(RequestHandlerSelectors.any())
-				.paths(PathSelectors.any())
-				.build()
-				.pathMapping("/");
-
-	}
+  
 
 	private static final Logger log = LoggerFactory.getLogger(AccountsApplication.class);
 

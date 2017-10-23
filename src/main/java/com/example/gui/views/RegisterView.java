@@ -1,8 +1,8 @@
 package com.example.gui.views;
 
-import com.example.DAOS.CitiesDAO;
-import com.example.DAOS.CustomersDAO;
-import com.example.DAOS.SimpleMailManager;
+import com.example.daos.CitiesDAO;
+import com.example.daos.CustomersDAO;
+import com.example.daos.SimpleMailManager;
 import com.example.entities.Customer;
 import com.example.gui.ui.DashboardUI;
 import com.vaadin.annotations.PreserveOnRefresh;
@@ -11,7 +11,6 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
-import com.vaadin.ui.themes.Reindeer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;

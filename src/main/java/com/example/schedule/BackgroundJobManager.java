@@ -1,4 +1,4 @@
-package com.example.Schedule;
+package com.example.schedule;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

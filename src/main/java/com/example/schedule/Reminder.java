@@ -1,8 +1,8 @@
-package com.example.Schedule;
+package com.example.schedule;
 
-import com.example.DAOS.CustomersDAO;
-import com.example.DAOS.SimpleMailManager;
-import com.example.DAOS.TrainingsDAO;
+import com.example.daos.CustomersDAO;
+import com.example.daos.SimpleMailManager;
+import com.example.daos.TrainingsDAO;
 import com.example.entities.Customer;
 import com.example.entities.Training;
 

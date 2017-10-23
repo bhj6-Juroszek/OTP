@@ -1,6 +1,6 @@
 package com.example.gui.views;
 
-import com.example.Model.*;
+import com.example.model.*;
 import com.example.entities.Category;
 import com.example.entities.Customer;
 import com.example.entities.Training;
@@ -14,15 +14,11 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.tapio.googlemaps.GoogleMap;
-import com.vaadin.tapio.googlemaps.client.LatLon;
 import com.vaadin.ui.*;
-import com.vaadin.ui.Calendar;
 import com.vaadin.ui.themes.Reindeer;
-import javafx.scene.control.DatePicker;
+
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;

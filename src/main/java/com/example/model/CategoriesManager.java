@@ -1,10 +1,9 @@
-package com.example.Model;
+package com.example.model;
 
-import com.example.DAOS.CategoriesDAO;
-import com.example.DAOS.CustomersDAO;
+import com.example.daos.CategoriesDAO;
+import com.example.daos.CustomersDAO;
 import com.example.entities.Category;
 import com.example.entities.Customer;
-import com.example.mappers.CategoryMapper;
 
 import java.util.ArrayList;
 

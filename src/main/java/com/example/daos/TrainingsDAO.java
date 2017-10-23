@@ -1,11 +1,9 @@
-package com.example.DAOS;
+package com.example.daos;
 
-import com.example.Model.JsonReader;
-import com.example.Model.Place;
+import com.example.model.JsonReader;
+import com.example.model.Place;
 import com.example.entities.Category;
-import com.example.entities.Rate;
 import com.example.entities.Training;
-import com.example.mappers.RateMapper;
 import com.example.mappers.TrainingMapper;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
@@ -16,7 +14,6 @@ import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 

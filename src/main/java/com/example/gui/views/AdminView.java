@@ -1,7 +1,7 @@
 package com.example.gui.views;
 
 
-import com.example.DAOS.CustomersDAO;
+import com.example.daos.CustomersDAO;
 import com.example.entities.*;
 import com.example.gui.ui.DashboardUI;
 import com.vaadin.annotations.Theme;

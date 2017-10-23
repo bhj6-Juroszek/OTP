@@ -1,7 +1,7 @@
-package com.example.Model;
+package com.example.model;
 
-import com.example.DAOS.CustomersDAO;
-import com.example.DAOS.ProfilesDAO;
+import com.example.daos.CustomersDAO;
+import com.example.daos.ProfilesDAO;
 import com.example.entities.Customer;
 import com.example.entities.Profile;
 
