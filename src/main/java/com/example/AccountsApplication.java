@@ -1,5 +1,7 @@
 package com.example;
 
+import com.example.backend.utils.SessionManager;
+import com.example.config.ApplicationConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -8,8 +10,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -31,6 +35,8 @@ public class AccountsApplication extends SpringBootServletInitializer {
   
 
 	private static final Logger log = LoggerFactory.getLogger(AccountsApplication.class);
+	private static ApplicationContext context;
+
 
 
 
@@ -41,7 +47,7 @@ public class AccountsApplication extends SpringBootServletInitializer {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run( AccountsApplication.class, args);
+      context = SpringApplication.run( AccountsApplication.class, args);
 	}
 
 
@@ -60,6 +66,11 @@ public class AccountsApplication extends SpringBootServletInitializer {
 				.addResourceLocations("/")
 				.setCachePeriod(0);
 	}
+
+
+	public static SessionManager getSessionManager() {
+	  return context.getBean(SessionManager.class);
+    }
 
 
 

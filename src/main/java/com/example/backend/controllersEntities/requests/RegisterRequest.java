@@ -1,6 +1,6 @@
-package com.example.controllers.controllersEntities;
+package com.example.backend.controllersEntities.requests;
 
-public class RegisterRequest {
+public class RegisterRequest implements Request {
   private String email;
   private String password;
 

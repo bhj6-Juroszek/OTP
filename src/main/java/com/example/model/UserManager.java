@@ -4,6 +4,7 @@ import com.example.daoLayer.daos.CustomersDAO;
 import com.example.daoLayer.entities.Customer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -14,6 +15,7 @@ import java.net.URL;
 /**
  * Created by Bartek on 2017-04-29.
  */
+@Component
 public class UserManager {
     private CustomersDAO customerRep =CustomersDAO.getInstance();
 
