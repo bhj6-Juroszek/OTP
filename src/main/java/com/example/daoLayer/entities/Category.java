@@ -5,15 +5,9 @@ import javax.persistence.*;
 /**
  * Created by Bartek on 2017-03-11.
  */
-@Entity
-@Table(name="customerTable")
 public class Category {
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
-    @Column
     private String name;
-    @Column
     private long parent;
 
     public Category() {

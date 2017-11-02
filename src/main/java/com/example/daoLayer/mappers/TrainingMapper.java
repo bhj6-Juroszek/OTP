@@ -14,13 +14,12 @@ public class TrainingMapper implements RowMapper<Training> {
         Training training = new Training();
         training.setId(rs.getInt("id"));
         training.setDate(rs.getDate("date"));
-        training.setHour(rs.getDouble("hour"));
         training.setLength(rs.getDouble("length"));
         training.setPrice(rs.getInt("price"));
         training.setCity(rs.getString("city"));
         training.setCategory(rs.getInt("category"));
         training.setDescription(rs.getString("description"));
-        training.setProfileId(rs.getInt("profileId"));
+        training.setOwnerId(rs.getInt("ownerId"));
         training.setTakenById(rs.getInt("takenById"));
         return training;
 

@@ -1,55 +1,62 @@
 package com.example.model;
 
-import com.example.daoLayer.daos.CustomersDAO;
-import com.example.daoLayer.entities.Customer;
+import com.example.backend.contexts.UserContext;
+import com.example.backend.controllersEntities.responses.LoginResponse;
+import com.example.daoLayer.DAOHandler;
+import com.example.daoLayer.daos.UsersDAO;
+import com.example.daoLayer.entities.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
+
+import static com.example.backend.utils.ResponseCode.*;
 
 /**
  * Created by Bartek on 2017-04-29.
  */
 @Component
 public class UserManager {
-    private CustomersDAO customerRep =CustomersDAO.getInstance();
 
-    public Customer login(String login, String password) {
-        Customer result = null;
-        if (!login.equals("") && !password.equals("")) {
-            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            result = customerRep.getCustomerByLogin(login);
-            if (result != null && passwordEncoder.matches(password, result.getPassword())) {
-                return result;
-            }
+  private final UsersDAO usersDAO = DAOHandler.usersDAO;
 
-        }
-        return null;
+  public LoginResponse login(@Nonnull final String login, @Nonnull final String password) {
+    final LoginResponse response = new LoginResponse();
+    final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    final User user = usersDAO.getCustomerByLogin(login);
+    if (user == null) {
+      response.setResponseCode(ACCOUNT_DOESNT_EXISTS);
+    } else if (!passwordEncoder.matches(password, user.getPassword())) {
+      response.setResponseCode(WRONG_PASSWORD);
+    } else if (!user.getConfirmation().equals("")) {
+      response.setResponseCode(NOT_AUTHENTICATED);
+    } else {
+      final UserContext userContext = new UserContext();
+      userContext.setUser(user);
+      response.setUserContext(userContext);
+      response.setResponseCode(SUCCESS);
     }
+    return response;
+  }
 
-    public static Boolean testImage(String url) {
-
-        if(url==null || url.equals(""))
-        {
-            return false;
-        }
-        try {
-            BufferedImage image = ImageIO.read(new URL(url));
-            //BufferedImage image = ImageIO.read(new URL("http://someimage.jpg"));
-            if (image != null) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (MalformedURLException e) {
-            return false;
-        } catch (IOException e) {
-            return false;
-        }
+  public static Boolean testImage(@Nonnull final String url) {
+    if (url.equals("")) {
+      return false;
     }
+    try {
+      BufferedImage image = ImageIO.read(new URL(url));
+      if (image != null) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (IOException e) {
+      return false;
+    }
+  }
 }

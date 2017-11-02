@@ -5,15 +5,9 @@ import javax.persistence.*;
 /**
  * Created by Bartek on 2017-03-10.
  */
-@Entity
-@Table(name="profilesTable")
 public class Profile {
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
-    @Column
     private long userId;
-    @Column
     private String text;
 
     public Profile(final long userId, final String text) {

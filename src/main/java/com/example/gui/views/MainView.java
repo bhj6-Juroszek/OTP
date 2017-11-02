@@ -1,9 +1,10 @@
 package com.example.gui.views;
 
+import com.example.daoLayer.DAOHandler;
 import com.example.daoLayer.daos.*;
 import com.example.model.*;
 import com.example.daoLayer.entities.Category;
-import com.example.daoLayer.entities.Customer;
+import com.example.daoLayer.entities.User;
 import com.example.daoLayer.entities.Training;
 import com.example.gui.ui.DashboardUI;
 import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
@@ -32,9 +33,9 @@ import java.util.Date;
 public class MainView extends AbsoluteLayout implements View {
 
   @Autowired
-  private CustomersDAO customerRep;
+  private UsersDAO customerRep;
 
-  private Customer loggedInCustomer = (Customer) VaadinSession.getCurrent().getAttribute("loggedInCustomer");
+  private User loggedInUser = (User) VaadinSession.getCurrent().getAttribute("loggedInCustomer");
   private ComboBox sortBy = null;
   private TextField area = null;
   private TextField maxPrice = null;
@@ -88,17 +89,17 @@ public class MainView extends AbsoluteLayout implements View {
     loginInfo.addStyleName("whiteBigText");
     loginInfo.setWidth("100px");
     loginButton = new Button("Login", (Button.ClickListener) event -> {
-      loggedInCustomer = userManager.login(login.getValue(), password.getValue());
-      if (loggedInCustomer == null) {
+      loggedInUser = userManager.login(login.getValue(), password.getValue()).getUserContext().getUser();
+      if (loggedInUser == null) {
         Notification.show("Wrong user or Password, try again!",
             Notification.Type.WARNING_MESSAGE);
-      } else if (!loggedInCustomer.getConfirmation().equals("")) {
+      } else if (!loggedInUser.getConfirmation().equals("")) {
         Notification.show("Account not active. Check your mail adress",
             Notification.Type.WARNING_MESSAGE);
       } else {
-        VaadinSession.getCurrent().setAttribute("loggedInCustomer", loggedInCustomer);
-        if (loggedInCustomer != null && UserManager.testImage(loggedInCustomer.getImageUrl())) {
-          img.setSource(new ExternalResource(loggedInCustomer.getImageUrl()));
+        VaadinSession.getCurrent().setAttribute("loggedInCustomer", loggedInUser);
+        if (loggedInUser != null && UserManager.testImage(loggedInUser.getImageUrl())) {
+          img.setSource(new ExternalResource(loggedInUser.getImageUrl()));
         } else {
           img.setSource(new ExternalResource(DEFAULT_IMAGE_PATH));
         }
@@ -150,8 +151,8 @@ public class MainView extends AbsoluteLayout implements View {
     main.addItem("Logout", new ThemeResource("icons/logout.png"), menuCommand).setStyleName("mainMenu");
     mainMenu.setWidth("60px");
     mainMenu.setStyleName("mainMenu");
-    if (loggedInCustomer != null && UserManager.testImage(loggedInCustomer.getImageUrl())) {
-      img.setSource(new ExternalResource(loggedInCustomer.getImageUrl()));
+    if (loggedInUser != null && UserManager.testImage(loggedInUser.getImageUrl())) {
+      img.setSource(new ExternalResource(loggedInUser.getImageUrl()));
     } else {
       img.setSource(new ExternalResource(DEFAULT_IMAGE_PATH));
     }
@@ -219,11 +220,11 @@ public class MainView extends AbsoluteLayout implements View {
   /*****************************************************************************************************************/
 
   private void refresh() {
-    loggedInCustomer = (Customer) VaadinSession.getCurrent().getAttribute("loggedInCustomer");
+    loggedInUser = (User) VaadinSession.getCurrent().getAttribute("loggedInCustomer");
     loginPanel = currentUI.getLoginPanel();
-    if (loggedInCustomer != null) {
+    if (loggedInUser != null) {
       loginPanel.setContent(loginContent2);
-      loginInfo.setValue("\r\n" + loggedInCustomer.getName());
+      loginInfo.setValue("\r\n" + loggedInUser.getName());
     } else {
       loginPanel.setContent(loginContent);
     }
@@ -350,8 +351,7 @@ public class MainView extends AbsoluteLayout implements View {
       } else {
         img.setSource(new ExternalResource(DEFAULT_IMAGE_PATH));
       }
-      Label nameAndSurname = new Label(
-          String.format("%s %s", training.getOwner().getName(), training.getOwner().getSurname()));
+      Label nameAndSurname = new Label(training.getOwner().getName());
       Label adressLabel = null;
       if (training.getCity().isEmpty()) {
         adressLabel = new Label("Online");
@@ -361,8 +361,8 @@ public class MainView extends AbsoluteLayout implements View {
       Label dateLabel = new Label(formatDate.format(training.getDate()));
       Label priceLabel = new Label(String.format("%d", training.getPrice()));
       NativeButton goToProfileButton = new NativeButton("Look up training", (Button.ClickListener) event -> {
-        if (loggedInCustomer != null) {
-          VaadinSession.getCurrent().setAttribute("customerToSee", (Customer) training.getOwner());
+        if (loggedInUser != null) {
+          VaadinSession.getCurrent().setAttribute("customerToSee", (User) training.getOwner());
           VaadinSession.getCurrent().setAttribute("training", (Training) training);
           currentUI.getNavigator().navigateTo("scheduleView");
         } else {
@@ -474,7 +474,7 @@ public class MainView extends AbsoluteLayout implements View {
       columns[i].setHeight("100%");
     }
 
-    CitiesDAO dao = CitiesDAO.getInstance();
+    CitiesDAO dao = DAOHandler.citiesDAO;
     citySelect = new ComboBox("Select city", dao.getAll());
     columns[0].addComponent(citySelect);
     columns[1].addComponent(sortBy);
@@ -504,7 +504,7 @@ public class MainView extends AbsoluteLayout implements View {
       currentUI.getNavigator().navigateTo("profileSeeView");
     }
     if (name.equals("Logout")) {
-      loggedInCustomer = null;
+      loggedInUser = null;
       password.setValue("");
       VaadinSession.getCurrent().setAttribute("loggedInCustomer", null);
       refresh();

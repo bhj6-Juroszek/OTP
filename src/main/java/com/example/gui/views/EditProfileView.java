@@ -1,8 +1,8 @@
 package com.example.gui.views;
 
-import com.example.daoLayer.daos.CustomersDAO;
+import com.example.daoLayer.daos.UsersDAO;
 import com.example.model.ProfilesManager;
-import com.example.daoLayer.entities.Customer;
+import com.example.daoLayer.entities.User;
 import com.example.gui.ui.DashboardUI;
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.View;
@@ -26,7 +26,7 @@ public class EditProfileView extends SecuredView implements View {
 
 
     @Autowired
-    private CustomersDAO userRepo;
+    private UsersDAO userRepo;
 
     private RichTextArea textArea=null;
     private DashboardUI currentUI=(DashboardUI) UI.getCurrent();
@@ -41,21 +41,21 @@ public class EditProfileView extends SecuredView implements View {
         logo.setWidth("350px");
         logo.addClickListener(event ->currentUI.getNavigator().navigateTo("mainView"));
         addComponent(logo, "top:0%;left:65%");
-        Customer customer=(Customer) VaadinSession.getCurrent().getAttribute("loggedInCustomer");
-        if(profiles.getUserProfile(customer)==null)
+        User user =(User) VaadinSession.getCurrent().getAttribute("loggedInCustomer");
+        if(profiles.getUserProfile(user)==null)
         {
-            profiles.createProfile(customer);
+            profiles.createProfile(user);
         }
         setHeight("1500px");
         textArea=new RichTextArea();
-        textArea.setValue(profiles.getUserProfile(customer).getText());
+        textArea.setValue(profiles.getUserProfile(user).getText());
         textArea.setWidth("1500px");
         textArea.setHeight("1500px");
         addComponent(textArea,"top:15%; bottom:35%;"+"left:25%; right:25%;");
         textArea.addValueChangeListener(event -> System.out.println(textArea.getValue()));
 
         NativeButton saveChangesButton=new NativeButton("Save changes",(ClickListener) -> {
-            profiles.changeProfileText(customer, textArea.getValue());
+            profiles.changeProfileText(user, textArea.getValue());
             Notification.show("Data saved succesfully",
                     Notification.Type.HUMANIZED_MESSAGE);
         });

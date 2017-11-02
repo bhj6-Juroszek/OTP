@@ -1,7 +1,8 @@
 package com.example.backend.controllers;
 
-import com.example.daoLayer.daos.CustomersDAO;
-import com.example.daoLayer.entities.Customer;
+import com.example.daoLayer.DAOHandler;
+import com.example.daoLayer.daos.UsersDAO;
+import com.example.daoLayer.entities.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,9 +27,9 @@ public class RedirectController {
 
     }
     System.out.println(token);
-    CustomersDAO dao = CustomersDAO.getInstance();
+    final UsersDAO dao = DAOHandler.usersDAO;
     String redirectUrl = "";
-    Customer cust = dao.getCustomerByConfirmation(token);
+    final User cust = dao.getCustomerByConfirmation(token);
     if (cust != null) {
       cust.setConfirmation("");
       dao.updateRecord(cust);

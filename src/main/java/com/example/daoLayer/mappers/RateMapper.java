@@ -12,11 +12,11 @@ import java.sql.SQLException;
 public class RateMapper implements RowMapper<Rate> {
 
     public Rate mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Rate rate = new Rate();
+        final Rate rate = new Rate();
         rate.setId(rs.getInt("id"));
         rate.setComment(rs.getString("comment"));
         rate.setValue(rs.getInt("value"));
-        rate.setProfileId(rs.getLong("profileId"));
+        rate.setToId(rs.getLong("toId"));
         rate.setFromId(rs.getLong("fromId"));
         rate.setDate(rs.getDate("date"));
         return rate;

@@ -1,7 +1,7 @@
 package com.example.gui.views;
 
 
-import com.example.daoLayer.daos.CustomersDAO;
+import com.example.daoLayer.daos.UsersDAO;
 import com.example.daoLayer.entities.*;
 import com.example.gui.ui.DashboardUI;
 import com.vaadin.annotations.Theme;
@@ -27,7 +27,7 @@ import java.util.List;
 public class AdminView extends SecuredView implements View {
 
     @Autowired
-    CustomersDAO customersRep;
+    UsersDAO customersRep;
 
     private DashboardUI currentUI=(DashboardUI) UI.getCurrent();
     private Boolean clicked=false;
@@ -40,7 +40,7 @@ public class AdminView extends SecuredView implements View {
     private Window categoryWindow= new Window();
     private Window confirmationWindow=new Window();
     private TextField windowTextField=new TextField("Value");
-    private List<Customer> customersList=new ArrayList<Customer>();
+    private List<User> customersList=new ArrayList<User>();
     private List<Window> windows=new ArrayList<Window>();
     private Button configUsersButton=null;
     private Button logoutButton=null;
@@ -179,22 +179,19 @@ public class AdminView extends SecuredView implements View {
         customerWindow.setContent(windowCustomerLayout);
         windowCustomerLayout.addComponent(new Label("NEW CUSTOMER"), "top:10px;left:100px");
         windowCustomerLayout.addComponent(newCustomerName, "top:80px;left:100px");
-        windowCustomerLayout.addComponent(newCustomerSurname, "top:160px;left:100px");
         windowCustomerLayout.addComponent(newCustomerAdress, "top:240px;left:100px");
         windowCustomerLayout.addComponent(newCustomerMail, "top:320px;left:100px");
         windowCustomerLayout.addComponent(newCustomerLogin, "top:400px;left:100px");
         windowCustomerLayout.addComponent(newCustomerPassword, "top:480px;left:100px");
         windowCustomerLayout.addComponent(newCustomerRole, "top:560px;left:100px");
         Button windowAddCustomer = new Button("OK", (ClickListener) -> {
-            Customer custom = new Customer(newCustomerName.getValue(),
-                    newCustomerSurname.getValue(),
+            User custom = new User(newCustomerName.getValue(),
                     newCustomerAdress.getValue(),
                     newCustomerMail.getValue(),
                     newCustomerLogin.getValue(),
                     newCustomerPassword.getValue(),
                     newCustomerRole.getValue(),
-                newCustomerCategories.getValue(),
-                    -1
+                    ""
             );
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String hashedPassword = passwordEncoder.encode(custom.getPassword());
@@ -245,59 +242,46 @@ public class AdminView extends SecuredView implements View {
         usersTable.addContainerProperty("Change login", Button.class, null);
         usersTable.addContainerProperty("Change adress", Button.class, null);
         int i=1;
-        for(Customer customer:customersList)
+        for(User user :customersList)
         {
             Button remove = new Button("Remove", (Button.ClickListener) event -> {
-                confirm(customer);
+                confirm(user);
             });
             Button name = new Button("Change name", (Button.ClickListener) event -> {
-                    windowTextField.setValue(customer.getName());
+                    windowTextField.setValue(user.getName());
 
             Button windowButtonName=new Button("OK", (ClickListener)-> {
-                customer.setName(windowTextField.getValue());
-                updateCustomers(customer);
+                user.setName(windowTextField.getValue());
+                updateCustomers(user);
             });
             windowLayout.addComponent(windowButtonName,"bottom:30px;left:115px;");
             window.setVisible(true);
         });
 
-            Button surname = new Button("Change surname", (Button.ClickListener) event -> {
-                windowTextField.setValue(customer.getSurname());
-                Button windowButtonSurname=new Button("OK", (ClickListener)-> {
-                    customer.setSurname(windowTextField.getValue());
-                    updateCustomers(customer);
-
-                });
-                windowLayout.addComponent(windowButtonSurname,"bottom:30px;left:115px;");
-                window.setContent(windowLayout);
-                window.setVisible(true);
-            });
             Button login = new Button("Change login", (Button.ClickListener) event -> {
-                windowTextField.setValue(customer.getLogin());
+                windowTextField.setValue(user.getLogin());
                 Button windowButtonLogin=new Button("OK", (ClickListener)-> {
-                    customer.setLogin(windowTextField.getValue());
-                    updateCustomers(customer);
+                    user.setLogin(windowTextField.getValue());
+                    updateCustomers(user);
                 });
                 windowLayout.addComponent(windowButtonLogin,"bottom:30px;left:115px;");
                 window.setContent(windowLayout);
                 window.setVisible(true);
             });
             Button adress = new Button("Change adress", (Button.ClickListener) event -> {
-                windowTextField.setValue(customer.getAdress());
+                windowTextField.setValue(user.getAdress());
                 Button windowButtonAdress=new Button("OK", (ClickListener)-> {
-                    customer.setAdress(windowTextField.getValue());
-                    updateCustomers(customer);
+                    user.setAdress(windowTextField.getValue());
+                    updateCustomers(user);
                 });
                 windowLayout.addComponent(windowButtonAdress,"bottom:30px;left:115px;");
                 window.setContent(windowLayout);
                 window.setVisible(true);
             });
-            usersTable.addItem(new Object[]{customer.getName(),
-                    customer.getSurname(),
-                    customer.getMail(),
+            usersTable.addItem(new Object[]{user.getName(),
+                    user.getMail(),
                     remove,
                     name,
-                    surname,
                     login,
                     adress,
             }, i++);
@@ -311,12 +295,12 @@ public class AdminView extends SecuredView implements View {
         configPanel.setContent(configUsersLayout);
     }
 
-    private void confirm(Customer customer)
+    private void confirm(User user)
     {
             confirmationWindow.setVisible(true);
         confirmationWindow.setContent(confirmationWindowLayout);
         Button  confirm = new Button("YES", (Button.ClickListener) event -> {
-            customersRep.delete(customer);
+            customersRep.delete(user);
             configUsers();
             confirmationWindow.setVisible(false);
         });
@@ -330,9 +314,9 @@ public class AdminView extends SecuredView implements View {
         confirmationWindowLayout.addComponent(decline, "top:75px;left:100px");
     }
 
-    private void updateCustomers(Customer customer)
+    private void updateCustomers(User user)
     {
-        if(customersRep.updateRecord(customer)) {
+        if(customersRep.updateRecord(user)) {
             window.setVisible(false);
             windowTextField.setValue("");
             configUsers();

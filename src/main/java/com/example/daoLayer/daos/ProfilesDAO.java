@@ -2,95 +2,84 @@ package com.example.daoLayer.daos;
 
 import com.example.daoLayer.entities.Profile;
 import com.example.daoLayer.mappers.ProfileMapper;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import static com.example.daoLayer.DAOHandler.PROFILES_TABLE_NAME;
 
 /**
  * Created by Bartek on 2017-03-10.
  */
-@Service
-@Configurable
-public class ProfilesDAO {
+@Repository
+public class ProfilesDAO extends DAO {
 
-    protected ProfilesDAO()
-    {
+  public ProfilesDAO(@Nonnull final JdbcTemplate template) {
+    super(template);
+  }
 
+  @Override
+  public void createTable() {
+    template.execute
+        ("CREATE TABLE " + PROFILES_TABLE_NAME + " (id INT NOT NULL AUTO_INCREMENT, userId INT, text VARCHAR(1500), " +
+            "PRIMARY KEY(id));"
+        );
+  }
+
+  public boolean saveToDB(@Nonnull final Profile profile) {
+    final String SQL = "INSERT INTO " + PROFILES_TABLE_NAME + " (userId, text) VALUES (?, ?)";
+
+    if (!exists(profile)) {
+      template.update(SQL, profile.getUserId(), profile.getText());
+    } else {
+      return false;
     }
+    return true;
+  }
 
-    public static ProfilesDAO getInstance()
-    {
-        return DAOHandler.profDao;
+  private boolean exists(@Nonnull final Profile profile) {
+    final Integer cnt = template.queryForObject(
+        "SELECT count(*) FROM " + PROFILES_TABLE_NAME + " WHERE userId = ?", Integer.class, profile.getUserId());
+    return cnt != null && cnt > 0;
+  }
+
+  public void delete(@Nonnull final Profile profile) {
+
+    final String SQL = "DELETE FROM " + PROFILES_TABLE_NAME + " WHERE id = ?";
+    template.update(SQL, profile.getId());
+  }
+
+  @Nullable
+  public Profile getProfileById(@Nonnull final Long id) {
+    try {
+      final String SQL = "SELECT * FROM " + PROFILES_TABLE_NAME + " WHERE id = ?";
+      return template.queryForObject(SQL,
+          new Object[]{id}, new ProfileMapper());
+    } catch (EmptyResultDataAccessException ex) {
+      return null;
     }
-    ApplicationContext context =
-            new ClassPathXmlApplicationContext("Mail.xml");
+  }
 
-
-    JdbcTemplate template = new JdbcTemplate((DataSource)context.getBean("customer"));
-
-    private String profilesTableName="profilesTable";
-
-    public boolean saveToDB(Profile profile)
-    {
-        String SQL="";
-        SQL = "insert into "+profilesTableName+" (userId, text) values (?, ?)";
-
-            if (!exists(profile)){
-                template.update(SQL, profile.getUserId(), profile.getText());
-        }
-        else{
-            return false;
-        }
-        return true;
+  @Nullable
+  public Profile getProfileByUser(@Nonnull final Long id) {
+    try {
+      final String SQL = "SELECT * FROM " + PROFILES_TABLE_NAME + " WHERE userId = ?";
+      return template.queryForObject(SQL,
+          new Object[]{id}, new ProfileMapper());
+    } catch (EmptyResultDataAccessException ex) {
+      return null;
     }
+  }
 
-    public boolean exists(Profile profile)
-    {
-        Integer cnt = template.queryForObject(
-                "SELECT count(*) FROM "+profilesTableName+" WHERE userId = ?", Integer.class, profile.getUserId());
-        return cnt != null && cnt > 0;
+  public boolean updateRecord(@Nonnull final Profile profile) {
+    if (exists(profile)) {
+      final String SQL = "UPDATE " + PROFILES_TABLE_NAME + " SET userId = ?, text = ? WHERE id= ?;";
+      template.update(SQL, profile.getUserId(), profile.getText(), profile.getId());
+      return true;
     }
-
-    public void delete(Profile profile){
-
-        String SQL = "delete from "+profilesTableName+" where id = ?";
-        template.update(SQL, profile.getId());
-    }
-
-    public Profile getProfileById(Long id) {
-        try {
-            String SQL = "select * from "+profilesTableName+" where id = ?";
-            return template.queryForObject(SQL,
-                    new Object[]{id}, new ProfileMapper());
-        }catch(EmptyResultDataAccessException ex)
-        {
-            return null;
-        }
-    }
-
-    public Profile getProfileByUser(Long id) {
-        try {
-            String SQL = "select * from "+profilesTableName+" where userId = ?";
-            return template.queryForObject(SQL,
-                    new Object[]{id}, new ProfileMapper());
-        }catch(EmptyResultDataAccessException ex)
-        {
-            return null;
-        }
-    }
-
-    public boolean updateRecord(Profile profile)
-    {
-        if(exists(profile)) {
-            String SQL = "UPDATE " + profilesTableName + " SET userId = ?, text = ? WHERE id= ?;";
-            template.update(SQL, profile.getUserId(), profile.getText(), profile.getId());
-            return true;
-        }
-        return false;
-    }
+    return false;
+  }
 }

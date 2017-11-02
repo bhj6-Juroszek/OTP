@@ -6,27 +6,18 @@ import javax.persistence.*;
 /**
  * Created by Bartek on 2017-03-10.
  */
-@Entity
-@Table(name="ratesTable")
 public class Rate {
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
-    @Column
     private String comment;
-    @Column
     private int value;
-    @Column
-    private long profileId;
-    @Column
+    private long toId;
     private long fromId;
-    @Column
     private Date date;
 
-    public Rate(final String comment, final int value, final long profileId, final long fromId, final Date date) {
+    public Rate(final String comment, final int value, final long toId, final long fromId, final Date date) {
         this.comment = comment;
         this.value = value;
-        this.profileId = profileId;
+        this.toId = toId;
         this.fromId = fromId;
         this.date = date;
     }
@@ -58,12 +49,12 @@ public class Rate {
         this.value = value;
     }
 
-    public long getProfileId() {
-        return profileId;
+    public long getToId() {
+        return toId;
     }
 
-    public void setProfileId(final long profileId) {
-        this.profileId = profileId;
+    public void setToId(final long toId) {
+        this.toId = toId;
     }
 
     public long getFromId() {

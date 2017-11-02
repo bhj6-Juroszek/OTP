@@ -1,7 +1,8 @@
 package com.example.model;
 
+import com.example.daoLayer.DAOHandler;
 import com.example.daoLayer.daos.RatesDAO;
-import com.example.daoLayer.entities.Customer;
+import com.example.daoLayer.entities.User;
 import com.example.daoLayer.entities.Profile;
 import com.example.daoLayer.entities.Rate;
 
@@ -15,19 +16,19 @@ import java.util.Calendar;
 public class RatesManager {
 
 
-    RatesDAO ratesRep=RatesDAO.getInstance();
+    RatesDAO ratesDAO = DAOHandler.ratesDAO;
 
 
-    public boolean rateProfile(Customer fromCustomer, Profile ratedProfile, int value, String comment)
+    public boolean rateProfile(User fromUser, Profile ratedProfile, int value, String comment)
     {
         Date date = new Date(Calendar.getInstance().getTime().getTime());
-        Rate result=new Rate(comment, value, ratedProfile.getId(), fromCustomer.getId(),date);
-        return ratesRep.saveToDB(result);
+        Rate result=new Rate(comment, value, ratedProfile.getUserId(), fromUser.getId(),date);
+        return ratesDAO.saveToDB(result);
     }
 
     public double getProfileAverageRate(Profile profile)
     {
-        ArrayList<Rate> rates=ratesRep.getRatesByProfile(profile.getId());
+        ArrayList<Rate> rates= ratesDAO.getRatesByProfile(profile.getId());
         double result=0;
         double divader=rates.size();
         for(Rate r:rates)
@@ -40,7 +41,7 @@ public class RatesManager {
 
     public ArrayList<Rate> getProfileLastRates(Profile profile)
     {
-        ArrayList<Rate> rates=ratesRep.getRatesByProfile(profile.getId());
+        ArrayList<Rate> rates= ratesDAO.getRatesByProfile(profile.getId());
         int max=5;
         if((rates.size()+1<max))max=rates.size()-1;
         return new ArrayList(rates.subList(0,max));
@@ -48,13 +49,13 @@ public class RatesManager {
 
     public ArrayList<Rate> getProfileRates(Profile profile)
     {
-        return ratesRep.getRatesByProfile(profile.getId());
+        return ratesDAO.getRatesByProfile(profile.getId());
 
     }
 
-    public Rate ifUserRated(Customer customer, Profile profile)
+    public Rate ifUserRated(User user, Profile profile)
     {
-        return ratesRep.getProfileUserRate(profile.getId(),customer.getId());
+        return ratesDAO.getProfileUserRate(profile.getId(), user.getId());
 
     }
 

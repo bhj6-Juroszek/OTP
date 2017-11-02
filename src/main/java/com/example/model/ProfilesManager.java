@@ -1,8 +1,9 @@
 package com.example.model;
 
-import com.example.daoLayer.daos.CustomersDAO;
+import com.example.daoLayer.DAOHandler;
+import com.example.daoLayer.daos.UsersDAO;
 import com.example.daoLayer.daos.ProfilesDAO;
-import com.example.daoLayer.entities.Customer;
+import com.example.daoLayer.entities.User;
 import com.example.daoLayer.entities.Profile;
 
 /**
@@ -10,27 +11,24 @@ import com.example.daoLayer.entities.Profile;
  */
 public class ProfilesManager {
 
-    ProfilesDAO profilesRep=ProfilesDAO.getInstance();
-    CustomersDAO customersRep=CustomersDAO.getInstance();
+    final ProfilesDAO profilesDAO = DAOHandler.profilesDAO;
 
-    public Profile getUserProfile(Customer customer)
+    public Profile getUserProfile(User user)
     {
-        return profilesRep.getProfileByUser(customer.getId());
+        return profilesDAO.getProfileByUser(user.getId());
     }
 
-    public void changeProfileText(Customer customer, String text)
+    public void changeProfileText(User user, String text)
     {
-        Profile profile=getUserProfile(customer);
+        Profile profile=getUserProfile(user);
         profile.setText(text);
-        profilesRep.updateRecord(profile);
+        profilesDAO.updateRecord(profile);
     }
 
-    public void createProfile(Customer customer)
+    public void createProfile(User user)
     {
-        Profile newProfile=new Profile(customer.getId(),"");
-        profilesRep.saveToDB(newProfile);
-        customer.setProfileId(profilesRep.getProfileByUser(customer.getId()).getId());
-        customersRep.updateRecord(customer);
+        Profile newProfile=new Profile(user.getId(),"");
+        profilesDAO.saveToDB(newProfile);
     }
 
 

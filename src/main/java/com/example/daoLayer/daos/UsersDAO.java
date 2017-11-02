@@ -1,0 +1,190 @@
+package com.example.daoLayer.daos;
+
+import com.example.daoLayer.entities.Category;
+import com.example.daoLayer.entities.User;
+import com.example.daoLayer.mappers.CategoryMapper;
+import com.example.daoLayer.mappers.UserMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
+import org.springframework.stereotype.Repository;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static com.example.daoLayer.DAOHandler.*;
+
+@Repository
+public class UsersDAO extends DAO {
+
+  public UsersDAO(@Nonnull final JdbcTemplate template) {
+    super(template);
+  }
+
+  public void createTable() {
+    template.execute
+        ("CREATE TABLE " + USERS_TABLE_NAME + " (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(50)," +
+            " adress VARCHAR(250), mail VARCHAR(250) UNIQUE NOT NULL, login VARCHAR(250), password VARCHAR(250), role INT(2), " +
+            "imageUrl VARCHAR(150), " +
+            "confirmation VARCHAR(250), PRIMARY KEY(id));"
+        );
+
+    template.execute(
+        "CREATE TABLE " + USERS_CATEGORIES_MAP + " (id INT NOT NULL AUTO_INCREMENT, idUser INT, idCategory INT, " +
+            "PRIMARY KEY(id));");
+  }
+
+  @Nullable
+  public List<Category> getUserCategories(final long id) {
+    try {
+      final String SQL = "select * from " + CATEGORIES_TABLE_NAME + " " +
+          "INNER JOIN USERS_CATEGORIES_MAP ON id = idCategory AND idUser = " + id +
+          " ORDER BY name ";
+      return (ArrayList<Category>) template.query(SQL,
+          new RowMapperResultSetExtractor<>(new CategoryMapper()));
+    } catch (EmptyResultDataAccessException ex) {
+      return null;
+    }
+  }
+
+  public boolean saveToDB(@Nonnull final User user) {
+    final String SQL = "INSERT INTO " + USERS_TABLE_NAME + " (name, adress, mail, login, password, role," +
+        "imageUrl, confirmation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    template.update(SQL, user.getName(), user.getAdress(), user.getMail(), user.getLogin(),
+        user.getPassword(), user.getRole(), user.getImageUrl(), user
+            .getConfirmation());
+    template.update("INSERT INTO " + USERS_CATEGORIES_MAP + " (idUser, idCategory) VALUES(?,?)", user.getId(),
+        DEFAULT_CATEGORY_ID);
+    return true;
+  }
+
+  private boolean exists(@Nonnull final Long id) {
+    final Integer cnt = template.queryForObject(
+        "SELECT count(*) FROM " + USERS_TABLE_NAME + " WHERE id = ?", Integer.class, id);
+    return cnt != null && cnt > 0;
+  }
+
+  public boolean existsAnother(@Nonnull final String id, @Nonnull final String from, @Nonnull final Long user) {
+    final Integer cnt = template.queryForObject(
+        "SELECT count(*) FROM " + USERS_TABLE_NAME + " WHERE " + " " + from + " = ? AND id != ?", Integer.class, id,
+        user);
+    return cnt != null && cnt > 0;
+  }
+
+  public void delete(@Nonnull final String value, @Nonnull final String pole) {
+    final String SQL = "delete from " + USERS_TABLE_NAME + " where " + pole + " = ?";
+    template.update(SQL, value);
+    return;
+  }
+
+  public void delete(@Nonnull final User user) {
+
+    final String SQL = "DELETE FROM " + USERS_TABLE_NAME + " WHERE mail = ?";
+    template.update(SQL, user.getMail());
+  }
+
+  public boolean exists(@Nonnull final User user) {
+    final Integer cnt = template.queryForObject(
+        "SELECT count(*) FROM " + USERS_TABLE_NAME + " WHERE login = ? AND id != ?"
+        , Integer.class
+        , user.getLogin()
+        , user.getId());
+    return ((cnt != null && cnt > 0) && this.existsAnother(user.getMail(), "mail", user.getId()));
+  }
+
+  @Nullable
+  public User getCustomerByMail(@Nonnull final String mail) {
+    try {
+      final String SQL = "SELECT * FROM " + USERS_TABLE_NAME + " WHERE mail = ?";
+      return template.queryForObject(SQL,
+          new Object[]{mail}, new UserMapper());
+    } catch (EmptyResultDataAccessException ex) {
+      return null;
+    }
+  }
+
+  @Nullable
+  public User getCustomerByProfile(@Nonnull final Long mail) {
+    try {
+      final String SQL = "SELECT * FROM " + USERS_TABLE_NAME + " WHERE profileId = ?";
+      return template.queryForObject(SQL,
+          new Object[]{mail}, new UserMapper());
+    } catch (EmptyResultDataAccessException ex) {
+      return null;
+    }
+  }
+
+  @Nullable
+  public User getCustomerByConfirmation(@Nonnull final String mail) {
+    try {
+      final String SQL = "SELECT * FROM " + USERS_TABLE_NAME + " WHERE confirmation = ?";
+      return template.queryForObject(SQL,
+          new Object[]{mail}, new UserMapper());
+    } catch (EmptyResultDataAccessException ex) {
+      return null;
+    }
+  }
+
+  @Nullable
+  public User getCustomerByLogin(@Nonnull final String login) {
+    try {
+      final String SQL = "SELECT * FROM " + USERS_TABLE_NAME + " WHERE login = ?";
+      return template.queryForObject(SQL,
+          new Object[]{login}, new UserMapper());
+    } catch (EmptyResultDataAccessException ex) {
+      return null;
+    }
+  }
+
+  @Nullable
+  public User getCustomerById(@Nonnull final Long id) {
+    try {
+      final String SQL = "SELECT * FROM " + USERS_TABLE_NAME + " WHERE id = ?";
+      return template.queryForObject(SQL,
+          new Object[]{id}, new UserMapper());
+    } catch (EmptyResultDataAccessException ex) {
+
+      return null;
+    }
+  }
+
+  public int getSize() {
+    return template.queryForList("SELECT * FROM " + USERS_TABLE_NAME).size();
+  }
+
+  public boolean updateRecord(@Nonnull final User user) {
+    if (exists(user.getId())) {
+      final String SQL = "UPDATE " + USERS_TABLE_NAME + " SET name = ?, adress = ?, mail = ?, login = ?, " +
+          "password = ?, role = ?, imageUrl = ?, confirmation = ?  WHERE id= ?;";
+      template.update(SQL, user.getName(), user.getAdress(), user.getMail(), user.getLogin(), user
+              .getPassword(), user.getRole(), user.getImageUrl(),
+          user.getConfirmation(), user
+              .getId());
+      return true;
+    }
+    return false;
+  }
+
+  @Nullable
+  public ArrayList<User> getCustomersWithCategory(@Nonnull final Category category) {
+    try {
+      final String SQL = "SELECT * FROM " + USERS_TABLE_NAME + " " +
+          "INNER JOIN USERS_CATEGORIES_MAP ON idCategory = " + category.getId() +
+          " ORDER BY name ";
+      final ArrayList<User> users = (ArrayList<User>) template.query(SQL,
+          new RowMapperResultSetExtractor<>(new UserMapper()));
+      final Set<User> usersSet = new HashSet();
+      for (User user : users) {
+        usersSet.add(user);
+      }
+      return new ArrayList<User>(usersSet);
+    } catch (EmptyResultDataAccessException ex) {
+      return null;
+    }
+  }
+
+}

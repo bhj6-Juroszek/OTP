@@ -1,8 +1,9 @@
 package com.example.model;
 
-import com.example.daoLayer.daos.CustomersDAO;
-import com.example.daoLayer.daos.SimpleMailManager;
-import com.example.daoLayer.entities.Customer;
+import com.example.daoLayer.DAOHandler;
+import com.example.daoLayer.daos.UsersDAO;
+import com.example.backend.utils.MailManager;
+import com.example.daoLayer.entities.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -13,8 +14,8 @@ import java.util.Random;
  */
 public class PasswordReminder {
 
-    private SimpleMailManager sender=new SimpleMailManager();
-    private CustomersDAO customersRep=CustomersDAO.getInstance();
+    private MailManager sender=new MailManager();
+    private UsersDAO customersRep= DAOHandler.usersDAO;
     private static final int NUMBER_OF_LETTERS=15;
     private String mail;
 
@@ -48,11 +49,11 @@ public class PasswordReminder {
         String newPassword=generatePassword();
         if(customersRep.existsAnother(mail,"mail",(long)-1))
         {
-            Customer customer=customersRep.getCustomerByMail(mail);
+            User user =customersRep.getCustomerByMail(mail);
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String hashedPassword = passwordEncoder.encode(newPassword);
-            customer.setPassword(hashedPassword);
-            customersRep.updateRecord(customer);
+            user.setPassword(hashedPassword);
+            customersRep.updateRecord(user);
 
             sender.sendMail("Juroszek",
                      mail,

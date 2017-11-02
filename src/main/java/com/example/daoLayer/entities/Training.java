@@ -1,37 +1,22 @@
 package com.example.daoLayer.entities;
 
-import com.example.daoLayer.daos.CustomersDAO;
+import com.example.daoLayer.DAOHandler;
 
 import java.sql.Date;
-import javax.persistence.*;
 
 /**
  * Created by Bartek on 2017-03-23.
  */
-@Entity
-@Table(name = "trainigsTable")
 public class Training {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
-  @Column
   private Date date;
-  @Column
-  private Double hour;
-  @Column
   private Double length;
-  @Column
   private long price;
-  @Column
   private long category;
-  @Column
   private String city;
-  @Column
   private String description;
-  @Column
-  private long profileId;
-  @Column
+  private long ownerId;
   private long takenById;
 
   public String getCity() {
@@ -74,14 +59,6 @@ public class Training {
     this.date = date;
   }
 
-  public Double getHour() {
-    return hour;
-  }
-
-  public void setHour(final Double hour) {
-    this.hour = hour;
-  }
-
   public Double getLength() {
     return length;
   }
@@ -98,12 +75,12 @@ public class Training {
     this.category = category;
   }
 
-  public long getProfileId() {
-    return profileId;
+  public long getOwnerId() {
+    return ownerId;
   }
 
-  public void setProfileId(final long profileId) {
-    this.profileId = profileId;
+  public void setOwnerId(final long ownerId) {
+    this.ownerId = ownerId;
   }
 
   public long getTakenById() {
@@ -118,7 +95,7 @@ public class Training {
 
   }
 
-  public Customer getOwner() {
-    return CustomersDAO.getInstance().getCustomerByProfile(profileId);
+  public User getOwner() {
+    return DAOHandler.usersDAO.getCustomerByProfile(ownerId);
   }
 }

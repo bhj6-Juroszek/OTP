@@ -1,12 +1,13 @@
 package com.example.backend.utils;
 
+import com.example.backend.contexts.UserContext;
+import com.example.daoLayer.entities.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import static java.lang.System.*;
 import static java.util.concurrent.TimeUnit.*;
@@ -14,7 +15,7 @@ import static java.util.concurrent.TimeUnit.*;
 @Component
 public class SessionManager {
 
-  Map<String, Long> loggedUsers;
+  Map<String, UserContext> loggedUsers;
   ScheduledExecutorService scheduler;
 
   public SessionManager() {
@@ -23,17 +24,17 @@ public class SessionManager {
     scheduler.scheduleAtFixedRate(this::removeUnactiveSessions, 15, 15, MINUTES);
   }
 
-  public void addToMap(final String uuid) {
-    loggedUsers.putIfAbsent(uuid, currentTimeMillis());
+  public void addToMap(final String uuid, User user) {
+    loggedUsers.putIfAbsent(uuid, new UserContext(user,currentTimeMillis()));
   }
 
-  public Map<String, Long> getLoggedUsers() {
+  public Map<String, UserContext> getLoggedUsers() {
     return loggedUsers;
   }
 
   private void removeUnactiveSessions() {
     for (String uuid : loggedUsers.keySet()) {
-      if ((loggedUsers.get(uuid) + MINUTES.toMillis(25L)) < currentTimeMillis()) {
+      if ((loggedUsers.get(uuid).getLastTouched() + MINUTES.toMillis(25L)) < currentTimeMillis()) {
         loggedUsers.remove(uuid);
       }
     }

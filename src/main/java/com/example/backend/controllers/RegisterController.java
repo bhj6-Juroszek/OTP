@@ -2,10 +2,10 @@ package com.example.backend.controllers;
 
 import com.example.backend.controllersEntities.requests.RegisterRequest;
 import com.example.backend.utils.SessionManager;
-import com.example.daoLayer.daos.CustomersDAO;
-import com.example.daoLayer.daos.DAOHandler;
-import com.example.daoLayer.daos.SimpleMailManager;
-import com.example.daoLayer.entities.Customer;
+import com.example.daoLayer.daos.UsersDAO;
+import com.example.daoLayer.DAOHandler;
+import com.example.backend.utils.MailManager;
+import com.example.daoLayer.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
+
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @CrossOrigin
 @Controller
@@ -23,15 +25,15 @@ public class RegisterController {
   @Autowired
   private SessionManager manager;
 
-  @RequestMapping(value = "/register", method = RequestMethod.POST, consumes = "application/json")
+  @RequestMapping(value = "/register", method = POST, consumes = "application/json")
   public @ResponseBody
   int register(@RequestBody RegisterRequest request) {
-    final CustomersDAO customersDao = DAOHandler.custDao;
+    final UsersDAO usersDAO = DAOHandler.usersDAO;
     final String mail = request.getEmail();
     final String password = request.getPassword();
-    final SimpleMailManager sender = new SimpleMailManager();
+    final MailManager sender = new MailManager();
     System.out.print(request.getEmail());
-    if (customersDao.existsAnother(mail, "mail", (long) -1)) {
+    if (usersDAO.existsAnother(mail, "mail", (long) -1)) {
       return -1;
     }
 
@@ -44,16 +46,13 @@ public class RegisterController {
       final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
       final String hashedPassword = passwordEncoder.encode(password);
 
-      customersDao.saveToDB(new Customer("Unknown",
-          "Unknown",
+      usersDAO.saveToDB(new User("Unknown",
           "Unknown",
           mail,
           mail,
           hashedPassword,
           false,
           "",
-          "",
-          -1,
           token));
       return 1;
     } else {

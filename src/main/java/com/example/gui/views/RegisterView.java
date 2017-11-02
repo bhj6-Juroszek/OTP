@@ -1,9 +1,10 @@
 package com.example.gui.views;
 
+import com.example.daoLayer.DAOHandler;
 import com.example.daoLayer.daos.CitiesDAO;
-import com.example.daoLayer.daos.CustomersDAO;
-import com.example.daoLayer.daos.SimpleMailManager;
-import com.example.daoLayer.entities.Customer;
+import com.example.daoLayer.daos.UsersDAO;
+import com.example.backend.utils.MailManager;
+import com.example.daoLayer.entities.User;
 import com.example.gui.ui.DashboardUI;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
@@ -25,11 +26,11 @@ import java.util.UUID;
 public class RegisterView extends VerticalLayout implements View {
 
     @Autowired
-    private CustomersDAO customerRep;
+    private UsersDAO customerRep;
     private Label info=new Label("Finish your registration");
     private TextField name=new TextField("First Name");
     private TextField surname=new TextField("Second Name");
-    CitiesDAO dao= CitiesDAO.getInstance();
+    final CitiesDAO citiesDAO = DAOHandler.citiesDAO;
     TextField city = new TextField("City");
     private TextField postCode=new TextField("Post code");
     private TextField apartamentNumber=new TextField("Apartment/House number");
@@ -75,7 +76,7 @@ public class RegisterView extends VerticalLayout implements View {
                             }
                             else {
                                 String token = UUID.randomUUID().toString();
-                                SimpleMailManager sender=new SimpleMailManager();
+                                MailManager sender=new MailManager();
                                 if(sender.sendMail("Juroszek",
                                         registerMail.getValue(),
                                         "Automatically generated Message",
@@ -84,16 +85,13 @@ public class RegisterView extends VerticalLayout implements View {
                                     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
                                     String hashedPassword = passwordEncoder.encode(registerPassword.getValue());
 
-                                    customerRep.saveToDB(new Customer(name.getValue(),
-                                            surname.getValue(),
+                                    customerRep.saveToDB(new User(name.getValue(),
                                             city.getValue() + " " + postCode.getValue() + "nr: " + apartamentNumber.getValue(),
                                             registerMail.getValue(),
                                             registerLogin.getValue(),
                                             hashedPassword,
                                             false,
                                             "",
-                                            "",
-                                            -1,
                                             token));
                                     Notification.show("Your account has been created!",
                                             Notification.Type.HUMANIZED_MESSAGE);

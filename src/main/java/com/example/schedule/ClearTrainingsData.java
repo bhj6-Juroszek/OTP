@@ -1,5 +1,6 @@
 package com.example.schedule;
 
+import com.example.daoLayer.DAOHandler;
 import com.example.daoLayer.daos.TrainingsDAO;
 
 /**
@@ -8,6 +9,6 @@ import com.example.daoLayer.daos.TrainingsDAO;
 public class ClearTrainingsData implements Runnable {
     @Override
     public void run() {
-        TrainingsDAO.getInstance().clear();
+        DAOHandler.trainingsDAO.clear();
     }
 }

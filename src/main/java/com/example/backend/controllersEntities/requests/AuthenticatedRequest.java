@@ -1,5 +1,6 @@
 package com.example.backend.controllersEntities.requests;
 
+import java.util.Map;
 import java.util.UUID;
 
 public abstract class AuthenticatedRequest implements Request {
@@ -16,5 +17,9 @@ public abstract class AuthenticatedRequest implements Request {
 
   public void setUuid(final String uuid) {
     this.uuid = uuid;
+  }
+
+  public boolean authenticate(Map usersMap, String uuid) {
+    return usersMap.containsKey(uuid);
   }
 }

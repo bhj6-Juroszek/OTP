@@ -1,10 +1,10 @@
 package com.example.gui.views;
 
-import com.example.daoLayer.daos.CustomersDAO;
+import com.example.daoLayer.daos.UsersDAO;
 import com.example.model.ProfilesManager;
 import com.example.model.RatesManager;
 import com.example.model.UserManager;
-import com.example.daoLayer.entities.Customer;
+import com.example.daoLayer.entities.User;
 import com.example.daoLayer.entities.Profile;
 import com.example.daoLayer.entities.Rate;
 import com.example.gui.ui.DashboardUI;
@@ -34,14 +34,14 @@ import java.net.URL;
 public class SeeProfileView extends AbsoluteLayout implements View {
 
     @Autowired
-    CustomersDAO userRepo;
+    UsersDAO userRepo;
     public final URL DEFAULT_IMAGE_PATH=new URL("https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQCeShBiPnm0h2AP4S5X2lISkauLSNNSqN61tndLC0KJYwt3EY1E04WPi0");
     private DashboardUI currentUI=(DashboardUI) UI.getCurrent();
     private ProfilesManager profiles=new ProfilesManager();
     private RatesManager manager=new RatesManager();
-    private Customer customer=(Customer) VaadinSession.getCurrent().getAttribute("customerToSee");
-    private Customer loggedInCustomer=(Customer) VaadinSession.getCurrent().getAttribute("loggedInCustomer");
-    private Profile profile=profiles.getUserProfile(customer);
+    private User user =(User) VaadinSession.getCurrent().getAttribute("customerToSee");
+    private User loggedInUser =(User) VaadinSession.getCurrent().getAttribute("loggedInCustomer");
+    private Profile profile=profiles.getUserProfile(user);
     private TextField comment = new TextField("Write your comment here");
     private Panel loginPanel=currentUI.getLoginPanel();
     private Image logo=new Image("", new ThemeResource("icons/logo2.png"));
@@ -61,8 +61,8 @@ public class SeeProfileView extends AbsoluteLayout implements View {
         addStyleName("backColor");
         if(profile==null)
         {
-            profiles.createProfile(customer);
-            profile=profiles.getUserProfile(customer);
+            profiles.createProfile(user);
+            profile=profiles.getUserProfile(user);
         }
         setHeight("2000px");
         Label profileLabel=new Label("",ContentMode.HTML);
@@ -74,7 +74,7 @@ public class SeeProfileView extends AbsoluteLayout implements View {
         addComponent(profileLabel,"top:15%;left:30%;");
         double rate=manager.getProfileAverageRate(profile);
         int numberOfRates=manager.getProfileRates(
-                profiles.getUserProfile(customer)
+                profiles.getUserProfile(user)
         ).size();
         String textFormatted=String.format("Average rate for this user: %.2g (from:%d rates;)"
         ,rate,numberOfRates);
@@ -100,8 +100,8 @@ public class SeeProfileView extends AbsoluteLayout implements View {
     private void createRateButtons()
     {
         Rate rate;
-        if(loggedInCustomer!=null && loggedInCustomer.getId()!=profile.getUserId()) {
-            if ((rate = manager.ifUserRated(loggedInCustomer, profile)) != null) {
+        if(loggedInUser !=null && loggedInUser.getId()!=profile.getUserId()) {
+            if ((rate = manager.ifUserRated(loggedInUser, profile)) != null) {
                 addComponent(new Label("You rated: "
                         + rate.getValue()
                 ), "top:55%; left:45%;");
@@ -112,7 +112,8 @@ public class SeeProfileView extends AbsoluteLayout implements View {
                 int cssShift = 40;
                 for (int i = 1; i < 11; i++) {
                     final int finalI = i;
-                    Button rateButton = new Button(String.format("[%d]", i), (Button.ClickListener) event -> {manager.rateProfile(loggedInCustomer
+                    Button rateButton = new Button(String.format("[%d]", i), (Button.ClickListener) event -> {manager.rateProfile(
+                        loggedInUser
                             , profile
                             , finalI
                             , comment.getValue());
@@ -139,9 +140,9 @@ public class SeeProfileView extends AbsoluteLayout implements View {
         userLayout.setHeightUndefined();
         userLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         Image img=new Image();
-        if(UserManager.testImage(customer.getImageUrl()))
+        if(UserManager.testImage(user.getImageUrl()))
         {
-            img.setSource(new ExternalResource(customer.getImageUrl()));
+            img.setSource(new ExternalResource(user.getImageUrl()));
         }
         else{
             img.setSource(new ExternalResource(DEFAULT_IMAGE_PATH));
@@ -149,18 +150,18 @@ public class SeeProfileView extends AbsoluteLayout implements View {
         img.setHeight("100px");
         img.setWidth("100px");
         userLayout.addComponent(img);
-        Label nameInfoLabel=new Label(String.format("%s %s",customer.getName(),customer.getSurname()));
+        Label nameInfoLabel=new Label(user.getName());
         nameInfoLabel.setStyleName("whiteBigText");
         nameInfoLabel.setHeight("75px");
         nameInfoLabel.setWidthUndefined();
         userLayout.addComponent(nameInfoLabel);
-        Label mailLabel=new Label(String.format("Mail: %s",customer.getMail()));
+        Label mailLabel=new Label(String.format("Mail: %s", user.getMail()));
         mailLabel.setStyleName("whiteBigText");
         mailLabel.setHeight("75px");
         mailLabel.setWidthUndefined();
         userLayout.addComponent(mailLabel);
-        NativeButton seeSchedule=new NativeButton(String.format("Go to %s's schedule",customer.getName()), (Button.ClickListener) event -> {
-            VaadinSession.getCurrent().setAttribute("customerToSee",customer);
+        NativeButton seeSchedule=new NativeButton(String.format("Go to %s's schedule", user.getName()), (Button.ClickListener) event -> {
+            VaadinSession.getCurrent().setAttribute("customerToSee", user);
             currentUI.getNavigator().navigateTo("scheduleView");
         });
         seeSchedule.setStyleName("panelButton");

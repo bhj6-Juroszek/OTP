@@ -1,5 +1,6 @@
 package com.example.model;
 
+import com.example.daoLayer.DAOHandler;
 import com.example.daoLayer.daos.CitiesDAO;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,7 +45,7 @@ public class JsonReader {
 
     public static Place getCity(String url) throws  JSONException {
         url=String.format("http://maps.google.com/maps/api/geocode/json?address=%s&sensor=false&region=pl",url);
-        CitiesDAO dao=CitiesDAO.getInstance();
+        CitiesDAO citiesDAO= DAOHandler.citiesDAO;
         InputStream is=null;
         Place result=new Place();
         try {
