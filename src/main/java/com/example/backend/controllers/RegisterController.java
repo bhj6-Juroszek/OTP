@@ -43,7 +43,7 @@ public class RegisterController {
         "Automatically generated Message",
         "Your account has been created. Click https://software-architecture.herokuapp.com/confirm.html?id=" + token +
             " to finish registration;")) {
-      final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+      final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
       final String hashedPassword = passwordEncoder.encode(password);
 
       usersDAO.saveToDB(new User("Unknown",

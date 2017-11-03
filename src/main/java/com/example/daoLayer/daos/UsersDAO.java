@@ -28,13 +28,14 @@ public class UsersDAO extends DAO {
   public void createTable() {
     template.execute
         ("CREATE TABLE " + USERS_TABLE_NAME + " (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(50)," +
-            " adress VARCHAR(250), mail VARCHAR(250) UNIQUE NOT NULL, login VARCHAR(250), password VARCHAR(250), role INT(2), " +
+            " adress VARCHAR(250), mail VARCHAR(250) UNIQUE NOT NULL, login VARCHAR(250), password VARCHAR(250), role" +
+            " INT(2), " +
             "imageUrl VARCHAR(150), " +
             "confirmation VARCHAR(250), PRIMARY KEY(id));"
         );
 
     template.execute(
-        "CREATE TABLE " + USERS_CATEGORIES_MAP + " (id INT NOT NULL AUTO_INCREMENT, idUser INT, idCategory INT, " +
+        "CREATE TABLE " + USERS_CATEGORIES_MAP + " (mapId INT NOT NULL AUTO_INCREMENT, idUser INT, idCategory INT, " +
             "PRIMARY KEY(id));");
   }
 
@@ -42,7 +43,7 @@ public class UsersDAO extends DAO {
   public List<Category> getUserCategories(final long id) {
     try {
       final String SQL = "select * from " + CATEGORIES_TABLE_NAME + " " +
-          "INNER JOIN USERS_CATEGORIES_MAP ON id = idCategory AND idUser = " + id +
+          "INNER JOIN " + USERS_CATEGORIES_MAP + " ON id = idCategory AND idUser = " + id +
           " ORDER BY name ";
       return (ArrayList<Category>) template.query(SQL,
           new RowMapperResultSetExtractor<>(new CategoryMapper()));

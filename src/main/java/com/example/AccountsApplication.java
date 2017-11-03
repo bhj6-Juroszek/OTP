@@ -1,9 +1,7 @@
 package com.example;
 
 import com.example.backend.utils.SessionManager;
-import com.example.daoLayer.DAOHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,19 +9,13 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfigur
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
 
 @ComponentScan
 @EnableAutoConfiguration
@@ -32,8 +24,10 @@ import springfox.documentation.spring.web.plugins.Docket;
 @EnableJpaRepositories
 public class AccountsApplication extends SpringBootServletInitializer {
 
-  private static final Logger log = LoggerFactory.getLogger(AccountsApplication.class);
   private static ApplicationContext context;
+  private static final org.apache.log4j.Logger LOGGER = org.apache.logging.log4j.LogManager.getLogger(AccountsApplication.class);
+
+  private static final Logger LOGGER = Logger.getLogger(AccountsApplication.class);
 
   @Override
   protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -43,7 +37,8 @@ public class AccountsApplication extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
     context = SpringApplication.run(AccountsApplication.class, args);
-//    DAOHandler.createAll();
+    LOGGER.log(Logger.DEBUG, "");
+    // DAOHandler.usersDAO.createTable();
   }
 
   private ApiInfo apiInfo() {

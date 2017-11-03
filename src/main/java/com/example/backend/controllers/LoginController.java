@@ -2,7 +2,9 @@ package com.example.backend.controllers;
 
 import com.example.backend.controllersEntities.requests.LoginRequest;
 import com.example.backend.controllersEntities.responses.LoginResponse;
+import com.example.backend.utils.ResponseCode;
 import com.example.model.UserManager;
+import org.omg.PortableInterceptor.SUCCESSFUL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +19,13 @@ public class LoginController extends AuthenticatedController {
 
   @Autowired
   UserManager userManager;
-
   @RequestMapping(value = "/login", method = POST, consumes = "application/json")
   public @ResponseBody
   LoginResponse loginAction(@RequestBody LoginRequest request) {
     final LoginResponse response = userManager.login(request.getEmail(), request.getPassword());
-    manager.addToMap(randomUUID().toString(), response.getUserContext().getUser());
+    if(response.getResponseCode() == ResponseCode.SUCCESS) {
+      manager.addToMap(randomUUID().toString(), response.getUserContext().getUser());
+    }
     return response;
   }
 

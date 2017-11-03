@@ -12,18 +12,18 @@ import javax.sql.DataSource;
  */
 public class DAOHandler {
 
-  public static final String TRAININGS_TABLE_NAME = "TRAININGS";
-  public static final String CATEGORIES_TABLE_NAME = "CATEGORIES";
-  public static final String RATES_TABLE_NAME = "RATES";
+  public static final String TRAININGS_TABLE_NAME = "trainings";
+  public static final String CATEGORIES_TABLE_NAME = "categories";
+  public static final String RATES_TABLE_NAME = "rates";
   public static final int DEFAULT_CATEGORY_ID = 1;
-  public static final String USERS_TABLE_NAME = "USERS";
-  public static final String USERS_CATEGORIES_MAP = "CATEGORIESMAP";
-  public static final String PROFILES_TABLE_NAME = "PROFILES";
-  public static final String CITIES_TABLE_NAME = "CITIES";
+  public static final String USERS_TABLE_NAME = "users";
+  public static final String USERS_CATEGORIES_MAP = "categories_map";
+  public static final String PROFILES_TABLE_NAME = "profiles";
+  public static final String CITIES_TABLE_NAME = "cities";
 
   private static final ApplicationContext context =
       new ClassPathXmlApplicationContext("Mail.xml");
-  private static final JdbcTemplate template = new JdbcTemplate((DataSource) context.getBean("dataSource"));
+  private static final JdbcTemplate template = new JdbcTemplate((DataSource) context.getBean("dbSource"));
 
   public static CategoriesDAO categoriesDAO = new CategoriesDAO(template);
   public static CitiesDAO citiesDAO = new CitiesDAO(template);

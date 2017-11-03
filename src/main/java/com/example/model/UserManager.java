@@ -27,7 +27,7 @@ public class UserManager {
 
   public LoginResponse login(@Nonnull final String login, @Nonnull final String password) {
     final LoginResponse response = new LoginResponse();
-    final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
     final User user = usersDAO.getCustomerByLogin(login);
     if (user == null) {
       response.setResponseCode(ACCOUNT_DOESNT_EXISTS);
