@@ -1,6 +1,8 @@
 package com.example;
 
 import com.example.backend.utils.SessionManager;
+import com.example.daoLayer.DAOHandler;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -25,9 +27,8 @@ import springfox.documentation.service.Contact;
 public class AccountsApplication extends SpringBootServletInitializer {
 
   private static ApplicationContext context;
-  private static final org.apache.log4j.Logger LOGGER = org.apache.logging.log4j.LogManager.getLogger(AccountsApplication.class);
-
   private static final Logger LOGGER = Logger.getLogger(AccountsApplication.class);
+
 
   @Override
   protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -37,8 +38,8 @@ public class AccountsApplication extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
     context = SpringApplication.run(AccountsApplication.class, args);
-    LOGGER.log(Logger.DEBUG, "");
-    // DAOHandler.usersDAO.createTable();
+    LOGGER.log(Level.INFO, "Started Application");
+    DAOHandler.usersDAO.createTable();
   }
 
   private ApiInfo apiInfo() {

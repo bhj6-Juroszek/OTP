@@ -25,7 +25,7 @@ public class SessionManager {
   }
 
   public void addToMap(final String uuid, User user) {
-    loggedUsers.putIfAbsent(uuid, new UserContext(user,currentTimeMillis()));
+    loggedUsers.putIfAbsent(uuid, new UserContext(user, currentTimeMillis()));
   }
 
   public Map<String, UserContext> getLoggedUsers() {
