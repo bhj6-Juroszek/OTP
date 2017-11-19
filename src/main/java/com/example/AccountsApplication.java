@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.backend.utils.CitiesCSVReader;
 import com.example.backend.utils.SessionManager;
 import com.example.daoLayer.DAOHandler;
 import org.apache.log4j.Level;
@@ -19,11 +20,11 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 
+import static org.apache.log4j.Level.*;
+
 @ComponentScan
 @EnableAutoConfiguration
 @SpringBootApplication(exclude = SpringDataWebAutoConfiguration.class)
-@PropertySource({"classpath:application.properties"})
-@EnableJpaRepositories
 public class AccountsApplication extends SpringBootServletInitializer {
 
   private static ApplicationContext context;
@@ -38,8 +39,8 @@ public class AccountsApplication extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
     context = SpringApplication.run(AccountsApplication.class, args);
-    LOGGER.log(Level.INFO, "Started Application");
-    DAOHandler.usersDAO.createTable();
+    LOGGER.log(INFO, "Started Application");
+    LOGGER.log(INFO, "Finished loading cities list");
   }
 
   private ApiInfo apiInfo() {

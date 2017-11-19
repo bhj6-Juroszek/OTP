@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <properties>
+        <property name="defaultPattern">%d> %p %t %c - %m%n</property>
+        <property name="mediumPattern">%d> %m%n</property>
+        <property name="simplePattern">%m%n</property>
+        <property name="logLevel">${sys:config.logLevel:-info}</property>
+    </properties>
+
+    <CustomLevels>
+        <CustomLevel name="CRITICAL" intLevel="250"/>
+        <CustomLevel name="DANGEROUS" intLevel="350"/>
+        <CustomLevel name="HAZARDOUS" intLevel="450"/>
+        <CustomLevel name="CLUE" intLevel="475"/>
+    </CustomLevels>
+
+    <Appenders>
+        <Console name="consoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d> %p %t %c - %m%n"/>
+        </Console>
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+
+</Configuration>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+
+    <properties>
+        <property name="logPath">${sys:config.logPath:-/home/}log/</property>
+    </properties>
+
+    <Appenders>
+        <RollingFile name="defaultAppender" fileName="${logPath}/OTP.log"
+                     append="true" filePattern="${logPath}/OTP.log.%i">
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="200" fileIndex="min"/>
+            <PatternLayout pattern="${defaultPattern}"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+
+        <Logger name="com.example.AccountsApplication" level="info" additivity="false">
+            <AppenderRef ref="defaultAppender"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="defaultAppender"/>
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

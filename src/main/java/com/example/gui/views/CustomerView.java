@@ -1,5 +1,6 @@
 package com.example.gui.views;
 
+import com.example.daoLayer.DAOHandler;
 import com.example.daoLayer.daos.UsersDAO;
 import com.example.model.UserManager;
 import com.example.daoLayer.entities.User;
@@ -39,8 +40,7 @@ public class CustomerView extends SecuredView implements View {
   public final URL DEFAULT_IMAGE_PATH = new URL(
       "https://encrypted-tbn2.gstatic" +
           ".com/images?q=tbn:ANd9GcQCeShBiPnm0h2AP4S5X2lISkauLSNNSqN61tndLC0KJYwt3EY1E04WPi0");
-  @Autowired
-  private UsersDAO customerRep;
+  private UsersDAO customerRep = DAOHandler.usersDAO;
 
   public CustomerView() throws MalformedURLException {
   }

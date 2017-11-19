@@ -35,7 +35,7 @@ public class CitiesDAO extends DAO {
 
     public boolean saveToDB(@Nonnull final City cat)
     {
-        final String SQL = "insert into "+ CITIES_TABLE_NAME +" (name, country) values (?, ?)";
+        final String SQL = "insert into "+ CITIES_TABLE_NAME +" (name, countryId) values (?, ?)";
             template.update(SQL, cat.getName(), cat.getCountryId());
         return true;
     }

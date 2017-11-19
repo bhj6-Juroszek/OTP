@@ -364,7 +364,7 @@ public class ScheduleView extends SecuredView implements View {
         return;
       }
 
-      if (city.getValue() != "" && new JsonReader().getCity(city.getValue()) == null) {
+      if (!city.getValue().equals("") && new JsonReader().getCity(city.getValue()) == null) {
         Notification.show("Couldn't find this place! Try less detailed adress or leave empty for online training",
             Notification.Type.WARNING_MESSAGE);
         return;

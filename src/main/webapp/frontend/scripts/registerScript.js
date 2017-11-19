@@ -1,21 +1,44 @@
-var app = angular.module('myApp', []);
-app.controller('myAppController', function($scope, $http) {
-    $scope.email = "jo";
-    $scope.password = "";
-    $scope.register = function() {
-       var result= $http({
-            method: 'POST',
-            url: 'http://localhost:8181/register',
-            data: {
-                email:this.email,
-                password:this.password
-            },
-            headers: {'Content-Type': 'application/json'}
-        }).then(function successCallback(response) {
-           $scope.email = response.data;
-        }, function errorCallback(response) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-        });
-    };
-});
+try {
+    var controller = $controller('myAppController')
+}catch(e) {
+    var app = angular.module('myApp');
+    app.controller('myAppController', function ($scope, $http) {
+        $scope.email = "jo";
+        $scope.password = "";
+        $scope.passwordConfirm = "";
+        $scope.error = "";
+        $scope.returnCode = -100;
+        $scope.register = function () {
+            $http({
+                method: 'POST',
+                url: 'http://localhost:8181/register',
+                data: {
+                    email: this.email,
+                    password: this.password
+                },
+                headers: {'Content-Type': 'application/json'}
+            }).then(function successCallback(response) {
+                $scope.returnCode = response.data;
+                if ($scope.returnCode === 1) {
+                    alert('Your account has been succesfully registered. Check your email to confirm registration.');
+                }
+                if ($scope.returnCode === 5) {
+                    alert('This mail is already registered!');
+                }
+                else {
+                    alert('Something went wrong. Try again later');
+                }
+            }, function errorCallback(response) {
+                alert('Could not connect to server. Please try again later');
+            });
+
+        };
+
+        $scope.init = function () {
+            $scope.email = "";
+            $scope.password = "";
+            $scope.passwordConfirm = "";
+            $scope.mailExists = false;
+        }
+    });
+}

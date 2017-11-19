@@ -8,6 +8,7 @@ public class UserContext {
   private User user;
 
   public UserContext() {
+    this.user = new User();
   }
 
   public UserContext(final User user, final long lastTouched) {
@@ -29,5 +30,28 @@ public class UserContext {
 
   public void setUser(final User user) {
     this.user = user;
+  }
+
+  @Override
+  public String toString() {
+    return String.format("User context for user: %s, id: %d", user.getMail(), user.getId());
+  }
+
+  @Override
+  public int hashCode() {
+    return (int)user.getId();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if(o != null) {
+      if (o instanceof UserContext) {
+        final UserContext userContext = (UserContext)o;
+        if(this.getUser().equals(userContext.getUser())) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }

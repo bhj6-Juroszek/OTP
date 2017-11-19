@@ -1,5 +1,6 @@
 package com.example.gui.views;
 
+import com.example.daoLayer.DAOHandler;
 import com.example.daoLayer.daos.UsersDAO;
 import com.example.model.ProfilesManager;
 import com.example.model.RatesManager;
@@ -33,8 +34,7 @@ import java.net.URL;
 @SpringView(name = "profileSeeView")
 public class SeeProfileView extends AbsoluteLayout implements View {
 
-    @Autowired
-    UsersDAO userRepo;
+    UsersDAO userRepo = DAOHandler.usersDAO;
     public final URL DEFAULT_IMAGE_PATH=new URL("https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQCeShBiPnm0h2AP4S5X2lISkauLSNNSqN61tndLC0KJYwt3EY1E04WPi0");
     private DashboardUI currentUI=(DashboardUI) UI.getCurrent();
     private ProfilesManager profiles=new ProfilesManager();

@@ -15,7 +15,7 @@ public class CityMapper implements RowMapper<City> {
         City cit = new City();
         cit.setId(rs.getInt("id"));
         cit.setName(rs.getString("name"));
-        cit.setCountryId(rs.getInt("country"));
+        cit.setCountryId(rs.getInt("countryId"));
 
         return cit;
 

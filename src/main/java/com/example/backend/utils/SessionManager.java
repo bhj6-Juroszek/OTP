@@ -24,8 +24,13 @@ public class SessionManager {
     scheduler.scheduleAtFixedRate(this::removeUnactiveSessions, 15, 15, MINUTES);
   }
 
-  public void addToMap(final String uuid, User user) {
+  public boolean addToMap(final String uuid, User user) {
+    if(loggedUsers.containsValue(new UserContext(user, currentTimeMillis())))
+    {
+      return true;
+    }
     loggedUsers.putIfAbsent(uuid, new UserContext(user, currentTimeMillis()));
+    return true;
   }
 
   public Map<String, UserContext> getLoggedUsers() {

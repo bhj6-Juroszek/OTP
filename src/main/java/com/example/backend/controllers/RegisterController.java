@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+import static com.example.backend.utils.ResponseCode.ACCOUNT_EXISTS;
+import static com.example.backend.utils.ResponseCode.INVALID_DATA;
+import static com.example.backend.utils.ResponseCode.SUCCESS;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @CrossOrigin
@@ -34,7 +37,7 @@ public class RegisterController {
     final MailManager sender = new MailManager();
     System.out.print(request.getEmail());
     if (usersDAO.existsAnother(mail, "mail", (long) -1)) {
-      return -1;
+      return ACCOUNT_EXISTS;
     }
 
     final String token = UUID.randomUUID().toString();
@@ -54,9 +57,9 @@ public class RegisterController {
           false,
           "",
           token));
-      return 1;
+      return SUCCESS;
     } else {
-      return -2;
+      return INVALID_DATA;
     }
   }
 }

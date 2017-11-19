@@ -16,7 +16,6 @@ public class User {
     private String imageUrl;
     private String confirmation;
 
-    private List<Category> categories;
 
 
     public User(final String name, final String adress, final String mail, final String login, final String password, final boolean role, final String imageUrl, final String confirmation) {
@@ -136,17 +135,6 @@ public class User {
     public User()
     {
 
-    }
-
-    public void loadCategories() {
-
-    }
-
-    public List<Category> getCategories() {
-      if(categories == null)
-        categories = new ArrayList<>();
-      categories = DAOHandler.usersDAO.getUserCategories(id);
-      return categories;
     }
 
     @Override

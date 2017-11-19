@@ -32,8 +32,7 @@ import java.util.Date;
 @Theme("mytheme")
 public class MainView extends AbsoluteLayout implements View {
 
-  @Autowired
-  private UsersDAO customerRep;
+  private UsersDAO customerRep = DAOHandler.usersDAO;
 
   private User loggedInUser = (User) VaadinSession.getCurrent().getAttribute("loggedInCustomer");
   private ComboBox sortBy = null;
@@ -146,7 +145,7 @@ public class MainView extends AbsoluteLayout implements View {
     main.addItem("Main", new ThemeResource("icons/home.png"), menuCommand).setStyleName("mainMenu");
     main.addItem("Admin", new ThemeResource("icons/crown.png"), menuCommand).setStyleName("mainMenu");
     main.addItem("See Profile", new ThemeResource("icons/dice.png"), menuCommand).setStyleName("mainMenu");
-    main.addItem("Edit Profile", new ThemeResource("Vicons/settings.png"), menuCommand).setStyleName("mainMenu");
+    main.addItem("Edit Profile", new ThemeResource("icons/settings.png"), menuCommand).setStyleName("mainMenu");
     main.addItem("Settings", new ThemeResource("icons/settings.png"), menuCommand).setStyleName("mainMenu");
     main.addItem("Logout", new ThemeResource("icons/logout.png"), menuCommand).setStyleName("mainMenu");
     mainMenu.setWidth("60px");

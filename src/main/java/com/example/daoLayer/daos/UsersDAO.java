@@ -36,7 +36,7 @@ public class UsersDAO extends DAO {
 
     template.execute(
         "CREATE TABLE " + USERS_CATEGORIES_MAP + " (mapId INT NOT NULL AUTO_INCREMENT, idUser INT, idCategory INT, " +
-            "PRIMARY KEY(id));");
+            "PRIMARY KEY(mapId));");
   }
 
   @Nullable
@@ -71,7 +71,7 @@ public class UsersDAO extends DAO {
 
   public boolean existsAnother(@Nonnull final String id, @Nonnull final String from, @Nonnull final Long user) {
     final Integer cnt = template.queryForObject(
-        "SELECT count(*) FROM " + USERS_TABLE_NAME + " WHERE " + " " + from + " = ? AND id != ?", Integer.class, id,
+        "SELECT count(*) FROM " + USERS_TABLE_NAME + " WHERE " + from + " = ? AND id != ?", Integer.class, id,
         user);
     return cnt != null && cnt > 0;
   }
@@ -88,14 +88,6 @@ public class UsersDAO extends DAO {
     template.update(SQL, user.getMail());
   }
 
-  public boolean exists(@Nonnull final User user) {
-    final Integer cnt = template.queryForObject(
-        "SELECT count(*) FROM " + USERS_TABLE_NAME + " WHERE login = ? AND id != ?"
-        , Integer.class
-        , user.getLogin()
-        , user.getId());
-    return ((cnt != null && cnt > 0) && this.existsAnother(user.getMail(), "mail", user.getId()));
-  }
 
   @Nullable
   public User getCustomerByMail(@Nonnull final String mail) {

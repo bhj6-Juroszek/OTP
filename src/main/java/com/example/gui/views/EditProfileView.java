@@ -1,5 +1,6 @@
 package com.example.gui.views;
 
+import com.example.daoLayer.DAOHandler;
 import com.example.daoLayer.daos.UsersDAO;
 import com.example.model.ProfilesManager;
 import com.example.daoLayer.entities.User;
@@ -25,8 +26,7 @@ import javax.annotation.PostConstruct;
 public class EditProfileView extends SecuredView implements View {
 
 
-    @Autowired
-    private UsersDAO userRepo;
+    private UsersDAO userRepo = DAOHandler.usersDAO;
 
     private RichTextArea textArea=null;
     private DashboardUI currentUI=(DashboardUI) UI.getCurrent();

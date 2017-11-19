@@ -26,7 +26,7 @@ public class CategoriesManager {
 
     public List<Category> getUserCategories(@Nonnull final User user)
     {
-        return user.getCategories();
+        return categoriesDAO.getAll();
     }
 
 

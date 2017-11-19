@@ -133,7 +133,7 @@ public class TrainingsDAO extends DAO {
     }
   }
 
-  public ArrayList<Training> getTrainingsByFilter(@Nonnull final String cityName, final double range,
+  public ArrayList<Training> getTrainingsByFilter(final String cityName, final double range,
       @Nonnull final Category cat, final Date dateFirst,
       @Nonnull final Date dateLast, final double maxPrice, final String sortBy, final boolean showOnline) {
     final ArrayList<Training> result = new ArrayList<>();

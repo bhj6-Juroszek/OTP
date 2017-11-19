@@ -1,6 +1,7 @@
 package com.example.gui.views;
 
 
+import com.example.daoLayer.DAOHandler;
 import com.example.daoLayer.daos.UsersDAO;
 import com.example.daoLayer.entities.*;
 import com.example.gui.ui.DashboardUI;
@@ -26,8 +27,7 @@ import java.util.List;
 @SpringView(name = "adminView")
 public class AdminView extends SecuredView implements View {
 
-    @Autowired
-    UsersDAO customersRep;
+    UsersDAO customersRep = DAOHandler.usersDAO;
 
     private DashboardUI currentUI=(DashboardUI) UI.getCurrent();
     private Boolean clicked=false;
