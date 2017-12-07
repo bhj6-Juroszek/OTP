@@ -78,7 +78,7 @@ public class RegisterView extends VerticalLayout implements View {
               if (sender.sendMail("Juroszek",
                   registerMail.getValue(),
                   "Automatically generated Message",
-                  "Your account has been created. Click https://software-architecture.herokuapp.com/confirm.html?id="
+                  "Your account has been created. Click http://67.209.115.104:8181/confirm.html?id="
                       + token + " to finish registration;")) {
                 PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
                 String hashedPassword = passwordEncoder.encode(registerPassword.getValue());

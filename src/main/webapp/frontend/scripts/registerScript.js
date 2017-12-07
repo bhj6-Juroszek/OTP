@@ -1,8 +1,8 @@
 try {
-    var controller = $controller('myAppController')
-}catch(e) {
+    var controller = $controller('myAppController', [])
+} catch (e) {
     var app = angular.module('myApp');
-    app.controller('myAppController', function ($scope, $http) {
+    app.controller('myAppController', function ($scope, $http, $window) {
         $scope.email = "jo";
         $scope.password = "";
         $scope.passwordConfirm = "";
@@ -20,7 +20,9 @@ try {
             }).then(function successCallback(response) {
                 $scope.returnCode = response.data;
                 if ($scope.returnCode === 1) {
+                    var mainAdress = '/executable/frontend/index.html';
                     alert('Your account has been succesfully registered. Check your email to confirm registration.');
+                    $window.location.href = mainAdress;
                 }
                 if ($scope.returnCode === 5) {
                     alert('This mail is already registered!');
@@ -33,6 +35,8 @@ try {
             });
 
         };
+
+
 
         $scope.init = function () {
             $scope.email = "";

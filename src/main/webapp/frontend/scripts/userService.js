@@ -1,25 +1,38 @@
 try {
-    angular.module('myApp');
-}
-catch(e) {
+    getUserContext().user;
+} catch (e) {
     var app = angular.module('myApp', []);
-    app.factory('commonService', [function ($scope, $http) {
-
-        var userContext;
+    app.factory('userService', function () {
 
         return {
             getUserContext: getUserContext,
-            setUserContext: setUserContext
+            setUserContext: setUserContext,
+            getUUID: getUUID,
+            setUUID: setUUID
         };
 
         // .................
 
         function getUserContext() {
-            return userContext;
+            if(!sessionStorage['user']) {
+                return null;
+            }
+            return JSON.parse(sessionStorage.getItem("user"));
         }
 
         function setUserContext(value) {
-            userContext = value;
+            sessionStorage.setItem("user", JSON.stringify(value))
         }
-    }]);
+
+        function getUUID() {
+            if(!sessionStorage['UUID']) {
+                return null;
+            }
+            return sessionStorage.getItem("UUID");
+        }
+
+        function setUUID(value) {
+            sessionStorage.setItem("UUID", value)
+        }
+    });
 }

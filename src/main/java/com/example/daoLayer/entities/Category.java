@@ -1,50 +1,64 @@
 package com.example.daoLayer.entities;
 
-import javax.persistence.*;
-
 /**
  * Created by Bartek on 2017-03-11.
  */
 public class Category {
-    private long id;
-    private String name;
-    private long parent;
 
-    public Category() {
-    }
+  private long id;
+  private String name;
+  private long parent;
 
-    public Category(final String name, final long parent) {
-        this.name = name;
-        this.parent = parent;
-    }
+  public Category() {
+  }
 
-    public long getId() {
-        return id;
-    }
+  public Category(final String name, final long parent) {
+    this.name = name;
+    this.parent = parent;
+  }
 
-    public void setId(final long id) {
-        this.id = id;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public void setId(final long id) {
+    this.id = id;
+  }
 
-    public void setName(final String name) {
-        this.name = name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public long getParent() {
-        return parent;
-    }
+  public void setName(final String name) {
+    this.name = name;
+  }
 
-    public void setParent(final long parent) {
-        this.parent = parent;
-    }
+  public long getParent() {
+    return parent;
+  }
 
-    @Override
-    public String toString()
-    {
-        return this.name;
+  public void setParent(final long parent) {
+    this.parent = parent;
+  }
+
+  @Override
+  public String toString() {
+    return this.name;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o != null) {
+      if (o instanceof Category) {
+        Category cat = (Category) o;
+        return this.id == cat.getId();
+      }
     }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return (int) this.id;
+  }
 }

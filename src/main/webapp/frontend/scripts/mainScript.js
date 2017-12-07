@@ -1,17 +1,19 @@
 try {
-    var controller = $controller('mainController')
+    var controller = $controller('mainController',[])
 } catch (e) {
     var app = angular.module('myApp');
-    app.controller('mainController', function ($scope, $http, commonService) {
-
-        $scope.init = function () {
-            if (commonService.getUserContext() != null) {
-                $scope.userInfoText = '&quot;asdYou are logged in as: &quot;asd' + commonService.getUserContext().user.email;
-                $scope.userInfo = '<li><a class=&quot;asdbtn&quot;asd href=&quot;asdlogIn.html&quot;asd>' + userInfoText + '</a></li>'
+    app.controller('mainController', function ($scope, $http, userService) {
+        var start = $scope.init = function () {
+            $scope.authData = false;
+            if (userService.getUserContext() !== null) {
+                $scope.userInfoText = userService.getUserContext().user.mail;
+                $scope.authData = true;
             } else {
-                $scope.userInfo = '<li><a class=&quot;asdbtn&quot;asd href=&quot;asdlogIn.html&quot;asd>LOG IN</a></li>'
+                $scope.authData = false;
             }
 
-        }
+        };
+        start();
     });
+
 }

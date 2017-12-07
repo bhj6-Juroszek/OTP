@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.daoLayer.DAOHandler.CATEGORIES_TABLE_NAME;
 
@@ -88,10 +89,10 @@ public class CategoriesDAO extends DAO {
   }
 
   @Nullable
-  public ArrayList<Category> getAll() {
+  public List<Category> getAll() {
     try {
       final String SQL = "SELECT * FROM " + CATEGORIES_TABLE_NAME + " ORDER BY name   ";
-      return (ArrayList<Category>) template.query(SQL,
+      return template.query(SQL,
           new RowMapperResultSetExtractor<>(new CategoryMapper()));
     } catch (EmptyResultDataAccessException ex) {
       return null;

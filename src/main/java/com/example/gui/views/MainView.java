@@ -1,24 +1,32 @@
 package com.example.gui.views;
 
+import com.example.AccountsApplication;
+import com.example.backend.controllersEntities.responses.LoginResponse;
 import com.example.daoLayer.DAOHandler;
-import com.example.daoLayer.daos.*;
-import com.example.model.*;
+import com.example.daoLayer.daos.CitiesDAO;
+import com.example.daoLayer.daos.UsersDAO;
 import com.example.daoLayer.entities.Category;
-import com.example.daoLayer.entities.User;
 import com.example.daoLayer.entities.Training;
+import com.example.daoLayer.entities.User;
 import com.example.gui.ui.DashboardUI;
+import com.example.model.CategoriesManager;
+import com.example.model.PasswordReminder;
+import com.example.model.TrainingManager;
+import com.example.model.UserManager;
 import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.server.*;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.server.ThemeResource;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.Runo;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.log4j.Logger;
 
 import javax.annotation.PostConstruct;
 import java.net.MalformedURLException;
@@ -26,12 +34,16 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import static org.apache.log4j.Level.INFO;
 
 @SpringView(name = "mainView")
 @PreserveOnRefresh
 @Theme("mytheme")
 public class MainView extends AbsoluteLayout implements View {
 
+  private final static Logger LOGGER = Logger.getLogger(AccountsApplication.class);
   private UsersDAO customerRep = DAOHandler.usersDAO;
 
   private User loggedInUser = (User) VaadinSession.getCurrent().getAttribute("loggedInCustomer");
@@ -88,22 +100,26 @@ public class MainView extends AbsoluteLayout implements View {
     loginInfo.addStyleName("whiteBigText");
     loginInfo.setWidth("100px");
     loginButton = new Button("Login", (Button.ClickListener) event -> {
-      loggedInUser = userManager.login(login.getValue(), password.getValue()).getUserContext().getUser();
-      if (loggedInUser == null) {
+      final LoginResponse response = userManager.login(login.getValue(), password.getValue());
+      LOGGER.log(INFO, "Login request for: user="+login.getValue()+", pass="+password.getValue()+" return code="+response.getResponseCode());
+      if (response.getResponseCode() != 1) {
         Notification.show("Wrong user or Password, try again!",
             Notification.Type.WARNING_MESSAGE);
-      } else if (!loggedInUser.getConfirmation().equals("")) {
-        Notification.show("Account not active. Check your mail adress",
-            Notification.Type.WARNING_MESSAGE);
       } else {
-        VaadinSession.getCurrent().setAttribute("loggedInCustomer", loggedInUser);
-        if (loggedInUser != null && UserManager.testImage(loggedInUser.getImageUrl())) {
-          img.setSource(new ExternalResource(loggedInUser.getImageUrl()));
+        loggedInUser = response.getUserContext().getUser();
+        if (!loggedInUser.getConfirmation().equals("")) {
+          Notification.show("Account not active. Check your mail adress",
+              Notification.Type.WARNING_MESSAGE);
         } else {
-          img.setSource(new ExternalResource(DEFAULT_IMAGE_PATH));
-        }
-        refresh();
+          VaadinSession.getCurrent().setAttribute("loggedInCustomer", loggedInUser);
+          if (loggedInUser != null && UserManager.testImage(loggedInUser.getImageUrl())) {
+            img.setSource(new ExternalResource(loggedInUser.getImageUrl()));
+          } else {
+            img.setSource(new ExternalResource(DEFAULT_IMAGE_PATH));
+          }
+          refresh();
 
+        }
       }
     }
     );
@@ -186,8 +202,8 @@ public class MainView extends AbsoluteLayout implements View {
     TextField mailText = new TextField();
     mailText.setCaption("Write your mail here");
     Button continueButton = new Button("Continue", (Button.ClickListener) event -> {
-      reminder = new PasswordReminder(mailText.getValue());
-      if (reminder.changePassword()) {
+      reminder = new PasswordReminder();
+      if (reminder.changePassword(mailText.getValue())) {
         window.setVisible(false);
         Notification.show("Your password has been changed",
             Notification.Type.HUMANIZED_MESSAGE);
@@ -242,7 +258,7 @@ public class MainView extends AbsoluteLayout implements View {
     buttonsLayout.setMargin(false);
     buttonsLayout.setHeightUndefined();
     buttonsLayout.setWidth("400px");
-    ArrayList<Category> allCategories = catManager.getCategories();
+    List<Category> allCategories = catManager.getCategories();
     for (Category cat : allCategories) {
       NativeButton button = new NativeButton(cat.getName(), (Button.ClickListener) event -> {
         prepareCustomersList(cat);

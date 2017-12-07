@@ -8,6 +8,7 @@ import com.example.daoLayer.entities.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
@@ -20,7 +21,7 @@ import static com.example.backend.utils.ResponseCode.*;
 /**
  * Created by Bartek on 2017-04-29.
  */
-@Component
+@Service
 public class UserManager {
 
   private final UsersDAO usersDAO = DAOHandler.usersDAO;

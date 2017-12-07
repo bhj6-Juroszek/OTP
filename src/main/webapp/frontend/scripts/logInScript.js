@@ -1,9 +1,9 @@
 try {
-    var controller = $controller('signInController')
+    var controller = $controller('signInController', [])
 } catch (e) {
     var app = angular.module('myApp');
-    app.controller('signInController', function ($scope, $http, commonService) {
-
+    app.controller('signInController', function ($scope, $http, userService, $window) {
+        var mainAdress = '/executable/frontend/index.html';
         $scope.logIn = function () {
             $http({
                 method: 'POST',
@@ -16,14 +16,21 @@ try {
             }).then(function successCallback(response) {
                 $scope.loginResponse = response.data;
                 if ($scope.loginResponse.responseCode === 1) {
-                    commonService.setUserContext($scope.loginResponse.userContext);
+                    userService.setUserContext($scope.loginResponse.userContext);
+                    userService.setUUID($scope.loginResponse.uuid);
                     alert('Logged In succesfully on : ' + $scope.loginResponse.userContext.user.mail);
-                    window.location.href = '/INZ/executable/frontend/index.html';
+                    $window.location.href = mainAdress;
+                } else if ($scope.loginResponse.responseCode === 2) {
+                    alert('Wrong credentials! ');
+                    init();
+                }else if ($scope.loginResponse.responseCode === 3) {
+                    alert('Account doesn\'t exist!');
+                    init();
                 } else {
                     $scope.email = "";
                     $scope.password = "";
                     $scope.validPassword = false;
-                    $window.location.href = '/index.html';
+                    $window.location.href = mainAdress;
                 }
             }, function errorCallback(response) {
                 // called asynchronously if an error occurs

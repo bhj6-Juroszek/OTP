@@ -26,8 +26,8 @@
 </head>
 
 <body>
+<!-- Fixed navbar -->
 <div ng-app="myApp" ng-controller="myAppController" data-ng-init="init()">
-    <!-- Fixed navbar -->
     <div class="navbar navbar-inverse navbar-fixed-top headroom">
         <div class="container">
             <div class="navbar-header">
@@ -49,7 +49,7 @@
                         </ul>
                     </li>
                     <li><a href="contact.html">Contact</a></li>
-                    <li class="active"><a class="btn" href="logIn.html">LOG IN / SIGN UP</a></li>
+                    <li class="active"><a class="btn" href="logIn.html">SIGN IN / SIGN UP</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div>
@@ -63,7 +63,7 @@
 
         <ol class="breadcrumb">
             <li><a href="index.html">Home</a></li>
-            <li class="active">Registration</li>
+            <li class="active">User access</li>
         </ol>
 
         <div class="row">
@@ -71,62 +71,57 @@
             <!-- Article main content -->
             <article class="col-xs-12 maincontent">
                 <header class="page-header">
-                    <h1 class="page-title">Registration</h1>
+                    <h1 class="page-title">Sign in</h1>
                 </header>
 
                 <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <h3 class="thin text-center">Register a new account</h3>
+                            <h3 class="thin text-center">Sign in to your account</h3>
                             <p class="text-center text-muted">Lorem ipsum dolor sit amet, <a
-                                    href="logIn.html">Login</a> adipisicing elit. Quo nulla quibusdam cum doloremque
+                                    href="signup.html">Register</a> adipisicing elit. Quo nulla quibusdam cum doloremque
                                 incidunt nemo sunt a tenetur omnis odio. </p>
                             <hr>
 
-                            <form name="userForm" ng-submit="register()" novalidate>
+                            <form name="registerForm" ng-submit="register()" novalidate>
                                 <div class="form-group"
-                                     ng-class="{ 'has-error' : userForm.email.$invalid && !userForm.email.$pristine }">
+                                     ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine }">
                                     Email Address
                                     <input type="email" name="email" class="form-control" ng-model="email"
                                            required>
 
-                                    <p ng-show="userForm.email.$invalid && !userForm.email.$pristine"
+                                    <p ng-show="registerForm.email.$invalid && !registerForm.email.$pristine"
                                        class="help-block">
                                         Email is required.</p>
                                 </div>
                                 <div class="form-group"
-                                     ng-class="{ 'has-error' : (userForm.password.$invalid && !userForm.password.$pristine) || password !=passwordConfirm }">
+                                     ng-class="{ 'has-error' : (registerForm.password.$invalid && !registerForm.password.$pristine)}">
                                     Password
                                     <input type="password" name="password" class="form-control"
                                            ng-model="password">
-                                    <p ng-show="(userForm.password.$invalid && !userForm.password.$pristine)"
+                                    <p ng-show="(registerForm.password.$invalid && !registerForm.password.$pristine)"
                                        class="help-block">Password can't be empty!</p>
                                 </div>
+
                                 <div class="form-group"
-                                     ng-class="{ 'has-error' : (userForm.passwordConfirm.$invalid && !userForm.passwordConfirm.$pristine) || password !=passwordConfirm }">
+                                     ng-class="{ 'has-error' : (registerForm.password.$invalid && !registerForm.password.$pristine)}">
                                     Confirm password
                                     <input type="password" name="passwordConfirm" class="form-control"
                                            ng-model="passwordConfirm">
-                                    <p ng-show="userForm.passwordConfirm.$invalid && !userForm.passwordConfirm.$pristine"
+                                    <p ng-show="(registerForm.passwordConfirm.$invalid && !registerForm.passwordConfirm.$pristine)"
                                        class="help-block">Password can't be empty!</p>
+                                    <p ng-show="(passwordConfirm !== password)"
+                                       class="help-block">Passwords must be the same!</p>
                                 </div>
 
                                 <hr>
 
                                 <div class="row">
-                                    <div class="col-lg-8">
-                                        <div class="form-group">
-                                            <label class="checkbox">
-                                                <input type="checkbox" ng-model="accepted">
-                                                I've read the <a href="page_terms.html">Terms and Conditions</a>
-                                            </label>
-                                        </div>
-                                    </div>
                                     <div class="col-lg-4 text-right">
-
                                         <button type="submit" class="btn btn-primary"
-                                                ng-disabled="userForm.$invalid || !accepted">Register
+                                                ng-disabled="registerForm.$invalid || (passwordConfirm !== password)">Register
                                         </button>
+
                                     </div>
                                 </div>
                             </form>
@@ -222,7 +217,6 @@
 
 
 <!-- JavaScript libs are placed at the end of the document so the pages load faster -->
-
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 <script src="assets/js/headroom.min.js"></script>
@@ -230,7 +224,6 @@
 <script src="assets/js/template.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 <script src="scripts/userService.js"></script>
-<script src="scripts/logInScript.js"></script>
 <script src="scripts/registerScript.js"></script>
 </body>
 </html>

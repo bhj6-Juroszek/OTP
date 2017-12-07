@@ -1,13 +1,9 @@
 package com.example.backend.controllersEntities.requests;
 
-public class LoginRequest extends AuthenticatedRequest {
+public class LoginRequest  {
 
   private String email;
   private String password;
-
-  public LoginRequest() {
-    super();
-  }
 
   public String getEmail() {
     return email;

@@ -2,6 +2,7 @@ package com.example.daoLayer.entities;
 
 import com.example.daoLayer.DAOHandler;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,7 +110,7 @@ public class User {
         return password;
     }
 
-    public User setPassword(String password) {
+    public User setPassword(@Nonnull final  String password) {
         this.password = password;
         return this;
     }

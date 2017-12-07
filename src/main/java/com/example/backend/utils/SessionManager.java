@@ -4,6 +4,7 @@ import com.example.backend.contexts.UserContext;
 import com.example.daoLayer.entities.User;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
@@ -24,12 +25,13 @@ public class SessionManager {
     scheduler.scheduleAtFixedRate(this::removeUnactiveSessions, 15, 15, MINUTES);
   }
 
-  public boolean addToMap(final String uuid, User user) {
-    if(loggedUsers.containsValue(new UserContext(user, currentTimeMillis())))
+  public boolean addToMap(@Nonnull final String uuid, @Nonnull User user) {
+    final UserContext newUserContext = new UserContext(user, currentTimeMillis());
+    if(loggedUsers.containsValue(newUserContext))
     {
-      return true;
+      loggedUsers.values().remove(newUserContext);
     }
-    loggedUsers.putIfAbsent(uuid, new UserContext(user, currentTimeMillis()));
+    loggedUsers.put(uuid, newUserContext);
     return true;
   }
 

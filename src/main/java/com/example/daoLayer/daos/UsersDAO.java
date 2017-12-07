@@ -125,7 +125,7 @@ public class UsersDAO extends DAO {
   @Nullable
   public User getCustomerByLogin(@Nonnull final String login) {
     try {
-      final String SQL = "SELECT * FROM " + USERS_TABLE_NAME + " WHERE login = ?";
+      final String SQL = "SELECT * FROM " + USERS_TABLE_NAME + " WHERE mail = ?";
       return template.queryForObject(SQL,
           new Object[]{login}, new UserMapper());
     } catch (EmptyResultDataAccessException ex) {

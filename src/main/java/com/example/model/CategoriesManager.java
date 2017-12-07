@@ -5,6 +5,7 @@ import com.example.daoLayer.daos.CategoriesDAO;
 import com.example.daoLayer.daos.UsersDAO;
 import com.example.daoLayer.entities.Category;
 import com.example.daoLayer.entities.User;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -13,13 +14,14 @@ import java.util.List;
 /**
  * Created by Bartek on 2017-03-11.
  */
+@Component
 public class CategoriesManager {
 
     private CategoriesDAO categoriesDAO = DAOHandler.categoriesDAO;
     private UsersDAO usersDAO = DAOHandler.usersDAO;
 
 
-    public ArrayList<Category> getCategories()
+    public List<Category> getCategories()
     {
         return categoriesDAO.getAll();
     }

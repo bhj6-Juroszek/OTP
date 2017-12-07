@@ -28,8 +28,10 @@ public class LoginController extends AuthenticatedController {
   LoginResponse loginAction(@RequestBody LoginRequest request) {
     final LoginResponse response = userManager.login(request.getEmail(), request.getPassword());
     if(response.getResponseCode() == ResponseCode.SUCCESS) {
-     if(!manager.addToMap(randomUUID().toString(), response.getUserContext().getUser())) {
+     if(!manager.addToMap(response.getUuid(), response.getUserContext().getUser())) {
        response.setResponseCode(ALREADY_LOGGED_IN);
+       response.setUserContext(null);
+       response.setUuid(null);
      }
     }
     return response;

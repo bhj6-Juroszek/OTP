@@ -23,7 +23,7 @@ public class RedirectController {
   public String processForm(@RequestParam("id") String token, HttpServletRequest request
   ) {
     if (token.equals("")) {
-      return request.getScheme() + "://software-architecture.herokuapp.com/#!mainView";
+      return request.getScheme() + "://67.209.115.104:8181/#!mainView";
 
     }
     System.out.println(token);
@@ -33,10 +33,10 @@ public class RedirectController {
     if (cust != null) {
       cust.setConfirmation("");
       dao.updateRecord(cust);
-      redirectUrl = request.getScheme() + "://software-architecture.herokuapp.com/#!mainView";
+      redirectUrl = request.getScheme() + "://67.209.115.104:8181/#!mainView";
       System.out.println(redirectUrl);
     } else {
-      redirectUrl = request.getScheme() + "://software-architecture.herokuapp.com/#!mainView";
+      redirectUrl = request.getScheme() + "://67.209.115.104:8181/#!mainView";
       System.out.println(redirectUrl);
     }
     return "redirect:" + redirectUrl;
