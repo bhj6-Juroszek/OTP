@@ -300,8 +300,8 @@ public class MainView extends AbsoluteLayout implements View {
     if (this.sortBy.getValue() != null) {
       sortBy = this.sortBy.getValue().toString();
     }
-    ArrayList<Training> trainings = dao
-        .getTrainingsByFilters(cityName, range, cat, initialDate.getValue(), lastDate.getValue(), maxPrice, sortBy,
+    List<Training> trainings = dao
+        .getTrainingsByFilters(cityName, range, cat.getId(), initialDate.getValue(), lastDate.getValue(), maxPrice, sortBy,
             showOnline.getValue());
     HorizontalLayout titlesLayout = new HorizontalLayout();
     if (!trainings.isEmpty()) {
@@ -353,7 +353,7 @@ public class MainView extends AbsoluteLayout implements View {
     prepareCustomersOnPages(titlesLayout, trainings, 0);
   }
 
-  private void prepareCustomersOnPages(HorizontalLayout titlesLayout, ArrayList<Training> trainings, int number) {
+  private void prepareCustomersOnPages(HorizontalLayout titlesLayout, List<Training> trainings, int number) {
     listLayout.removeAllComponents();
     listLayout.addComponent(titlesLayout);
     SimpleDateFormat formatDate = new SimpleDateFormat("dd-MMM-yy");

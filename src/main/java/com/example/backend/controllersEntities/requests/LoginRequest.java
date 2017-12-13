@@ -1,6 +1,6 @@
 package com.example.backend.controllersEntities.requests;
 
-public class LoginRequest  {
+public class LoginRequest implements Request {
 
   private String email;
   private String password;

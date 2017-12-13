@@ -299,10 +299,11 @@ img.pull-left {
     margin: 0 5px;
 }
 
-.categoriesb{
+.categoriesb {
     text-decoration: none; /* Remove underline from links */
     list-style-type: none;
 }
+
 .categoriesb ul {
     display: table-row;
 }
@@ -317,6 +318,7 @@ img.pull-left {
     -webkit-border-radius: 28;
     -moz-border-radius: 28;
     border-radius: 12px;
+    opacity: 0.8;
     font-family: Georgia;
     color: white;
     font-size: 18px;
@@ -324,10 +326,31 @@ img.pull-left {
     margin-bottom: 3px;
     text-decoration: none;
     display: block; /* Make the links appear below each other */
-    width: 200px;
+    /*width: 200px;*/
 }
 
-.subitem li a  {
+.categoriesb a {
+    background: #161a1c;
+    background-image: -webkit-linear-gradient(top, #161a1c, #252e33);
+    background-image: -moz-linear-gradient(top, #161a1c, #252e33);
+    background-image: -ms-linear-gradient(top, #161a1c, #252e33);
+    background-image: -o-linear-gradient(top, #161a1c, #252e33);
+    background-image: linear-gradient(to bottom, #161a1c, #252e33);
+    -webkit-border-radius: 28;
+    -moz-border-radius: 28;
+    border-radius: 12px;
+    font-family: Georgia;
+    opacity: 0.75;
+    color: white;
+    font-size: 18px;
+    padding: 10px 20px 10px 20px;
+    margin-bottom: 3px;
+    text-decoration: none;
+    display: block; /* Make the links appear below each other */
+    /*width: 200px;*/
+}
+
+.subitem li a {
     margin-left: 20px;
     background-image: -webkit-linear-gradient(top, gold, #252e33);
     background-image: -moz-linear-gradient(top, gold, #252e33);
@@ -340,6 +363,11 @@ img.pull-left {
 .categoriesb li a:hover {
     color: gold;
 }
+
 .subitem li a:hover {
     color: darkgrey;
+}
+
+.combo {
+    width: 200px;
 }

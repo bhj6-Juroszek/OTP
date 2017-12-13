@@ -1,8 +1,9 @@
 package com.example.daoLayer.entities;
 
 import com.example.daoLayer.DAOHandler;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Created by Bartek on 2017-03-23.
@@ -97,5 +98,27 @@ public class Training {
 
   public User getOwner() {
     return DAOHandler.usersDAO.getCustomerByProfile(ownerId);
+  }
+
+  @Override
+  public String toString() {
+    return "Training: id:" + this.id + ",desc:" + this.description;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null) {
+      return false;
+    }
+    if (o instanceof Training) {
+      final Training training = (Training) o;
+      return this.id == training.getId();
+    }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return (int) this.id;
   }
 }

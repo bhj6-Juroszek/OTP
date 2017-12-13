@@ -8,7 +8,9 @@ try {
             getUserContext: getUserContext,
             setUserContext: setUserContext,
             getUUID: getUUID,
-            setUUID: setUUID
+            setUUID: setUUID,
+            getHost: getHost,
+            getMainAdress: getMainAdress
         };
 
         // .................
@@ -33,6 +35,12 @@ try {
 
         function setUUID(value) {
             sessionStorage.setItem("UUID", value)
+        }
+        function getHost() {
+            return 'http://localhost:8181/';
+        }
+        function getMainAdress() {
+            return '/executable/frontend/index.html';
         }
     });
 }

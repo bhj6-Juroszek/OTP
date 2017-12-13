@@ -2,16 +2,17 @@ try {
     var controller = $controller('myAppController', [])
 } catch (e) {
     var app = angular.module('myApp');
-    app.controller('myAppController', function ($scope, $http, $window) {
+    app.controller('myAppController', function ($scope, $http, $window, userService) {
         $scope.email = "jo";
         $scope.password = "";
         $scope.passwordConfirm = "";
         $scope.error = "";
         $scope.returnCode = -100;
+        var mainAdress = userService.getMainAdress();
         $scope.register = function () {
             $http({
                 method: 'POST',
-                url: 'http://localhost:8181/register',
+                url: userService.getHost() + '/register',
                 data: {
                     email: this.email,
                     password: this.password
@@ -20,7 +21,6 @@ try {
             }).then(function successCallback(response) {
                 $scope.returnCode = response.data;
                 if ($scope.returnCode === 1) {
-                    var mainAdress = '/executable/frontend/index.html';
                     alert('Your account has been succesfully registered. Check your email to confirm registration.');
                     $window.location.href = mainAdress;
                 }

@@ -1,5 +1,6 @@
 package com.example.daoLayer.daos;
 
+import com.example.daoLayer.DAOHandler;
 import com.example.model.JsonReader;
 import com.example.model.Place;
 import com.example.daoLayer.entities.Category;
@@ -14,8 +15,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 import static com.example.backend.utils.DateUtils.addHoursToDate;
+import static com.example.daoLayer.DAOHandler.*;
 import static com.example.daoLayer.DAOHandler.TRAININGS_TABLE_NAME;
 import static com.example.model.JsonReader.*;
 
@@ -73,7 +77,8 @@ public class TrainingsDAO extends DAO {
   }
 
   private boolean exists(@Nonnull final Training training) {
-    for (Training tr : this.getTrainingsFromDate(training.getOwnerId(), training.getDate())) {
+    java.sql.Date sqlDate = new java.sql.Date(training.getDate().getTime());
+    for (Training tr : this.getTrainingsFromDate(training.getOwnerId(),sqlDate )) {
       if (tr.getDate().before(training.getDate()) && tr.getDate()
           .before(addHoursToDate(training.getDate(), training.getLength()))) {
         return true;
@@ -133,30 +138,31 @@ public class TrainingsDAO extends DAO {
     }
   }
 
-  public ArrayList<Training> getTrainingsByFilter(final String cityName, final double range,
-      @Nonnull final Category cat, final Date dateFirst,
+  public List<Training> getTrainingsByFilter(final String cityName, final double range,
+       final long categoryId, final Date dateFirst,
       @Nonnull final Date dateLast, final double maxPrice, final String sortBy, final boolean showOnline) {
     final ArrayList<Training> result = new ArrayList<>();
     try {
       Object[] list = null;
+      String innerJoin = " INNER JOIN " + CATEGORIES_TABLE_NAME + " cats ON cats.id = ? OR cats.parent = ?";
       String SQL = "";
       if (dateFirst == null && maxPrice == 0) {
-        SQL = "select * from " + TRAININGS_TABLE_NAME + "where category = ? AND takenById = 0 ORDER BY ";
-        list = new Object[]{cat.getId()};
+        SQL = "select * from " + TRAININGS_TABLE_NAME + innerJoin + " WHERE takenById = 0 ORDER BY ";
+        list = new Object[]{categoryId, categoryId,};
       } else if (dateFirst == null && maxPrice != 0) {
-        SQL = "select * from " + TRAININGS_TABLE_NAME + " where category = ? AND takenById = 0 AND price < ?  ORDER " +
+        SQL = "select * from " + TRAININGS_TABLE_NAME + innerJoin + " WHERE takenById = 0 AND price < ?  ORDER " +
             "BY ";
-        list = new Object[]{cat.getId(), maxPrice};
+        list = new Object[]{categoryId, categoryId, maxPrice};
       } else if (dateFirst != null && maxPrice == 0) {
-        SQL = "select * from " + TRAININGS_TABLE_NAME + " where category = ? AND takenById = 0 AND date BETWEEN ? AND" +
+        SQL = "select * from " + TRAININGS_TABLE_NAME + innerJoin + " WHERE takenById = 0 AND date BETWEEN ? AND" +
             " ?" +
             "  ORDER BY ";
-        list = new Object[]{cat.getId(), dateFirst, dateLast};
+        list = new Object[]{categoryId, categoryId, dateFirst, dateLast};
       } else if (dateFirst != null && maxPrice != 0) {
-        SQL = "select * from " + TRAININGS_TABLE_NAME + " where category = ? AND takenById = 0 AND date BETWEEN ? AND" +
+        SQL = "select * from " + TRAININGS_TABLE_NAME + innerJoin + " WHERE takenById = 0 AND date BETWEEN ? AND" +
             " ?" +
             " AND price < ? ORDER BY ";
-        list = new Object[]{cat.getId(), dateFirst, dateLast, maxPrice};
+        list = new Object[]{categoryId, categoryId, dateFirst, dateLast, maxPrice};
       }
 
       if (sortBy != null) {
@@ -169,8 +175,7 @@ public class TrainingsDAO extends DAO {
           list, new RowMapperResultSetExtractor<>(new TrainingMapper()));
       if (range != 0) {
         Place place1 = null;
-        Place place2;
-        place2 = getCity(cityName);
+        Place place2 = null;
 
         for (int i = 0; i < trainings.size(); i++) {
           if (trainings.get(i).getCity().equals("")) {
@@ -178,10 +183,11 @@ public class TrainingsDAO extends DAO {
               result.add(trainings.get(i));
             }
           }
-          if (i > 0 && !trainings.get(i).getCity().equals(trainings.get(i - 1).getCity())) {
+          else {
+            place2 = getCity(cityName);
             place1 = getCity(trainings.get(i).getCity());
           }
-          if (place1 != null) {
+          if (place1 != null && place2 != null) {
             if (reader.distance(place1, place2) < range) {
               result.add(trainings.get(i));
             }
@@ -200,8 +206,8 @@ public class TrainingsDAO extends DAO {
       }
     } catch (EmptyResultDataAccessException ignored) {
     }
-
-    return result;
+    final HashSet<Training> removeDuplicatesSet = new HashSet<>(result);
+    return new ArrayList<>(removeDuplicatesSet);
   }
 }
 

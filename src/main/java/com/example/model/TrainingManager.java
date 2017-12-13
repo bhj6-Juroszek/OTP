@@ -6,16 +6,22 @@ import com.example.daoLayer.daos.TrainingsDAO;
 import com.example.daoLayer.entities.Category;
 import com.example.daoLayer.entities.Training;
 import com.example.daoLayer.entities.User;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import static com.example.backend.utils.DateUtils.getSQLDate;
 
 /**
  * Created by Bartek on 2017-03-25.
  */
+@Service
 public class TrainingManager {
 
   private final MailManager mailManager = new MailManager();
@@ -53,14 +59,15 @@ public class TrainingManager {
     return result;
   }
 
+
   public boolean saveTraining(@Nonnull final Training training,@Nonnull final  Date date) {
-    final java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+    final java.sql.Date sqlDate = getSQLDate(date);
     training.setDate(sqlDate);
     return trainingsDAO.saveToDB(training);
   }
 
   public ArrayList<Training> getTrainingsFromDate(@Nonnull final Date date,@Nonnull final  Long fromId) {
-    final java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+    final java.sql.Date sqlDate = getSQLDate(date);
     return trainingsDAO.getTrainingsFromDate(fromId, sqlDate);
   }
 
@@ -85,12 +92,12 @@ public class TrainingManager {
   }
 
   @Nullable
-  public ArrayList<Training> getTrainingsByFilters(final String cityName, final double range, final Category cat, @Nonnull final Date dateFirst,
+  public List<Training> getTrainingsByFilters(final String cityName, final double range, final long categoryId, @Nonnull final Date dateFirst,
       @Nonnull final Date dateLast, final double maxPrice, final String sortBy, final boolean showOnline) {
-    java.sql.Date sqlDateFirst = new java.sql.Date(dateFirst.getTime());
-    java.sql.Date sqlDateLast = new java.sql.Date(dateLast.getTime());
+    java.sql.Date sqlDateFirst = getSQLDate(dateFirst);
+    java.sql.Date sqlDateLast = getSQLDate(dateLast);
     return trainingsDAO
-        .getTrainingsByFilter(cityName, range, cat, sqlDateFirst, sqlDateLast, maxPrice, sortBy, showOnline);
+        .getTrainingsByFilter(cityName, range, categoryId, sqlDateFirst, sqlDateLast, maxPrice, sortBy, showOnline);
   }
 
 }

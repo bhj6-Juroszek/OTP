@@ -101,11 +101,11 @@ public class UsersDAO extends DAO {
   }
 
   @Nullable
-  public User getCustomerByProfile(@Nonnull final Long mail) {
+  public User getCustomerByProfile(@Nonnull final Long id) {
     try {
-      final String SQL = "SELECT * FROM " + USERS_TABLE_NAME + " WHERE profileId = ?";
+      final String SQL = "SELECT * FROM " + USERS_TABLE_NAME + " WHERE id = ?";
       return template.queryForObject(SQL,
-          new Object[]{mail}, new UserMapper());
+          new Object[]{id}, new UserMapper());
     } catch (EmptyResultDataAccessException ex) {
       return null;
     }

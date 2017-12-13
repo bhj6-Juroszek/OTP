@@ -17,6 +17,8 @@
     <!-- Custom styles for our template -->
     <link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen">
     <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+    <!-- Latest compiled and minified JavaScript -->
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -71,27 +73,32 @@
     <header id="head">
         <div class="container">
             <div class="row">
-                <h1 class="lead" ng-hide="authData" id="loginButton">Lorem ipsum</h1>
-                <h1 class="lead" ng-show="authData" id="mainButton">Welcome {{userInfoText}}</h1>
+                <h1 class="lead" ng-hide="authData" >Lorem ipsum</h1>
+                <h1 class="lead" ng-show="authData" >Welcome {{userInfoText}}</h1>
             </div>
         </div>
     </header>
     <!-- /Header -->
 
 
-
     <div class="container" ng-controller="searchEngineController" ng-show="authData" ng-app="myApp"
-         data-ng-init="getCategories()">
+         data-ng-init="initSearcher()">
+        <div class="row">
+                <select class="selectpicker" >
+                    <option ng-repeat="y in citiesList" data-tokens="y.name">{{y.name}}</option>
+                </select>
+        </div>
         <ul class="categoriesb">
             <li class="categoriesb" ng-repeat="x in categories">
                 <ul class="categoriesb subitem">
-                    <a ng-click="test(x)">{{x.name}}</a>
+                    <a class="btn" ng-click="test(x)">{{x.name}}</a>
                     <li ng-repeat="y in getSubCategories(x)" ng-show="getVisibility(y.parent)">
-                        <a ng-click="setSelectedCategory(y)">{{y.name}}</a>
+                        <a class="btn" ng-click="setSelectedCategory(y)">{{y.name}}</a>
                     </li>
                 </ul>
             </li>
         </ul>
+        <a ng-click="search()" class="categoriesb">SEARCH</a>
     </div>
 
 
@@ -260,6 +267,7 @@
 
 
 <!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 <script src="assets/js/headroom.min.js"></script>

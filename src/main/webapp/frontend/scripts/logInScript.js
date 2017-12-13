@@ -3,11 +3,11 @@ try {
 } catch (e) {
     var app = angular.module('myApp');
     app.controller('signInController', function ($scope, $http, userService, $window) {
-        var mainAdress = '/executable/frontend/index.html';
+        var mainAdress = userService.getMainAdress();
         $scope.logIn = function () {
             $http({
                 method: 'POST',
-                url: 'http://localhost:8181/login',
+                url: userService.getHost() + '/login',
                 data: {
                     email: this.email,
                     password: this.password

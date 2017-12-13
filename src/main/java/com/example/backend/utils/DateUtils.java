@@ -17,4 +17,8 @@ public class DateUtils {
     cal.add(MINUTE, addMinutes);
     return cal.getTime();
   }
+
+  public static  java.sql.Date getSQLDate(@Nonnull final Date date) {
+    return new java.sql.Date(date.getTime());
+  }
 }

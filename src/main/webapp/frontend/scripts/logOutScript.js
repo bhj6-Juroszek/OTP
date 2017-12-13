@@ -3,12 +3,12 @@ try {
 } catch (e) {
     var app = angular.module('myApp');
     app.controller('logOutController', function ($scope, $http, userService, $window) {
-        var mainAdress = '/executable/frontend/index.html';
+        var mainAdress = userService.getMainAdress();
         var uuid = userService.getUUID();
         $scope.logOut = function () {
             $http({
                 method: 'GET',
-                url: 'http://localhost:8181/logout',
+                url: userService.getHost() + '/logout',
                 params: {"uuid": uuid}
             }).then(function successCallback() {
                 userService.setUUID(null);

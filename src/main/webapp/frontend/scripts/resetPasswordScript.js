@@ -3,12 +3,12 @@ try {
 } catch (e) {
     var app = angular.module('myApp');
     app.controller('resetPasswordController', function ($scope, $http, userService, $window) {
-        var mainAdress = '/executable/frontend/index.html';
+        var mainAdress = userService.getMainAdress();
         $scope.mail = "jurbar369@gmail.com";
         $scope.resetPassword = function () {
             $http({
                 method: 'GET',
-                url: 'http://localhost:8181/resetPassword',
+                url: userService.getHost() + 'resetPassword',
                 params: {"mail": $scope.mail}
             }).then(function successCallback() {
                 userService.setUUID(null);

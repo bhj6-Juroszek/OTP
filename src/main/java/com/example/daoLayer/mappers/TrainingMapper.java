@@ -13,7 +13,7 @@ public class TrainingMapper implements RowMapper<Training> {
     public Training mapRow(ResultSet rs, int rowNum) throws SQLException {
         Training training = new Training();
         training.setId(rs.getInt("id"));
-        training.setDate(rs.getDate("date"));
+        training.setDate(rs.getTimestamp("date"));
         training.setLength(rs.getDouble("length"));
         training.setPrice(rs.getInt("price"));
         training.setCity(rs.getString("city"));
