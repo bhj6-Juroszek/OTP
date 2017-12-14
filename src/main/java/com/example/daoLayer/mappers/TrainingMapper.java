@@ -1,6 +1,9 @@
 package com.example.daoLayer.mappers;
 
+import com.example.daoLayer.entities.Category;
 import com.example.daoLayer.entities.Training;
+import com.example.daoLayer.entities.User;
+import com.example.model.Place;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -11,17 +14,24 @@ import java.sql.SQLException;
  */
 public class TrainingMapper implements RowMapper<Training> {
     public Training mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Training training = new Training();
-        training.setId(rs.getInt("id"));
-        training.setDate(rs.getTimestamp("date"));
-        training.setLength(rs.getDouble("length"));
-        training.setPrice(rs.getInt("price"));
-        training.setCity(rs.getString("city"));
-        training.setCategory(rs.getInt("category"));
-        training.setDescription(rs.getString("description"));
-        training.setOwnerId(rs.getInt("ownerId"));
-        training.setTakenById(rs.getInt("takenById"));
-        return training;
+      final UserMapper userMapper = new UserMapper();
+      final CategoryMapper categoryMapper = new CategoryMapper();
+    final Training result = new Training();
+    result.setId(rs.getLong("trainingsId"));
+    result.setDescription(rs.getString("description"));
+    result.setPrice(rs.getDouble("price"));
+    result.setCapacity(rs.getInt("capacity"));
 
+    final Place place = new Place();
+    place.setLat(rs.getDouble("lat"));
+    place.setLng(rs.getDouble("lng"));
+    place.setName(rs.getString("place"));
+    result.setPlace(place);
+    final Category category = categoryMapper.mapRow(rs, rowNum);
+    result.setCategory(category);
+    final User owner = userMapper.mapRow(rs, rowNum);
+    owner.setPassword(null).setLogin(null).setImageUrl(null).setConfirmation(null);
+    result.setOwner(owner);
+    return result;
     }
 }

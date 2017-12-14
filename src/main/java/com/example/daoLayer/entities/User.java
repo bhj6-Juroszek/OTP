@@ -34,8 +34,9 @@ public class User {
         return imageUrl;
     }
 
-    public void setImageUrl(final String imageUrl) {
+    public User setImageUrl(final String imageUrl) {
         this.imageUrl = imageUrl;
+        return this;
     }
 
     public boolean isRole() {
@@ -110,7 +111,7 @@ public class User {
         return password;
     }
 
-    public User setPassword(@Nonnull final  String password) {
+    public User setPassword( final  String password) {
         this.password = password;
         return this;
     }

@@ -13,9 +13,9 @@ public class CategoryMapper implements RowMapper<Category> {
 
     public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
         Category cat = new Category();
-        cat.setId(rs.getInt("id"));
-        cat.setName(rs.getString("name"));
-        cat.setParent(rs.getInt("parent"));
+        cat.setId(rs.getInt("categoryId"));
+        cat.setName(rs.getString("categoryName"));
+        cat.setParent(rs.getInt("categoryParent"));
 
         return cat;
 

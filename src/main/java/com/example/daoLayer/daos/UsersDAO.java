@@ -27,11 +27,11 @@ public class UsersDAO extends DAO {
 
   public void createTable() {
     template.execute
-        ("CREATE TABLE " + USERS_TABLE_NAME + " (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(50)," +
+        ("CREATE TABLE " + USERS_TABLE_NAME + " (userId INT NOT NULL AUTO_INCREMENT, userName VARCHAR(50)," +
             " adress VARCHAR(250), mail VARCHAR(250) UNIQUE NOT NULL, login VARCHAR(250), password VARCHAR(250), role" +
             " INT(2), " +
             "imageUrl VARCHAR(150), " +
-            "confirmation VARCHAR(250), PRIMARY KEY(id));"
+            "confirmation VARCHAR(250), PRIMARY KEY(userId));"
         );
 
     template.execute(
@@ -40,11 +40,11 @@ public class UsersDAO extends DAO {
   }
 
   @Nullable
-  public List<Category> getUserCategories(final long id) {
+  public List<Category> getUserCategories(final long userId) {
     try {
       final String SQL = "select * from " + CATEGORIES_TABLE_NAME + " " +
-          "INNER JOIN " + USERS_CATEGORIES_MAP + " ON id = idCategory AND idUser = " + id +
-          " ORDER BY name ";
+          "INNER JOIN " + USERS_CATEGORIES_MAP + " ON userId = idCategory AND idUser = " + userId +
+          " ORDER BY userName ";
       return (ArrayList<Category>) template.query(SQL,
           new RowMapperResultSetExtractor<>(new CategoryMapper()));
     } catch (EmptyResultDataAccessException ex) {
@@ -53,7 +53,7 @@ public class UsersDAO extends DAO {
   }
 
   public boolean saveToDB(@Nonnull final User user) {
-    final String SQL = "INSERT INTO " + USERS_TABLE_NAME + " (name, adress, mail, login, password, role," +
+    final String SQL = "INSERT INTO " + USERS_TABLE_NAME + " (userName, adress, mail, login, password, role," +
         "imageUrl, confirmation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     template.update(SQL, user.getName(), user.getAdress(), user.getMail(), user.getLogin(),
         user.getPassword(), user.getRole(), user.getImageUrl(), user
@@ -63,15 +63,15 @@ public class UsersDAO extends DAO {
     return true;
   }
 
-  private boolean exists(@Nonnull final Long id) {
+  private boolean exists(@Nonnull final Long userId) {
     final Integer cnt = template.queryForObject(
-        "SELECT count(*) FROM " + USERS_TABLE_NAME + " WHERE id = ?", Integer.class, id);
+        "SELECT count(*) FROM " + USERS_TABLE_NAME + " WHERE userId = ?", Integer.class, userId);
     return cnt != null && cnt > 0;
   }
 
-  public boolean existsAnother(@Nonnull final String id, @Nonnull final String from, @Nonnull final Long user) {
+  public boolean existsAnother(@Nonnull final String userId, @Nonnull final String from, @Nonnull final Long user) {
     final Integer cnt = template.queryForObject(
-        "SELECT count(*) FROM " + USERS_TABLE_NAME + " WHERE " + from + " = ? AND id != ?", Integer.class, id,
+        "SELECT count(*) FROM " + USERS_TABLE_NAME + " WHERE " + from + " = ? AND userId != ?", Integer.class, userId,
         user);
     return cnt != null && cnt > 0;
   }
@@ -101,11 +101,11 @@ public class UsersDAO extends DAO {
   }
 
   @Nullable
-  public User getCustomerByProfile(@Nonnull final Long id) {
+  public User getCustomerByProfile(@Nonnull final Long userId) {
     try {
-      final String SQL = "SELECT * FROM " + USERS_TABLE_NAME + " WHERE id = ?";
+      final String SQL = "SELECT * FROM " + USERS_TABLE_NAME + " WHERE userId = ?";
       return template.queryForObject(SQL,
-          new Object[]{id}, new UserMapper());
+          new Object[]{userId}, new UserMapper());
     } catch (EmptyResultDataAccessException ex) {
       return null;
     }
@@ -134,11 +134,11 @@ public class UsersDAO extends DAO {
   }
 
   @Nullable
-  public User getCustomerById(@Nonnull final Long id) {
+  public User getCustomerById(@Nonnull final Long userId) {
     try {
-      final String SQL = "SELECT * FROM " + USERS_TABLE_NAME + " WHERE id = ?";
+      final String SQL = "SELECT * FROM " + USERS_TABLE_NAME + " WHERE userId = ?";
       return template.queryForObject(SQL,
-          new Object[]{id}, new UserMapper());
+          new Object[]{userId}, new UserMapper());
     } catch (EmptyResultDataAccessException ex) {
 
       return null;
@@ -151,8 +151,8 @@ public class UsersDAO extends DAO {
 
   public boolean updateRecord(@Nonnull final User user) {
     if (exists(user.getId())) {
-      final String SQL = "UPDATE " + USERS_TABLE_NAME + " SET name = ?, adress = ?, mail = ?, login = ?, " +
-          "password = ?, role = ?, imageUrl = ?, confirmation = ?  WHERE id= ?;";
+      final String SQL = "UPDATE " + USERS_TABLE_NAME + " SET userName = ?, adress = ?, mail = ?, login = ?, " +
+          "password = ?, role = ?, imageUrl = ?, confirmation = ?  WHERE userId= ?;";
       template.update(SQL, user.getName(), user.getAdress(), user.getMail(), user.getLogin(), user
               .getPassword(), user.getRole(), user.getImageUrl(),
           user.getConfirmation(), user
@@ -167,7 +167,7 @@ public class UsersDAO extends DAO {
     try {
       final String SQL = "SELECT * FROM " + USERS_TABLE_NAME + " " +
           "INNER JOIN USERS_CATEGORIES_MAP ON idCategory = " + category.getId() +
-          " ORDER BY name ";
+          " ORDER BY userName ";
       final ArrayList<User> users = (ArrayList<User>) template.query(SQL,
           new RowMapperResultSetExtractor<>(new UserMapper()));
       final Set<User> usersSet = new HashSet();

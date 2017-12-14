@@ -44,7 +44,7 @@ public class JsonReader {
     return x * PIx / 180;
   }
 
-  public static Place getCity(final String url) throws JSONException {
+  public static Place getPlace(final String url) throws JSONException {
     final String attributeUrl = String.format(
         "http://maps.google.com/maps/api/geocode/json?address=%s&sensor" +
             "=false&region=pl",

@@ -1,27 +1,26 @@
 package com.example.daoLayer.daos;
 
-import com.example.daoLayer.DAOHandler;
+import com.example.daoLayer.AsyncDbSaver;
+import com.example.daoLayer.entities.*;
+import com.example.daoLayer.mappers.TrainingMapper;
+import com.example.daoLayer.mappers.TrainingWithInstancesExtractor;
 import com.example.model.JsonReader;
 import com.example.model.Place;
-import com.example.daoLayer.entities.Category;
-import com.example.daoLayer.entities.Training;
-import com.example.daoLayer.mappers.TrainingMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapperResultSetExtractor;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.sql.Date;
+import java.sql.Types;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Date;
 import java.util.List;
 
-import static com.example.backend.utils.DateUtils.addHoursToDate;
 import static com.example.daoLayer.DAOHandler.*;
-import static com.example.daoLayer.DAOHandler.TRAININGS_TABLE_NAME;
-import static com.example.model.JsonReader.*;
 
 /**
  * Created by Bartek on 2017-03-25.
@@ -29,87 +28,225 @@ import static com.example.model.JsonReader.*;
 @Repository
 public class TrainingsDAO extends DAO {
 
+  private AsyncDbSaver asyncSaver;
+  private NamedParameterJdbcTemplate parameterJdbcTemplate;
+
   public TrainingsDAO(@Nonnull final JdbcTemplate template) {
     super(template);
-
+    parameterJdbcTemplate = new NamedParameterJdbcTemplate(template);
   }
 
   @Override
   public void createTable() {
     template.execute
-        ("CREATE TABLE " + TRAININGS_TABLE_NAME + " (id INT NOT NULL AUTO_INCREMENT, date DATE, length DOUBLE, " +
-            "price INT, category INT, city VARCHAR(50), description VARCHAR(500), ownerId INT, takenById INT, PRIMARY" +
-            " KEY(id));"
+        ("CREATE TABLE " + TRAININGS_TABLE_NAME + " (trainingsId INT NOT NULL AUTO_INCREMENT, category INT, place " +
+            "VARCHAR(250), price DOUBLE, lat DOUBLE, lng DOUBLE, description VARCHAR(500), capacity INT, owner " +
+            "INT, PRIMARY" +
+            " KEY(trainingsId));"
+        );
+    template.execute
+        ("CREATE TABLE " + TRAININGS_INSTANCES_TABLE_NAME + " (trainingsInsId INT NOT NULL AUTO_INCREMENT, " +
+            "trainingInsDateStart DATE, trainingInsDateEnd DATE," +
+            " idTrainings INT, PRIMARY" +
+            " KEY(trainingsInsId));"
+        );
+    template.execute
+        ("CREATE TABLE " + TRAININGS_RESERVATIONS_TABLE_NAME + " (trainingsResId INT NOT NULL AUTO_INCREMENT, " +
+            "customerId INT, idTrainingsIns INT, PRIMARY KEY(trainingsResId));"
         );
   }
 
-  public boolean saveToDB(@Nonnull final Training training) {
-    final String SQL = "INSERT INTO " + TRAININGS_TABLE_NAME + " (date, length, price, category, city, description, " +
-        "ownerId, " +
-        "takenById) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    if (!exists(training)) {
-      template.update(SQL, training.getDate(), training.getLength(), training.getPrice(), training.getCategory(),
-          training.getCity(), training.getDescription(), training.getOwnerId(), training.getTakenById());
-    } else {
-      return false;
+  public List<Training> getTrainings(final long categoryId, @Nonnull final Date from, @Nonnull final Date to) {
+    return getTrainings(categoryId, from, to, 0, 0.0, 0, null);
+  }
+
+  public List<Training> getTrainings(final long categoryId, @Nonnull final Date from, @Nonnull final Date to,
+      final double maxPrice) {
+    return getTrainings(categoryId, from, to, 0.0);
+  }
+
+  public List<Training> getTrainings(final long categoryId, @Nonnull final Date fromDate, @Nonnull final Date toDate,
+      final long trainerId, final double maxPrice, final int maxDistance, @Nullable final Place placeAround) {
+    final StringBuilder SQL = new StringBuilder();
+    final MapSqlParameterSource parameterSource = new MapSqlParameterSource()
+        .addValue("categoryId", categoryId, Types.NUMERIC)
+        .addValue("fromDate", fromDate, Types.TIMESTAMP)
+        .addValue("toDate", toDate, Types.TIMESTAMP);
+    SQL.append("SELECT * FROM " + TRAININGS_TABLE_NAME + " tr " +
+        "LEFT OUTER JOIN " + TRAININGS_INSTANCES_TABLE_NAME + " trIns ON tr.trainingsId = trIns.idTrainings " +
+        "LEFT OUTER JOIN " + TRAININGS_RESERVATIONS_TABLE_NAME + " trRes ON trIns.trainingsInsId = trRes" +
+        ".idTrainingsIns " +
+        "INNER JOIN " + CATEGORIES_TABLE_NAME + " cats ON tr.category = cats.categoryId " +
+        "INNER JOIN " + USERS_TABLE_NAME + " usrs ON tr.owner = usrs.userId " +
+        "LEFT OUTER JOIN " + "(SELECT userId AS c_userId, userName AS c_userName, adress AS c_adress, mail AS c_mail," +
+        " " +
+        "imageUrl AS c_imageUrl FROM " + USERS_TABLE_NAME + ") usrsRes ON usrsRes.c_userId = trRes.customerId " +
+        "WHERE (cats.categoryId = :categoryId " +
+        "OR cats.categoryParent = :categoryId) " +
+        "AND (trIns.trainingInsDateStart BETWEEN :fromDate AND :toDate) ");
+    applyTrainerFilter(SQL, parameterSource, trainerId);
+    applyMaxPriceFilter(SQL, parameterSource, maxPrice);
+    return applyDistanceFilter(parameterJdbcTemplate.query(SQL.toString(),
+        parameterSource,
+        new TrainingWithInstancesExtractor()), maxDistance, placeAround);
+  }
+
+  private void applyTrainerFilter(@Nonnull final StringBuilder builder,
+      @Nonnull final MapSqlParameterSource parameterSource, final long trainerId) {
+    if (trainerId != 0) {
+      builder.append(" AND usrs.userId = :trainerId ");
+      parameterSource.addValue("trainerId", trainerId, Types.NUMERIC);
     }
-    return true;
   }
 
-  public boolean updateRecord(@Nonnull final Training training) {
-    if (existsById(training)) {
-      final String SQL = "UPDATE " + TRAININGS_TABLE_NAME + " SET date = ?, length = ?, price = ?, category = ?, city" +
-          " =" +
-          " ?,description = ?,  ownerId= ?, takenById= ?  WHERE id= ?;";
-      template.update(SQL, training.getDate(), training.getLength(), training.getPrice(), training.getCategory(),
-          training.getCity(), training.getDescription(), training.getOwnerId(), training.getTakenById(),
-          training.getId());
-      return true;
+  private void applyMaxPriceFilter(@Nonnull final StringBuilder builder,
+      @Nonnull final MapSqlParameterSource parameterSource, final double maxPrice) {
+    if (maxPrice > 0.0) {
+      builder.append(" AND tr.price <= :maxPrice ");
+      parameterSource.addValue("maxPrice", maxPrice, Types.DOUBLE);
     }
-    return false;
-
   }
 
-  private boolean existsById(@Nonnull final Training training) {
-    final Integer cnt = template.queryForObject(
-        "SELECT count(*) FROM " + TRAININGS_TABLE_NAME + " WHERE id = ?  ", Integer.class, training.getId());
-    return cnt != null && cnt > 0;
-  }
-
-  private boolean exists(@Nonnull final Training training) {
-    java.sql.Date sqlDate = new java.sql.Date(training.getDate().getTime());
-    for (Training tr : this.getTrainingsFromDate(training.getOwnerId(),sqlDate )) {
-      if (tr.getDate().before(training.getDate()) && tr.getDate()
-          .before(addHoursToDate(training.getDate(), training.getLength()))) {
-        return true;
-      }
-      if (addHoursToDate(tr.getDate(), tr.getLength()).after(training.getDate()) && addHoursToDate(tr.getDate(),
-          tr.getLength()).before(addHoursToDate(training.getDate(), training.getLength()))) {
-        return true;
-      }
-      if (tr.getDate() == training.getDate()) {
-        return true;
+  private List<Training> applyDistanceFilter(@Nonnull final List<Training> trainings, final int maxDistance,
+      @Nullable final Place place) {
+    if (maxDistance == 0 || place == null) {
+      return trainings;
+    }
+    final List<Training> result = new ArrayList<>();
+    final JsonReader reader = new JsonReader();
+    for (Training training : trainings) {
+      final Place trainingPlace = training.getPlace();
+      if (reader.distance(place, trainingPlace) <= maxDistance) {
+        result.add(training);
       }
     }
-    return false;
+    return result;
   }
 
-  public void delete(@Nonnull final Training training) {
-    final String SQL = "DELETE FROM " + TRAININGS_TABLE_NAME + " WHERE id = ? ";
+  public void saveTrainingAsynchronously(@Nonnull final Training training) {
+    asyncSaver.execute(this::saveTraining, training);
+  }
+
+  public void saveTrainingInstanceAsynchronously(@Nonnull final TrainingInstance trainingInstance) {
+    asyncSaver.execute(this::saveTrainingInstance, trainingInstance);
+  }
+
+  public void saveTrainingReservationAsynchronously(@Nonnull final TrainingReservation trainingReservation) {
+    asyncSaver.execute(this::saveTrainingReservation, trainingReservation);
+  }
+
+  public void updateTrainingAsynchronously(@Nonnull final Training training) {
+    asyncSaver.execute(this::updateTraining, training);
+  }
+
+  public void updateTrainingInstanceAsynchronously(@Nonnull final TrainingInstance trainingInstance) {
+    asyncSaver.execute(this::updateTrainingInstance, trainingInstance);
+  }
+
+  public void updateTrainingReservationAsynchronously(@Nonnull final TrainingReservation trainingReservation) {
+    asyncSaver.execute(this::updateTrainingReservation, trainingReservation);
+  }
+
+  public void deleteTrainingAsynchronously(@Nonnull final Training training) {
+    asyncSaver.execute(this::deleteTraining, training);
+  }
+
+  public void deleteTrainingInstanceAsynchronously(@Nonnull final TrainingInstance trainingInstance) {
+    asyncSaver.execute(this::deleteTrainingInstance, trainingInstance);
+  }
+
+  public void deleteTrainingReservationAsynchronously(@Nonnull final TrainingReservation trainingReservation) {
+    asyncSaver.execute(this::deleteTrainingReservation, trainingReservation);
+  }
+
+  public void saveTraining(@Nonnull final Training training) {
+    final Place place = training.getPlace();
+    final Category category = training.getCategory();
+    final User owner = training.getOwner();
+    if (place != null && category != null && owner != null) {
+      final String SQL = "INSERT INTO " + TRAININGS_TABLE_NAME + " (category, place, price, lat, lng, " +
+          "description, capacity, owner) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+      template.update(SQL, category.getId(), place.getName(), training.getPrice(), place.getLat(),
+          place.getLng(), training.getDescription(), training.getCapacity(), training.getOwner().getId());
+    }
+  }
+
+  private void saveTrainingInstance(@Nonnull final TrainingInstance trainingInstance) {
+    final String SQL = "MERGE INTO" + TRAININGS_INSTANCES_TABLE_NAME + " USING dual " +
+        "            ON (idTrainings = :idTrainings AND ((trainingInsDateStart BETWEEN :trainingInsDateStart AND " +
+        ":trainingInsDateEnd) OR " +
+        "(trainingInsDateEnd BETWEEN :trainingInsDateStart AND :trainingInsDateEnd))) " +
+        "WHEN NOT MATCHED THEN INSERT INTO " + TRAININGS_INSTANCES_TABLE_NAME + "(idTrainings, trainingInsDateStart, " +
+        "trainingInsDateEnd) " +
+        "VALUES (:idTrainings, :trainingInsDateStart, :trainingInsDateEnd)";
+    parameterJdbcTemplate.update(SQL,
+        new MapSqlParameterSource().addValue("idTrainings", trainingInstance.getTrainingParent(), Types.NUMERIC)
+            .addValue("trainingInsDateStart", trainingInstance.getDateStart(), Types.TIMESTAMP)
+            .addValue("trainingInsDateEnd", trainingInstance.getDateEnd(), Types.TIMESTAMP));
+  }
+
+  private void saveTrainingReservation(@Nonnull final TrainingReservation trainingReservation) {
+    final User customer = trainingReservation.getCustomer();
+    if (customer != null) {
+      final String SQL = "INSERT INTO " + TRAININGS_RESERVATIONS_TABLE_NAME + " (customerId, idTrainingIns) VALUES " +
+          "(?, ?)";
+      template.update(SQL, customer.getId(), trainingReservation.getTrainingInstance());
+    }
+  }
+
+  private void updateTraining(@Nonnull final Training training) {
+    final Place place = training.getPlace();
+    final Category category = training.getCategory();
+    final String SQL = "UPDATE " + TRAININGS_TABLE_NAME + " SET (category = ?, place = ?, price = ?, lat " +
+        "= ?, lng = ?, " +
+        "description = ?, size = ?, WHERE trainingsId= ?";
+    template.update(SQL, category.getId(), place.getName(), training.getPrice(), place.getLat(),
+        place.getLng(), training.getDescription(), training.getCapacity(), training.getId());
+  }
+
+  private void updateTrainingInstance(@Nonnull final TrainingInstance trainingInstance) {
+    final String SQL = "UPDATE " + TRAININGS_INSTANCES_TABLE_NAME + " SET (trainingInsDateStart = ?, idTrainings = ?)" +
+        " " +
+        "WHERE trainingsInsId = ?";
+    template
+        .update(SQL, trainingInstance.getDateStart(), trainingInstance.getTrainingParent(), trainingInstance.getId());
+  }
+
+  private void updateTrainingReservation(@Nonnull final TrainingReservation trainingReservation) {
+    final User customer = trainingReservation.getCustomer();
+    if (customer != null) {
+      final String SQL = "UPDATE " + TRAININGS_RESERVATIONS_TABLE_NAME + " SET (customerId, idTrainingIns) VALUES " +
+          "(?, ?)";
+      template.update(SQL, customer.getId(), trainingReservation.getTrainingInstance());
+    }
+  }
+
+  private void deleteTraining(@Nonnull final Training training) {
+    final String SQL = "DELETE FROM " + TRAININGS_TABLE_NAME + " WHERE trainingsId = ? ";
     template.update(SQL, training.getId());
   }
 
+  private void deleteTrainingInstance(@Nonnull final TrainingInstance trainingInstance) {
+    final String SQL = "DELETE FROM " + TRAININGS_INSTANCES_TABLE_NAME + " WHERE trainingsInsId = ? ";
+    template.update(SQL, trainingInstance.getId());
+  }
+
+  private void deleteTrainingReservation(@Nonnull final TrainingReservation trainingReservation) {
+    final String SQL = "DELETE FROM " + TRAININGS_RESERVATIONS_TABLE_NAME + " WHERE trainingsResId = ? ";
+    template.update(SQL, trainingReservation.getId());
+  }
+
   public void clear() {
-    final java.util.Date date = new java.util.Date();
+    final Date date = new Date();
     final java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-    final String SQL = "DELETE FROM " + TRAININGS_TABLE_NAME + " WHERE date < ?";
+    final String SQL = "DELETE FROM " + TRAININGS_TABLE_NAME + " WHERE trainingInsDateStart < ?";
     template.update(SQL, sqlDate);
   }
 
   @Nullable
   public Training getTrainingById(@Nonnull final Long id) {
     try {
-      final String SQL = "SELECT * FROM " + TRAININGS_TABLE_NAME + " WHERE id = ?";
+      final String SQL = "SELECT * FROM " + TRAININGS_TABLE_NAME + " WHERE trainingsId = ?";
       return template.queryForObject(SQL,
           new Object[]{id}, new TrainingMapper());
     } catch (EmptyResultDataAccessException ex) {
@@ -117,97 +254,9 @@ public class TrainingsDAO extends DAO {
     }
   }
 
-  public ArrayList<Training> getTrainingsFromDate(@Nonnull final Long fromId, @Nonnull final Date date) {
-    try {
-      final String SQL = "SELECT * FROM " + TRAININGS_TABLE_NAME + " WHERE ownerId = ? AND year(date) = year (?) AND " +
-          "month(date) = month(?) AND day(date) = day(?) ";
-      return (ArrayList<Training>) template.query(SQL,
-          new Object[]{fromId, date, date, date}, new RowMapperResultSetExtractor<Training>(new TrainingMapper()));
-    } catch (EmptyResultDataAccessException ex) {
-      return null;
-    }
-  }
-
-  public ArrayList<Training> getTrainingsFromDate(@Nonnull final Date date) {
-    try {
-      final String SQL = "SELECT * FROM " + TRAININGS_TABLE_NAME + " WHERE date = ? ";
-      return (ArrayList<Training>) template.query(SQL,
-          new Object[]{date}, new RowMapperResultSetExtractor<>(new TrainingMapper()));
-    } catch (EmptyResultDataAccessException ex) {
-      return null;
-    }
-  }
-
-  public List<Training> getTrainingsByFilter(final String cityName, final double range,
-       final long categoryId, final Date dateFirst,
-      @Nonnull final Date dateLast, final double maxPrice, final String sortBy, final boolean showOnline) {
-    final ArrayList<Training> result = new ArrayList<>();
-    try {
-      Object[] list = null;
-      String innerJoin = " INNER JOIN " + CATEGORIES_TABLE_NAME + " cats ON cats.id = ? OR cats.parent = ?";
-      String SQL = "";
-      if (dateFirst == null && maxPrice == 0) {
-        SQL = "select * from " + TRAININGS_TABLE_NAME + innerJoin + " WHERE takenById = 0 ORDER BY ";
-        list = new Object[]{categoryId, categoryId,};
-      } else if (dateFirst == null && maxPrice != 0) {
-        SQL = "select * from " + TRAININGS_TABLE_NAME + innerJoin + " WHERE takenById = 0 AND price < ?  ORDER " +
-            "BY ";
-        list = new Object[]{categoryId, categoryId, maxPrice};
-      } else if (dateFirst != null && maxPrice == 0) {
-        SQL = "select * from " + TRAININGS_TABLE_NAME + innerJoin + " WHERE takenById = 0 AND date BETWEEN ? AND" +
-            " ?" +
-            "  ORDER BY ";
-        list = new Object[]{categoryId, categoryId, dateFirst, dateLast};
-      } else if (dateFirst != null && maxPrice != 0) {
-        SQL = "select * from " + TRAININGS_TABLE_NAME + innerJoin + " WHERE takenById = 0 AND date BETWEEN ? AND" +
-            " ?" +
-            " AND price < ? ORDER BY ";
-        list = new Object[]{categoryId, categoryId, dateFirst, dateLast, maxPrice};
-      }
-
-      if (sortBy != null) {
-        SQL += sortBy;
-      } else {
-        SQL += "DATE";
-      }
-      final JsonReader reader = new JsonReader();
-      final ArrayList<Training> trainings = (ArrayList<Training>) template.query(SQL,
-          list, new RowMapperResultSetExtractor<>(new TrainingMapper()));
-      if (range != 0) {
-        Place place1 = null;
-        Place place2 = null;
-
-        for (int i = 0; i < trainings.size(); i++) {
-          if (trainings.get(i).getCity().equals("")) {
-            if (showOnline) {
-              result.add(trainings.get(i));
-            }
-          }
-          else {
-            place2 = getCity(cityName);
-            place1 = getCity(trainings.get(i).getCity());
-          }
-          if (place1 != null && place2 != null) {
-            if (reader.distance(place1, place2) < range) {
-              result.add(trainings.get(i));
-            }
-          }
-        }
-      } else {
-        for (int i = 0; i < trainings.size(); i++) {
-          if (trainings.get(i).getCity().equals("")) {
-            if (showOnline) {
-              result.add(trainings.get(i));
-            }
-          } else {
-            result.add(trainings.get(i));
-          }
-        }
-      }
-    } catch (EmptyResultDataAccessException ignored) {
-    }
-    final HashSet<Training> removeDuplicatesSet = new HashSet<>(result);
-    return new ArrayList<>(removeDuplicatesSet);
+  @Autowired
+  public void setAsyncDbSaver(@Nonnull final AsyncDbSaver asyncSaver) {
+    this.asyncSaver = asyncSaver;
   }
 }
 
