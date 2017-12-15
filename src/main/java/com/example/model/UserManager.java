@@ -2,12 +2,12 @@ package com.example.model;
 
 import com.example.backend.contexts.UserContext;
 import com.example.backend.controllersEntities.responses.LoginResponse;
-import com.example.daoLayer.DAOHandler;
+import com.example.daoLayer.DAOHelper;
 import com.example.daoLayer.daos.UsersDAO;
 import com.example.daoLayer.entities.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
@@ -24,7 +24,12 @@ import static com.example.backend.utils.ResponseCode.*;
 @Service
 public class UserManager {
 
-  private final UsersDAO usersDAO = DAOHandler.usersDAO;
+  private final UsersDAO usersDAO;
+
+  @Autowired
+  public UserManager(@Nonnull final UsersDAO usersDAO) {
+    this.usersDAO = usersDAO;
+  }
 
   public LoginResponse login(@Nonnull final String login, @Nonnull final String password) {
     final LoginResponse response = new LoginResponse();

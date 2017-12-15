@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.example.daoLayer.DAOHandler.*;
+import static com.example.daoLayer.DAOHelper.*;
 
 @Repository
 public class UsersDAO extends DAO {

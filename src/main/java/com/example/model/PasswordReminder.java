@@ -1,9 +1,9 @@
 package com.example.model;
 
 import com.example.backend.utils.MailManager;
-import com.example.daoLayer.DAOHandler;
 import com.example.daoLayer.daos.UsersDAO;
 import com.example.daoLayer.entities.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,9 +17,15 @@ import java.util.Random;
 @Service
 public class PasswordReminder {
 
-  private MailManager sender = new MailManager();
-  private UsersDAO customersRep = DAOHandler.usersDAO;
+  private final MailManager sender;
+  private final UsersDAO customersRep;
   private static final int NUMBER_OF_LETTERS = 15;
+
+  @Autowired
+  public PasswordReminder(@Nonnull final MailManager sender, @Nonnull final UsersDAO customersRep) {
+    this.sender = sender;
+    this.customersRep = customersRep;
+  }
 
   private static String generatePassword() {
     StringBuilder result = new StringBuilder();

@@ -1,4 +1,4 @@
-package com.example.model;
+package com.example.daoLayer.entities;
 
 /**
  * Created by Bartek on 2017-05-04.

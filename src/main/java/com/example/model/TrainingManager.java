@@ -1,8 +1,9 @@
 package com.example.model;
 
 import com.example.backend.utils.MailManager;
-import com.example.daoLayer.DAOHandler;
+import com.example.daoLayer.DAOHelper;
 import com.example.daoLayer.daos.TrainingsDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
@@ -15,10 +16,16 @@ import java.util.Date;
 @Service
 public class TrainingManager {
 
-  private final MailManager mailManager = new MailManager();
-  private final TrainingsDAO trainingsDAO = DAOHandler.trainingsDAO;
+  private final MailManager mailManager;
+  private final TrainingsDAO trainingsDAO;
 
-  public static final String[] DAYS = {
+  @Autowired
+  public TrainingManager(@Nonnull final MailManager mailManager, @Nonnull final TrainingsDAO trainingsDAO) {
+    this.mailManager = mailManager;
+    this.trainingsDAO = trainingsDAO;
+  }
+
+  private static final String[] DAYS = {
       "Monday",
       "Tuesday",
       "Wednesday",

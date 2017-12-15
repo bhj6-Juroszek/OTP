@@ -1,6 +1,6 @@
 package com.example.model;
 
-import org.apache.commons.codec.net.URLCodec;
+import com.example.daoLayer.entities.Place;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.net.URL;
-import java.net.URLEncoder;
 
 /**
  * Created by Bartek on 2017-05-03.

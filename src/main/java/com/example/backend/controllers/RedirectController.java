@@ -1,8 +1,9 @@
 package com.example.backend.controllers;
 
-import com.example.daoLayer.DAOHandler;
+import com.example.daoLayer.DAOHelper;
 import com.example.daoLayer.daos.UsersDAO;
 import com.example.daoLayer.entities.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/")
 public class RedirectController {
 
+  private UsersDAO usersDAO;
+
   @RequestMapping(value = "/confirm", method = RequestMethod.GET)
   public String processForm(@RequestParam("id") String token, HttpServletRequest request
   ) {
@@ -27,12 +30,11 @@ public class RedirectController {
 
     }
     System.out.println(token);
-    final UsersDAO dao = DAOHandler.usersDAO;
     String redirectUrl = "";
-    final User cust = dao.getCustomerByConfirmation(token);
+    final User cust = usersDAO.getCustomerByConfirmation(token);
     if (cust != null) {
       cust.setConfirmation("");
-      dao.updateRecord(cust);
+      usersDAO.updateRecord(cust);
       redirectUrl = request.getScheme() + "://67.209.115.104:8181/#!mainView";
       System.out.println(redirectUrl);
     } else {
@@ -40,5 +42,10 @@ public class RedirectController {
       System.out.println(redirectUrl);
     }
     return "redirect:" + redirectUrl;
+  }
+
+  @Autowired
+  public void setUsersDAO(final UsersDAO usersDAO) {
+    this.usersDAO = usersDAO;
   }
 }

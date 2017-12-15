@@ -3,7 +3,7 @@ package com.example.daoLayer.mappers;
 import com.example.daoLayer.entities.Category;
 import com.example.daoLayer.entities.Training;
 import com.example.daoLayer.entities.User;
-import com.example.model.Place;
+import com.example.daoLayer.entities.Place;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

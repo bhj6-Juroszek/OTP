@@ -1,18 +1,16 @@
 package com.example.backend.controllers;
 
-import com.example.backend.controllersEntities.requests.TrainingsWithFilterRequest;
-import com.example.daoLayer.DAOHandler;
+import com.example.daoLayer.daos.CitiesDAO;
 import com.example.daoLayer.daos.TrainingsDAO;
 import com.example.daoLayer.entities.Category;
 import com.example.daoLayer.entities.City;
 import com.example.daoLayer.entities.Training;
 import com.example.daoLayer.entities.User;
-import com.example.model.Place;
+import com.example.daoLayer.entities.Place;
 import com.example.model.TrainingManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -20,7 +18,6 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @CrossOrigin
 @Controller
@@ -28,7 +25,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class SearchController {
 
   private TrainingManager trainingManager;
-  private TrainingsDAO dao;
+  private TrainingsDAO trainingsDAO;
+  private CitiesDAO citiesDAO;
 
 //  @RequestMapping(value = "/trainingsWithFilter", method = POST)
 //  @ResponseBody public List<Training> getTrainingsWithFilters(@RequestBody TrainingsWithFilterRequest request) {
@@ -40,7 +38,7 @@ public class SearchController {
 
   @RequestMapping(value = "/cities", method = GET)
   @ResponseBody public List<City> getCities() {
-    return DAOHandler.citiesDAO.getAll();
+    return citiesDAO.getAll();
   }
 
   @RequestMapping(value = "/test", method = GET)
@@ -49,8 +47,8 @@ public class SearchController {
     training.setPlace(new Place());
     training.setOwner(new User());
     training.setCategory(new Category());
-    dao.saveTrainingAsynchronously(training);
-    dao.saveTraining(training);
+    trainingsDAO.saveTrainingAsynchronously(training);
+    trainingsDAO.saveTraining(training);
     return "coss";
   }
 
@@ -60,7 +58,12 @@ public class SearchController {
   }
 
   @Autowired
-  public void setDao(final TrainingsDAO dao) {
-    this.dao = dao;
+  public void setCitiesDAO(final CitiesDAO citiesDAO) {
+    this.citiesDAO = citiesDAO;
+  }
+
+  @Autowired
+  public void setTrainingsDAO(final TrainingsDAO trainingsDAO) {
+    this.trainingsDAO = trainingsDAO;
   }
 }

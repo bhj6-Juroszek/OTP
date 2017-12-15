@@ -5,7 +5,7 @@ import com.example.daoLayer.entities.*;
 import com.example.daoLayer.mappers.TrainingMapper;
 import com.example.daoLayer.mappers.TrainingWithInstancesExtractor;
 import com.example.model.JsonReader;
-import com.example.model.Place;
+import com.example.daoLayer.entities.Place;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.example.daoLayer.DAOHandler.*;
+import static com.example.daoLayer.DAOHelper.*;
 
 /**
  * Created by Bartek on 2017-03-25.

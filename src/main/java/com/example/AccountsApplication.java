@@ -3,7 +3,6 @@ package com.example;
 import com.example.backend.utils.SessionManager;
 import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -32,7 +31,6 @@ public class AccountsApplication extends SpringBootServletInitializer {
   public static void main(String[] args) {
     context = SpringApplication.run(AccountsApplication.class, args);
     LOGGER.log(INFO, "Started Application");
-//    DAOHandler.createAll();
     LOGGER.log(INFO, "Finished loading cities list");
   }
 

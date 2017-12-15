@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-import static com.example.daoLayer.DAOHandler.CITIES_TABLE_NAME;
+import static com.example.daoLayer.DAOHelper.CITIES_TABLE_NAME;
 
 /**
  * Created by Bartek on 2017-05-04.

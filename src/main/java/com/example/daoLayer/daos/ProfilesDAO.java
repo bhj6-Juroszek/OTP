@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.example.daoLayer.DAOHandler.PROFILES_TABLE_NAME;
+import static com.example.daoLayer.DAOHelper.PROFILES_TABLE_NAME;
 
 /**
  * Created by Bartek on 2017-03-10.

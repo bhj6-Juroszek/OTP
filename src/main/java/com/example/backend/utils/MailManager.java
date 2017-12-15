@@ -1,34 +1,33 @@
 package com.example.backend.utils;
 
 import com.vaadin.ui.Notification;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
+import java.util.Properties;
+
+@Component
 public class MailManager {
-
-  ApplicationContext context =
-      new ClassPathXmlApplicationContext("Mail.xml");
 
   final private JavaMailSenderImpl mailSender;
 
-  public MailManager(String password, String username) {
-    this.mailSender = (JavaMailSenderImpl) context.getBean("mailSender");
-    mailSender.setHost("smtp.gmail.com");
-    mailSender.setPort(587);
-    mailSender.setPassword(password);
-    mailSender.setUsername(username);
-    mailSender.setProtocol("smtp");
-
-  }
-
   public MailManager() {
-    this.mailSender = (JavaMailSenderImpl) context.getBean("mailSender");
+    this.mailSender = new JavaMailSenderImpl();
     mailSender.setHost("smtp.gmail.com");
     mailSender.setPort(587);
     mailSender.setProtocol("smtp");
+    mailSender.setUsername("juroszeksender@gmail.com");
+    mailSender.setPassword("DefaultPassword");
+    final Properties javaMailProperties = new Properties();
+    javaMailProperties.setProperty("mail.smtp.auth", "true");
+    javaMailProperties.setProperty("mail.smtp.starttls.enable", "true");
+    mailSender.setJavaMailProperties(javaMailProperties);
   }
 
   public boolean sendMail(String from, String to, String subject, String content) {

@@ -1,35 +1,37 @@
 package com.example.model;
 
-import com.example.daoLayer.DAOHandler;
-import com.example.daoLayer.daos.UsersDAO;
 import com.example.daoLayer.daos.ProfilesDAO;
-import com.example.daoLayer.entities.User;
 import com.example.daoLayer.entities.Profile;
+import com.example.daoLayer.entities.User;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by Bartek on 2017-03-10.
  */
 public class ProfilesManager {
 
-    final ProfilesDAO profilesDAO = DAOHandler.profilesDAO;
+  private final ProfilesDAO profilesDAO;
 
-    public Profile getUserProfile(User user)
-    {
-        return profilesDAO.getProfileByUser(user.getId());
-    }
+  @Autowired
+  public ProfilesManager(@Nonnull final ProfilesDAO profilesDAO) {
+    this.profilesDAO = profilesDAO;
+  }
 
-    public void changeProfileText(User user, String text)
-    {
-        Profile profile=getUserProfile(user);
-        profile.setText(text);
-        profilesDAO.updateRecord(profile);
-    }
+  private Profile getUserProfile(User user) {
+    return profilesDAO.getProfileByUser(user.getId());
+  }
 
-    public void createProfile(User user)
-    {
-        Profile newProfile=new Profile(user.getId(),"");
-        profilesDAO.saveToDB(newProfile);
-    }
+  public void changeProfileText(User user, String text) {
+    Profile profile = getUserProfile(user);
+    profile.setText(text);
+    profilesDAO.updateRecord(profile);
+  }
 
+  public void createProfile(User user) {
+    Profile newProfile = new Profile(user.getId(), "");
+    profilesDAO.saveToDB(newProfile);
+  }
 
 }

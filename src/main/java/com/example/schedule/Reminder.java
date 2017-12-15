@@ -1,22 +1,23 @@
 package com.example.schedule;
 
-import com.example.daoLayer.DAOHandler;
-import com.example.daoLayer.daos.UsersDAO;
 import com.example.backend.utils.MailManager;
-import com.example.daoLayer.daos.TrainingsDAO;
-import com.example.daoLayer.entities.User;
-import com.example.daoLayer.entities.Training;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import javax.annotation.Nonnull;
 
 /**
  * Created by Bartek on 2017-05-08.
  */
+@Component
 public class Reminder implements Runnable {
 
-  private MailManager mailManager = new MailManager();
+  private final MailManager mailManager;
+
+  @Autowired
+  public Reminder(@Nonnull final MailManager mailManager) {
+    this.mailManager = mailManager;
+  }
 
   @Override
   public void run() {

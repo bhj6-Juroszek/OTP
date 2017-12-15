@@ -10,10 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.daoLayer.DAOHandler.CATEGORIES_TABLE_NAME;
+import static com.example.daoLayer.DAOHelper.CATEGORIES_TABLE_NAME;
 
 /**
  * Created by Bartek on 2017-03-11.

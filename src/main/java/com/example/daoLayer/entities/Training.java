@@ -1,7 +1,5 @@
 package com.example.daoLayer.entities;
 
-import com.example.model.Place;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,8 +1,12 @@
 package com.example.backend.utils;
 
-import com.example.daoLayer.DAOHandler;
+import com.example.daoLayer.DAOHelper;
+import com.example.daoLayer.daos.CitiesDAO;
 import com.example.daoLayer.entities.City;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,9 +16,17 @@ import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+@Component
 public class CitiesCSVReader {
 
-  public static void readCities() {
+  private final CitiesDAO citiesDAO;
+
+  @Autowired
+  public CitiesCSVReader(@Nonnull final CitiesDAO citiesDAO) {
+    this.citiesDAO = citiesDAO;
+  }
+
+  public void readCities() {
     final Set<String> cities = new HashSet<>();
     final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
     String csvFile = "/home/miasta.csv";
@@ -32,7 +44,7 @@ public class CitiesCSVReader {
             cities.add(city.getName());
             executor.submit(() -> {
               System.out.println("City [ name=" + country[6] + "]");
-              DAOHandler.citiesDAO.saveToDB(city);
+              citiesDAO.saveToDB(city);
 
             });
             a++;

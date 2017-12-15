@@ -1,11 +1,5 @@
 package com.example.daoLayer.entities;
 
-import com.example.daoLayer.DAOHandler;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-
 public class User {
     private long id;
     private String name;
