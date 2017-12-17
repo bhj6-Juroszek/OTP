@@ -1,14 +1,12 @@
-package com.example.model;
+package com.example.backend.model;
 
 import com.example.daoLayer.daos.CategoriesDAO;
 import com.example.daoLayer.daos.UsersDAO;
 import com.example.daoLayer.entities.Category;
-import com.example.daoLayer.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,15 +28,7 @@ public class CategoriesManager {
     return categoriesDAO.getAll();
   }
 
-  public List<Category> getUserCategories(@Nonnull final User user) {
-    return categoriesDAO.getAll();
-  }
-
-  public ArrayList<User> getTrainersFromCategory(@Nonnull final Category category) {
-    return usersDAO.getCustomersWithCategory(category);
-  }
-
-  public Category getCategory(long id) {
+  public Category getCategory(@Nonnull final String id) {
     return categoriesDAO.getCategoryById(id);
   }
 

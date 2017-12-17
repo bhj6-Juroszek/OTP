@@ -1,4 +1,4 @@
-package com.example.schedule;
+package com.example.backend.schedule;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class BackgroundJobManager implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent event) {
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(clearTrainingsData, 0, 1, TimeUnit.DAYS);
+        scheduler.scheduleAtFixedRate(clearTrainingsData, 0, 5, TimeUnit.DAYS);
         scheduler.scheduleAtFixedRate(reminder, 0, 1, TimeUnit.HOURS);
 
     }

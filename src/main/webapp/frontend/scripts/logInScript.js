@@ -3,7 +3,7 @@ try {
 } catch (e) {
     var app = angular.module('myApp');
     app.controller('signInController', function ($scope, $http, userService, $window) {
-        var mainAdress = userService.getMainAdress();
+        var mainAdress = 'index.html';
         $scope.logIn = function () {
             $http({
                 method: 'POST',

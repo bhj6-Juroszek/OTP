@@ -1,24 +1,20 @@
 package com.example.daoLayer.entities;
 
-public class TrainingReservation {
-  private long id;
-  private long trainingInstance;
+public class TrainingReservation extends Entity {
+
+  private String trainingInstance;
   private User customer;
 
-  public long getId() {
-    return id;
+  public TrainingReservation() {
+    super();
   }
 
-  public long getTrainingInstance() {
+  public String getTrainingInstance() {
     return trainingInstance;
   }
 
-  public void setTrainingInstance(final long trainingInstance) {
+  public void setTrainingInstance(final String trainingInstance) {
     this.trainingInstance = trainingInstance;
-  }
-
-  public void setId(final long id) {
-    this.id = id;
   }
 
   public User getCustomer() {

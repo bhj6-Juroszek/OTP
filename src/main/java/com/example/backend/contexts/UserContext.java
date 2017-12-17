@@ -39,7 +39,7 @@ public class UserContext {
 
   @Override
   public int hashCode() {
-    return (int)user.getId();
+    return user.hashCode();
   }
 
   @Override

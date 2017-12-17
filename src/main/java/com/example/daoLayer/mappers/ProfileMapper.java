@@ -11,11 +11,11 @@ import java.sql.SQLException;
  */
 public class ProfileMapper implements RowMapper<Profile> {
     public Profile mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Profile prof = new Profile();
-        prof.setId(rs.getInt("id"));
-        prof.setUserId(rs.getInt("userId"));
-        prof.setText(rs.getString("text"));
-        return prof;
+        final Profile profile = new Profile();
+        profile.setId(rs.getString("profileId"));
+        profile.setOwnerId(rs.getString("profileOwnerId"));
+        profile.setContent(rs.getString("profileContent"));
+        return profile;
 
     }
 }

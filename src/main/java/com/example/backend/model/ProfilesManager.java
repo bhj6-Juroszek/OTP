@@ -1,4 +1,4 @@
-package com.example.model;
+package com.example.backend.model;
 
 import com.example.daoLayer.daos.ProfilesDAO;
 import com.example.daoLayer.entities.Profile;
@@ -25,7 +25,7 @@ public class ProfilesManager {
 
   public void changeProfileText(User user, String text) {
     Profile profile = getUserProfile(user);
-    profile.setText(text);
+    profile.setContent(text);
     profilesDAO.updateRecord(profile);
   }
 

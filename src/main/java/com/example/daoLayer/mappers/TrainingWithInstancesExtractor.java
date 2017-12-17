@@ -46,34 +46,38 @@ public class TrainingWithInstancesExtractor implements ResultSetExtractor<List<T
   }
 
   private TrainingReservation mapTrainingReservation(@Nonnull final ResultSet rs) throws SQLException {
-    final long id = rs.getLong("trainingsResId");
-    if (id == 0) {
+    final String id = rs.getString("trainingsResId");
+    if (id == null) {
       return null;
     }
     final TrainingReservation trainingReservation = new TrainingReservation();
     trainingReservation.setId(id);
-    trainingReservation.setTrainingInstance(rs.getLong("idTrainingsIns"));
+    trainingReservation.setTrainingInstance(rs.getString("idTrainingsIns"));
     final User customer = mapCustomer(rs);
     trainingReservation.setCustomer(customer);
     return trainingReservation;
   }
 
   private TrainingInstance mapTrainingInstance(@Nonnull final ResultSet rs) throws SQLException {
-    final long id = rs.getLong("trainingsInsId");
-    if (id == 0) {
+    final String id = rs.getString("trainingsInsId");
+    if (id == null) {
       return null;
     }
     final TrainingInstance trainingInstance = new TrainingInstance();
     trainingInstance.setId(id);
     trainingInstance.setDateEnd(rs.getTimestamp("trainingInsDateEnd"));
     trainingInstance.setDateStart(rs.getTimestamp("trainingInsDateStart"));
-    trainingInstance.setTrainingParent(rs.getLong("idTrainings"));
+    trainingInstance.setTrainingParent(rs.getString("idTrainings"));
     return trainingInstance;
   }
 
   private User mapCustomer(@Nonnull final ResultSet rs) throws SQLException {
-    User user = new User();
-    user.setId(rs.getInt("c_userId"));
+    final String id = rs.getString("c_userId");
+    if (id == null) {
+      return null;
+    }
+    final User user = new User();
+    user.setId(id);
     user.setName(rs.getString("c_userName"));
     user.setAdress(rs.getString("c_adress"));
     user.setMail(rs.getString("c_mail"));

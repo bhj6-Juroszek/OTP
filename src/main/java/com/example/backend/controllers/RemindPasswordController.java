@@ -1,6 +1,6 @@
 package com.example.backend.controllers;
 
-import com.example.model.PasswordReminder;
+import com.example.backend.model.PasswordReminder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

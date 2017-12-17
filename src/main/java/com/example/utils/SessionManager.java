@@ -16,6 +16,9 @@ import static java.util.concurrent.TimeUnit.*;
 @Component
 public class SessionManager {
 
+  public static final String DOMAIN_NAME = "localhost:8181/executable/frontend/";
+  public static final String HOST_NAME = "localhost:8181/";
+
   Map<String, UserContext> loggedUsers;
   ScheduledExecutorService scheduler;
 

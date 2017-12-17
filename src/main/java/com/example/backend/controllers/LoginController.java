@@ -3,8 +3,7 @@ package com.example.backend.controllers;
 import com.example.backend.controllersEntities.requests.LoginRequest;
 import com.example.backend.controllersEntities.responses.LoginResponse;
 import com.example.backend.utils.ResponseCode;
-import com.example.model.UserManager;
-import org.omg.PortableInterceptor.SUCCESSFUL;
+import com.example.backend.model.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Nonnull;
 
 import static com.example.backend.utils.ResponseCode.ALREADY_LOGGED_IN;
-import static java.util.UUID.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @CrossOrigin

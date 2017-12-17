@@ -1,6 +1,5 @@
-package com.example.schedule;
+package com.example.backend.schedule;
 
-import com.example.daoLayer.DAOHelper;
 import com.example.daoLayer.daos.TrainingsDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,7 @@ public class ClearTrainingsData implements Runnable {
   }
 
   @Override
-    public void run() {
+  public void run() {
         trainingsDAO.clear();
-    }
+  }
 }

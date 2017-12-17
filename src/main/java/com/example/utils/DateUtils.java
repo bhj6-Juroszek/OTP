@@ -1,6 +1,8 @@
-package com.example.backend.utils;
+package com.example.utils;
 
 import javax.annotation.Nonnull;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -20,5 +22,10 @@ public class DateUtils {
 
   public static  java.sql.Date getSQLDate(@Nonnull final Date date) {
     return new java.sql.Date(date.getTime());
+  }
+
+  public Date prepareDate(final int year, final int month, final int date,
+      final int hour, final int minute) {
+    return new Date(LocalDateTime.of(year, month, date, hour, minute).toEpochSecond(ZoneOffset.UTC) * 1000);
   }
 }

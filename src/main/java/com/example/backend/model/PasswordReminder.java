@@ -1,4 +1,4 @@
-package com.example.model;
+package com.example.backend.model;
 
 import com.example.backend.utils.MailManager;
 import com.example.daoLayer.daos.UsersDAO;
@@ -17,9 +17,9 @@ import java.util.Random;
 @Service
 public class PasswordReminder {
 
+  private static final int NUMBER_OF_LETTERS = 15;
   private final MailManager sender;
   private final UsersDAO customersRep;
-  private static final int NUMBER_OF_LETTERS = 15;
 
   @Autowired
   public PasswordReminder(@Nonnull final MailManager sender, @Nonnull final UsersDAO customersRep) {
@@ -28,8 +28,8 @@ public class PasswordReminder {
   }
 
   private static String generatePassword() {
-    StringBuilder result = new StringBuilder();
-    Random random = new Random();
+    final StringBuilder result = new StringBuilder();
+    final Random random = new Random();
     for (int i = 0; i < NUMBER_OF_LETTERS; i++) {
       char letter = (char) (random.nextInt(61) + 48);
       if (letter > 57 && letter < 83) {
@@ -44,8 +44,8 @@ public class PasswordReminder {
 
   public boolean changePassword(@Nonnull final String mail) {
     final String newPassword = generatePassword();
-    if (customersRep.existsAnother(mail, "mail", (long) -1)) {
-      final User user = customersRep.getCustomerByMail(mail);
+    if (customersRep.existsAnother(mail, "mail", "")) {
+      final User user = customersRep.getUserByMail(mail);
       final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
       final String hashedPassword = passwordEncoder.encode(newPassword);
       user.setPassword(hashedPassword);

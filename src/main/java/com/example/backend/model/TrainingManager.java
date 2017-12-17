@@ -1,7 +1,6 @@
-package com.example.model;
+package com.example.backend.model;
 
 import com.example.backend.utils.MailManager;
-import com.example.daoLayer.DAOHelper;
 import com.example.daoLayer.daos.TrainingsDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,7 @@ public class TrainingManager {
       "Saturday",
       "Sunday"};
 
-  public static String getDay(int day) {
+  public static String getDay(final int day) {
     return DAYS[day];
 
   }
@@ -71,7 +70,7 @@ public class TrainingManager {
 //
 //  public void reserve(@Nonnull final Training training, final long fromId) {
 //    training.setTakenById(fromId);
-//    final User reservedBy = (DAOHandler.usersDAO.getCustomerById(training.getTakenById()));
+//    final User reservedBy = (DAOHandler.usersDAO.getUserById(training.getTakenById()));
 //    trainingsDAO.updateRecord(training);
 //    final double minutes = training.getDate().getMinutes();
 //    final double hours = training.getDate().getHours();

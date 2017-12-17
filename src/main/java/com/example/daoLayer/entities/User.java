@@ -1,156 +1,125 @@
 package com.example.daoLayer.entities;
 
-public class User {
-    private long id;
-    private String name;
-    private String adress;
-    private String mail;
-    private String login;
-    private String password;
-    private boolean role;
-    private String imageUrl;
-    private String confirmation;
+import java.util.Objects;
 
+public class User extends Entity {
 
+  private String name;
+  private String adress;
+  private String mail;
+  private String login;
+  private String password;
+  private boolean role;
+  private String imageUrl;
+  private String confirmation;
 
-    public User(final String name, final String adress, final String mail, final String login, final String password, final boolean role, final String imageUrl, final String confirmation) {
-        this.name = name;
-        this.adress = adress;
-        this.mail = mail;
-        this.login = login;
-        this.password = password;
-        this.role = role;
-        this.imageUrl = imageUrl;
-        this.confirmation = confirmation;
-    }
+  public User() {
+    this("", "", "", "", "", false, "", "");
+  }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
+  public User(final String name, final String adress, final String mail, final String login, final String password,
+      final boolean role, final String imageUrl, final String confirmation) {
+    super();
+    this.name = name;
+    this.adress = adress;
+    this.mail = mail;
+    this.login = login;
+    this.password = password;
+    this.role = role;
+    this.imageUrl = imageUrl;
+    this.confirmation = confirmation;
+  }
 
-    public User setImageUrl(final String imageUrl) {
-        this.imageUrl = imageUrl;
-        return this;
-    }
+  public String getImageUrl() {
+    return imageUrl;
+  }
 
-    public boolean isRole() {
-        return role;
-    }
+  public User setImageUrl(final String imageUrl) {
+    this.imageUrl = imageUrl;
+    return this;
+  }
 
-    public String getConfirmation() {
-        return confirmation;
-    }
+  public boolean isRole() {
+    return role;
+  }
 
-    public void setConfirmation(final String confirmation) {
-        this.confirmation = confirmation;
-    }
+  public String getConfirmation() {
+    return confirmation;
+  }
 
-    public User(final String name,final String adress, final String mail, final String login, final String password, final boolean role, final String confirmation) {
-        this.name = name;
-        this.adress = adress;
-        this.mail = mail;
-        this.login = login;
-        this.password = password;
-        this.role = role;
-        this.confirmation = confirmation;
-    }
+  public void setConfirmation(final String confirmation) {
+    this.confirmation = confirmation;
+  }
 
-    public long getId() {
-        return id;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public User setId(long id) {
-        this.id = id;
-        return this;
-    }
+  public User setName(String name) {
+    this.name = name;
+    return this;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getAdress() {
+    return adress;
+  }
 
-    public User setName(String name) {
-        this.name = name;
-        return this;
-    }
+  public User setAdress(String adress) {
+    this.adress = adress;
+    return this;
+  }
 
+  public String getMail() {
+    return mail;
+  }
 
-    public String getAdress() {
-        return adress;
-    }
+  public User setMail(String mail) {
+    this.mail = mail;
+    return this;
+  }
 
-    public User setAdress(String adress) {
-        this.adress = adress;
-        return this;
-    }
+  public String getLogin() {
+    return login;
+  }
 
-    public String getMail() {
-        return mail;
-    }
+  public User setLogin(String login) {
+    this.login = login;
+    return this;
+  }
 
-    public User setMail(String mail) {
-        this.mail = mail;
-        return this;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public String getLogin() {
-        return login;
-    }
+  public User setPassword(final String password) {
+    this.password = password;
+    return this;
+  }
 
-    public User setLogin(String login) {
-        this.login = login;
-        return this;
-    }
+  public boolean getRole() {
+    return role;
+  }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public User setPassword( final  String password) {
-        this.password = password;
-        return this;
-    }
-
-    public boolean getRole() {
-        return role;
-    }
-
-    public void setRole(boolean role) {
-        this.role = role;
-    }
-
-
-    public User(final String name, final String adress, final String mail, final String login, final String password, final boolean role) {
-        this.name = name;
-        this.adress = adress;
-        this.mail = mail;
-        this.login = login;
-        this.password = password;
-        this.role = role;
-    }
-
-    public User()
-    {
-
-    }
-
-    @Override
-    public int hashCode() {
-      return (int)id;
-    }
+  public void setRole(boolean role) {
+    this.role = role;
+  }
 
   @Override
   public boolean equals(Object object) {
-    if(object == null) return false;
-    if(object instanceof User) {
-      final User user = (User)object;
-      if(this.id == user.getId()) return true;
+    if (object == null) {
+      return false;
+    }
+    if (object instanceof User) {
+      final User user = (User) object;
+      if (Objects.equals(this.id, user.getId())) {
+        return true;
+      }
     }
     return false;
   }
 
-    @Override
-    public String toString()
-    {
-        return (name+" Adress:"+adress+" Mail: "+mail);
-    }
+  @Override
+  public String toString() {
+    return (name + " Adress:" + adress + " Mail: " + mail);
+  }
 }

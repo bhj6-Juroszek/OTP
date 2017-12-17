@@ -1,28 +1,23 @@
 package com.example.daoLayer.entities;
 
+import java.util.Objects;
+
 /**
  * Created by Bartek on 2017-03-11.
  */
-public class Category {
+public class Category extends Entity {
 
-  private long id;
   private String name;
   private long parent;
 
   public Category() {
+    this("", 0);
   }
 
   public Category(final String name, final long parent) {
+    super();
     this.name = name;
     this.parent = parent;
-  }
-
-  public long getId() {
-    return id;
-  }
-
-  public void setId(final long id) {
-    this.id = id;
   }
 
   public String getName() {
@@ -50,15 +45,10 @@ public class Category {
   public boolean equals(Object o) {
     if (o != null) {
       if (o instanceof Category) {
-        Category cat = (Category) o;
-        return this.id == cat.getId();
+        final Category cat = (Category) o;
+        return Objects.equals(this.id, cat.getId());
       }
     }
     return false;
-  }
-
-  @Override
-  public int hashCode() {
-    return (int) this.id;
   }
 }

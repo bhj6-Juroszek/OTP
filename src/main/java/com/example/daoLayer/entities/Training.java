@@ -2,13 +2,13 @@ package com.example.daoLayer.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Bartek on 2017-03-23.
  */
-public class Training {
+public class Training extends Entity {
 
-  private long id;
   private Category category;
   private Place place;
   private double price;
@@ -19,10 +19,8 @@ public class Training {
 
 
   public Training() {
+    super();
     this.instances = new ArrayList<>();
-  }
-  public long getId() {
-    return id;
   }
 
   public List<TrainingInstance> getInstances() {
@@ -31,10 +29,6 @@ public class Training {
 
   public void setInstances(final List<TrainingInstance> instances) {
     this.instances = instances;
-  }
-
-  public void setId(final long id) {
-    this.id = id;
   }
 
   public Category getCategory() {
@@ -97,13 +91,9 @@ public class Training {
     }
     if (o instanceof Training) {
       final Training training = (Training) o;
-      return this.id == training.getId();
+      return Objects.equals(this.id, training.getId());
     }
     return false;
   }
 
-  @Override
-  public int hashCode() {
-    return (int) this.id;
-  }
 }

@@ -9,7 +9,7 @@
         <RollingFile name="defaultAppender" fileName="${logPath}/OTP.log"
                      append="true" filePattern="${logPath}/OTP.log.%i">
             <Policies>
-                <SizeBasedTriggeringPolicy capacity="10 MB"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
             </Policies>
             <DefaultRolloverStrategy max="200" fileIndex="min"/>
             <PatternLayout pattern="${defaultPattern}"/>

@@ -11,13 +11,13 @@ import java.sql.SQLException;
  */
 public class CategoryMapper implements RowMapper<Category> {
 
-    public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Category cat = new Category();
-        cat.setId(rs.getInt("categoryId"));
-        cat.setName(rs.getString("categoryName"));
-        cat.setParent(rs.getInt("categoryParent"));
+  public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
+    final Category category = new Category();
+    category.setId(rs.getString("categoryId"));
+    category.setName(rs.getString("categoryName"));
+    category.setParent(rs.getInt("categoryParent"));
 
-        return cat;
+    return category;
 
-    }
+  }
 }

@@ -1,4 +1,4 @@
-package com.example.model;
+package com.example.backend.model;
 
 import com.example.daoLayer.daos.RatesDAO;
 import com.example.daoLayer.entities.Profile;
@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by Bartek on 2017-03-11.
@@ -23,25 +24,25 @@ public class RatesManager {
     this.ratesDAO = ratesDAO;
   }
 
-  public boolean rateProfile(User fromUser, Profile ratedProfile, int value, String comment) {
-    Date date = new Date(Calendar.getInstance().getTime().getTime());
-    Rate result = new Rate(comment, value, ratedProfile.getUserId(), fromUser.getId(), date);
+  public boolean rateProfile(@Nonnull final User fromUser, @Nonnull final Profile ratedProfile, final int value,
+      @Nonnull final String comment) {
+    final Date date = new Date(Calendar.getInstance().getTime().getTime());
+    final Rate result = new Rate(comment, value, ratedProfile.getOwnerId(), fromUser.getId(), date);
     return ratesDAO.saveToDB(result);
   }
 
-  public double getProfileAverageRate(Profile profile) {
-    ArrayList<Rate> rates = ratesDAO.getRatesByProfile(profile.getId());
+  public double getProfileAverageRate(@Nonnull final Profile profile) {
+    final List<Rate> rates = ratesDAO.getRatesByProfile(profile.getId());
     double result = 0;
-    double divader = rates.size();
     for (Rate r : rates) {
       result += r.getValue();
     }
-    result /= divader;
+    result /= rates.size();
     return result;
   }
 
-  public ArrayList<Rate> getProfileLastRates(Profile profile) {
-    ArrayList<Rate> rates = ratesDAO.getRatesByProfile(profile.getId());
+  public ArrayList<Rate> getProfileLastRates(@Nonnull final Profile profile) {
+    List<Rate> rates = ratesDAO.getRatesByProfile(profile.getId());
     int max = 5;
     if ((rates.size() + 1 < max)) {
       max = rates.size() - 1;
@@ -49,12 +50,12 @@ public class RatesManager {
     return new ArrayList(rates.subList(0, max));
   }
 
-  public ArrayList<Rate> getProfileRates(Profile profile) {
+  public List<Rate> getProfileRates(@Nonnull final Profile profile) {
     return ratesDAO.getRatesByProfile(profile.getId());
 
   }
 
-  public Rate ifUserRated(User user, Profile profile) {
+  public Rate ifUserRated(@Nonnull final User user, @Nonnull final Profile profile) {
     return ratesDAO.getProfileUserRate(profile.getId(), user.getId());
 
   }

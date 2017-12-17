@@ -24,7 +24,7 @@ try {
                     alert('Your account has been succesfully registered. Check your email to confirm registration.');
                     $window.location.href = mainAdress;
                 }
-                if ($scope.returnCode === 5) {
+                else if ($scope.returnCode === 5) {
                     alert('This mail is already registered!');
                 }
                 else {

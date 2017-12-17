@@ -3,20 +3,21 @@ package com.example.daoLayer.entities;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
-public class TrainingInstance {
-  private long id;
-  private long trainingParent;
+public class TrainingInstance extends Entity {
+
+  private String trainingParent;
   private Date dateStart;
   private Date dateEnd;
   private List<TrainingReservation> trainingReservations;
 
-
   public TrainingInstance() {
+    super();
     this.trainingReservations = new ArrayList<>();
   }
 
-  public long getTrainingParent() {
+  public String getTrainingParent() {
     return trainingParent;
   }
 
@@ -28,16 +29,8 @@ public class TrainingInstance {
     this.dateEnd = dateEnd;
   }
 
-  public void setTrainingParent(final long trainingParent) {
+  public void setTrainingParent(final String trainingParent) {
     this.trainingParent = trainingParent;
-  }
-
-  public long getId() {
-    return id;
-  }
-
-  public void setId(final long id) {
-    this.id = id;
   }
 
   public Date getDateStart() {
@@ -63,13 +56,8 @@ public class TrainingInstance {
     }
     if (o instanceof TrainingInstance) {
       final TrainingInstance trainingInstance = (TrainingInstance) o;
-      return this.id == trainingInstance.getId();
+      return Objects.equals(this.id, trainingInstance.getId());
     }
     return false;
-  }
-
-  @Override
-  public int hashCode() {
-    return (int) this.id;
   }
 }

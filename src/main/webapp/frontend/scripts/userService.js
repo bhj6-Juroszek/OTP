@@ -40,7 +40,7 @@ try {
             return 'http://localhost:8181/';
         }
         function getMainAdress() {
-            return '/executable/frontend/index.html';
+            return 'INZ/executable/frontend/index.html';
         }
     });
 }

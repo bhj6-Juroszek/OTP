@@ -18,15 +18,14 @@ public class DAOHelper {
   public static final String RATES_TABLE_NAME = "rates";
   public static final int DEFAULT_CATEGORY_ID = 1;
   public static final String USERS_TABLE_NAME = "users";
-  public static final String USERS_CATEGORIES_MAP = "categories_map";
   public static final String PROFILES_TABLE_NAME = "profiles";
-  public static final String CITIES_TABLE_NAME = "cities";
+  public static final String PLACES_TABLE_NAME = "cities";
 
-  DAOHelper(@Nonnull final CategoriesDAO categoriesDAO, @Nonnull final CitiesDAO citiesDAO,
+  DAOHelper(@Nonnull final CategoriesDAO categoriesDAO, @Nonnull final PlacesDAO placesDAO,
       @Nonnull final UsersDAO usersDAO, @Nonnull final ProfilesDAO profilesDAO, @Nonnull final RatesDAO ratesDAO,
       @Nonnull final TrainingsDAO trainingsDAO) {
     this.categoriesDAO = categoriesDAO;
-    this.citiesDAO = citiesDAO;
+    this.placesDAO = placesDAO;
     this.usersDAO = usersDAO;
     this.trainingsDAO = trainingsDAO;
     this.profilesDAO = profilesDAO;
@@ -35,7 +34,7 @@ public class DAOHelper {
   }
 
   private CategoriesDAO categoriesDAO;
-  private CitiesDAO citiesDAO;
+  private PlacesDAO placesDAO;
   private UsersDAO usersDAO;
   private ProfilesDAO profilesDAO;
   private RatesDAO ratesDAO;
@@ -43,7 +42,7 @@ public class DAOHelper {
 
   private void createAll() {
     categoriesDAO.createTable();
-    citiesDAO.createTable();
+    placesDAO.createTable();
     usersDAO.createTable();
     profilesDAO.createTable();
     ratesDAO.createTable();

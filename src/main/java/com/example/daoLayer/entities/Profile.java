@@ -1,44 +1,36 @@
 package com.example.daoLayer.entities;
 
-import javax.persistence.*;
-
 /**
  * Created by Bartek on 2017-03-10.
  */
-public class Profile {
-    private long id;
-    private long userId;
-    private String text;
+public class Profile extends Entity {
 
-    public Profile(final long userId, final String text) {
-        this.userId = userId;
-        this.text = text;
-    }
-    public Profile() {
+  private String ownerId;
+  private String content;
 
-    }
+  public Profile() {
+    this("", "");
 
-    public long getId() {
-        return id;
-    }
+  }
+  public Profile(final String ownerId, final String content) {
+    super();
+    this.ownerId = ownerId;
+    this.content = content;
+  }
 
-    public void setId(final long id) {
-        this.id = id;
-    }
+  public String getOwnerId() {
+    return ownerId;
+  }
 
-    public long getUserId() {
-        return userId;
-    }
+  public void setOwnerId(final String ownerId) {
+    this.ownerId = ownerId;
+  }
 
-    public void setUserId(final long userId) {
-        this.userId = userId;
-    }
+  public String getContent() {
+    return content;
+  }
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(final String text) {
-        this.text = text;
-    }
+  public void setContent(final String content) {
+    this.content = content;
+  }
 }

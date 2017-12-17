@@ -13,4 +13,9 @@ otherwise You won't have access to mail sender object and app will crush
 -java -jar target/executable-1.jar
 -Point your browser to http://localhost:8181
 
-App deployed on: https://software-architecture.herokuapp.com/#!mainView
+IMPORTANT:
+Application is in development process. Change from VAADIN GUI to http views in progress. Currently application is in one big mess ;)
+
+Licenses:
+**Creative Commons Attribution 3.0** - http://creativecommons.org/licenses/by/3.0/ POSTGRESSUS template
+**MIT License** - schedule template
