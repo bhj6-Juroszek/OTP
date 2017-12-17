@@ -29,7 +29,7 @@ import static com.example.utils.SessionManager.HOST_NAME;
 public class UserManager {
 
   private static final Logger LOGGER = LogManager.getLogger(UserManager.class);
-  private final static String FROM = "Online training Platform";
+  private final static String FROM = "OTP";
   private final static String SUBJECT = "Yor account registration";
   private final static String CONTENT_TEMPLATE = "Your account has been created. Click http://%sconfirm.html?id=%s to" +
       " finish registration.";

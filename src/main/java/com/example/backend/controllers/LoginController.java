@@ -2,15 +2,15 @@ package com.example.backend.controllers;
 
 import com.example.backend.controllersEntities.requests.LoginRequest;
 import com.example.backend.controllersEntities.responses.LoginResponse;
-import com.example.backend.utils.ResponseCode;
 import com.example.backend.model.UserManager;
+import com.example.utils.ResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nonnull;
 
-import static com.example.backend.utils.ResponseCode.ALREADY_LOGGED_IN;
+import static com.example.utils.ResponseCode.ALREADY_LOGGED_IN;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @CrossOrigin

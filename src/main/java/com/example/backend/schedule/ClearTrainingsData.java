@@ -21,6 +21,6 @@ public class ClearTrainingsData implements Runnable {
 
   @Override
   public void run() {
-        trainingsDAO.clear();
+        trainingsDAO.clear(5);
   }
 }

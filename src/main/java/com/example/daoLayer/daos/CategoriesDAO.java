@@ -31,7 +31,7 @@ public class CategoriesDAO extends DAO {
     }
     template.execute
         ("CREATE TABLE " + CATEGORIES_TABLE_NAME + " (categoryId VARCHAR(50) NOT NULL, categoryName VARCHAR(50), " +
-            "categoryParent INT, " +
+            "categoryParent VARCHAR(50), " +
             "PRIMARY KEY(categoryId));"
         );
   }

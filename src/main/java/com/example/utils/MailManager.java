@@ -1,4 +1,4 @@
-package com.example.backend.utils;
+package com.example.utils;
 
 import com.vaadin.ui.Notification;
 import org.springframework.beans.factory.annotation.Autowired;

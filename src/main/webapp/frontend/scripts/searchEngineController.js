@@ -17,11 +17,10 @@ try {
                 $scope.allCategories = response.data;
                 for (var i = 0, l = response.data.length; i < l; i++) {
                     var category = response.data[i];
-                    if (category.parent === 0) {
+                    if (category.parent == 0) {
                         $scope.categories.push(category);
                     }
-                    $scope.parents.push(JSON.parse("{\"id\":" + category.parent + ", \"visible\":false}"
-                    ));
+                    $scope.parents.push(JSON.parse("{\"id\":\"" + category.parent + "\", \"visible\":false}"));
                 }
             }, function errorCallback() {
                 $scope.categories = [];
@@ -58,7 +57,7 @@ try {
                 method: 'GET',
                 url: userService.getHost() + 'cities'
             }).then(function successCallback(response) {
-                for(var i=0; i<100; i++) {
+                for(var i=0; (i<100 && i<response.data); i++) {
                     $scope.citiesList.push(response.data[i])
                 }
                 }
@@ -68,7 +67,7 @@ try {
 
         $scope.getVisibility = function (value) {
             for (var i = 0, l = $scope.parents.length; i < l; i++) {
-                if ($scope.parents[i].id === value) {
+                if ($scope.parents[i].id == value) {
                     return $scope.parents[i].visible;
                 }
             }

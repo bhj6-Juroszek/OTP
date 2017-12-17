@@ -1,7 +1,7 @@
 package com.example.backend.model;
 
-import com.example.backend.utils.MailManager;
 import com.example.daoLayer.daos.TrainingsDAO;
+import com.example.utils.MailManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.example.backend.utils;
+package com.example.utils;
 
 import com.example.backend.contexts.UserContext;
 import com.example.daoLayer.entities.User;

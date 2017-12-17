@@ -1,6 +1,6 @@
 package com.example;
 
-import com.example.backend.utils.SessionManager;
+import com.example.utils.SessionManager;
 import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -3,6 +3,8 @@ package com.example.backend.model;
 import com.example.daoLayer.daos.CategoriesDAO;
 import com.example.daoLayer.daos.UsersDAO;
 import com.example.daoLayer.entities.Category;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +16,7 @@ import java.util.List;
  */
 @Component
 public class CategoriesManager {
-
+  private static final Logger LOGGER = LogManager.getLogger(CategoriesManager.class);
   private final CategoriesDAO categoriesDAO;
   private final UsersDAO usersDAO;
 
@@ -25,7 +27,9 @@ public class CategoriesManager {
   }
 
   public List<Category> getCategories() {
-    return categoriesDAO.getAll();
+    final List<Category> categories = categoriesDAO.getAll();
+    LOGGER.info("Loaded list of categories: {}", categories);
+    return categories;
   }
 
   public Category getCategory(@Nonnull final String id) {

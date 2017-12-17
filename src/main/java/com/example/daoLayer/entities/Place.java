@@ -43,4 +43,9 @@ public class Place extends Entity {
   public void setLng(final double lng) {
     this.lng = lng;
   }
+
+  @Override
+  public String toString() {
+    return String.format("Place:[%s]", name);
+  }
 }

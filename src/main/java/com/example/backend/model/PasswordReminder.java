@@ -1,8 +1,8 @@
 package com.example.backend.model;
 
-import com.example.backend.utils.MailManager;
 import com.example.daoLayer.daos.UsersDAO;
 import com.example.daoLayer.entities.User;
+import com.example.utils.MailManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;

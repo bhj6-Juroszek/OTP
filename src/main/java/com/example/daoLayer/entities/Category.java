@@ -8,13 +8,13 @@ import java.util.Objects;
 public class Category extends Entity {
 
   private String name;
-  private long parent;
+  private String parent;
 
   public Category() {
-    this("", 0);
+    this("", "0");
   }
 
-  public Category(final String name, final long parent) {
+  public Category(final String name, final String parent) {
     super();
     this.name = name;
     this.parent = parent;
@@ -28,11 +28,11 @@ public class Category extends Entity {
     this.name = name;
   }
 
-  public long getParent() {
+  public String getParent() {
     return parent;
   }
 
-  public void setParent(final long parent) {
+  public void setParent(final String parent) {
     this.parent = parent;
   }
 
