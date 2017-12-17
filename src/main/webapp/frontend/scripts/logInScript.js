@@ -33,8 +33,7 @@ try {
                     $window.location.href = mainAdress;
                 }
             }, function errorCallback(response) {
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
+                alert('Could not connect to server. Please try again later');
             });
         };
         $scope.init = function () {

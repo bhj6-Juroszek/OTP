@@ -99,6 +99,19 @@ public class UserManager {
     return INVALID_DATA;
   }
 
+  public int updateDetails(@Nonnull final User user) {
+    if (usersDAO.existsAnother(user.getLogin(), "login", user.getId()) || usersDAO
+        .existsAnother(user.getMail(), "mail", user.getId())) {
+      return ACCOUNT_EXISTS;
+    }
+    final String changedPassword = user.getPassword();
+    if(!"".equals(changedPassword)) {
+      usersDAO.updatePassword(user.getId(), passwordEncoder.encode(changedPassword));
+    }
+    usersDAO.updateRecord(user);
+    return SUCCESS;
+  }
+
   private String getContent(@Nonnull final String uuid) {
     return String.format(CONTENT_TEMPLATE, HOST_NAME, uuid);
   }
@@ -109,11 +122,7 @@ public class UserManager {
     }
     try {
       final BufferedImage image = ImageIO.read(new URL(url));
-      if (image != null) {
-        return true;
-      } else {
-        return false;
-      }
+      return image != null;
     } catch (IOException e) {
       return false;
     }

@@ -7,6 +7,8 @@ try {
         return {
             getUserContext: getUserContext,
             setUserContext: setUserContext,
+            getPickableCategories: getPickableCategories,
+            setPickableCategories: setPickableCategories,
             getUUID: getUUID,
             setUUID: setUUID,
             getHost: getHost,
@@ -41,6 +43,15 @@ try {
         }
         function getMainAdress() {
             return 'index.html';
+        }
+        function getPickableCategories() {
+            if(!sessionStorage['categories']) {
+                return [];
+            }
+            return JSON.parse(sessionStorage.getItem("categories"));
+        }
+        function setPickableCategories(categories) {
+            sessionStorage.setItem("categories", JSON.stringify(categories))
         }
     });
 }

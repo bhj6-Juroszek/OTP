@@ -15,7 +15,7 @@ public abstract class AuthenticatedController {
     this.manager = manager;
   }
 
-  boolean authenticate(final String uuid) {
+  boolean authenticate(@Nonnull final String uuid) {
     return (manager.getLoggedUsers().containsKey(uuid));
   }
 }

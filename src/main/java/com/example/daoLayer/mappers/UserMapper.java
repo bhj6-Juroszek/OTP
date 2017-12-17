@@ -8,8 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 public class UserMapper implements RowMapper<User> {
 
-
-
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
         User user = new User();
         user.setId(rs.getString("userId"));
@@ -22,6 +20,5 @@ public class UserMapper implements RowMapper<User> {
         user.setImageUrl(rs.getString("imageUrl"));
         user.setConfirmation(rs.getString("confirmation"));
         return user;
-
     }
 }

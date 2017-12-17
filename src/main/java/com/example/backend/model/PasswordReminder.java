@@ -49,7 +49,7 @@ public class PasswordReminder {
       final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
       final String hashedPassword = passwordEncoder.encode(newPassword);
       user.setPassword(hashedPassword);
-      customersRep.updateRecord(user);
+      customersRep.updatePassword(user.getId(), hashedPassword);
       sender.sendMail("Juroszek",
           mail,
           "Your password has been changed",

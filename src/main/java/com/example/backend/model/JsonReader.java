@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import java.io.*;
@@ -15,6 +16,7 @@ import static java.lang.Math.*;
 /**
  * Created by Bartek on 2017-05-03.
  */
+@Component
 public class JsonReader {
 
   private static final double RADIUS = 6378.16;
@@ -46,16 +48,15 @@ public class JsonReader {
     return x * PI / 180;
   }
 
-  public static Place getPlace(@Nonnull final String url) throws JSONException {
+  public Place getPlace(@Nonnull final String placeName) throws JSONException {
     final String attributeUrl = String.format(
         "http://maps.google.com/maps/api/geocode/json?address=%s&sensor" +
             "=false&region=pl",
-        url);
+        placeName);
     final String strippedUrl = StringUtils.stripAccents(attributeUrl);
-    final String strippedUrl2 = strippedUrl.replace("ł", "l");
+    final String strippedUrl2 = strippedUrl.replace("ł", "l").replace(" ", "+");
     final Place result = new Place();
     try (InputStream is = new URL(strippedUrl2).openStream()) {
-//          url = URLEncoder.co(url, "UTF-8");
       final BufferedReader rd = new BufferedReader(new InputStreamReader(is, "UTF-8"));
       final String jsonText = readAll(rd);
       final JSONObject json = new JSONObject(jsonText);

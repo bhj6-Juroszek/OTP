@@ -1,13 +1,20 @@
 package com.example.backend.model;
 
 import com.example.daoLayer.daos.TrainingsDAO;
+import com.example.daoLayer.entities.Category;
+import com.example.daoLayer.entities.Place;
+import com.example.daoLayer.entities.Training;
 import com.example.utils.MailManager;
+import com.example.utils.ResponseCode;
+import org.omg.PortableInterceptor.SUCCESSFUL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
 import java.util.Calendar;
 import java.util.Date;
+
+import static com.example.utils.ResponseCode.*;
 
 /**
  * Created by Bartek on 2017-03-25.
@@ -17,11 +24,13 @@ public class TrainingManager {
 
   private final MailManager mailManager;
   private final TrainingsDAO trainingsDAO;
+  private JsonReader jsonReader;
 
   @Autowired
-  public TrainingManager(@Nonnull final MailManager mailManager, @Nonnull final TrainingsDAO trainingsDAO) {
+  public TrainingManager(@Nonnull final MailManager mailManager, @Nonnull final TrainingsDAO trainingsDAO, @Nonnull final JsonReader jsonReader) {
     this.mailManager = mailManager;
     this.trainingsDAO = trainingsDAO;
+    this.jsonReader = jsonReader;
   }
 
   private static final String[] DAYS = {
@@ -54,6 +63,19 @@ public class TrainingManager {
     }
 
     return result;
+  }
+
+  public int saveTrainingTemplate(@Nonnull final Training training, @Nonnull final String placeName, @Nonnull final String categoryId) {
+    final Place place = jsonReader.getPlace(placeName);
+    if(place != null) {
+      final Category idPlaceholder = new Category();
+      idPlaceholder.setId(categoryId);
+      training.setPlace(place);
+      training.setCategory(idPlaceholder);
+      trainingsDAO.saveTraining(training);
+      return SUCCESS;
+    }
+    return INVALID_DATA;
   }
 
 
@@ -96,5 +118,6 @@ public class TrainingManager {
 //    return trainingsDAO
 //        .getTrainingsByFilter(cityName, range, categoryId, sqlDateFirst, sqlDateLast, maxPrice, sortBy, showOnline);
 //  }
+
 
 }

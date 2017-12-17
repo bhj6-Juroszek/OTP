@@ -1,7 +1,10 @@
 package com.example.daoLayer.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Objects;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User extends Entity {
 
   private String name;

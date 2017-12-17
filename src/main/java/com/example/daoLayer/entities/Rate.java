@@ -1,10 +1,13 @@
 package com.example.daoLayer.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.sql.Date;
 
 /**
  * Created by Bartek on 2017-03-10.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Rate extends Entity {
 
   private String comment;

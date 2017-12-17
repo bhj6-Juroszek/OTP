@@ -1,10 +1,12 @@
 package com.example.daoLayer.daos;
 
+import com.example.backend.model.JsonReader;
 import com.example.daoLayer.AsyncDbSaver;
 import com.example.daoLayer.entities.*;
 import com.example.daoLayer.mappers.TrainingMapper;
 import com.example.daoLayer.mappers.TrainingWithInstancesExtractor;
-import com.example.backend.model.JsonReader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -16,16 +18,17 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static com.example.daoLayer.DAOHelper.*;
-import static java.util.concurrent.TimeUnit.*;
+import static java.util.concurrent.TimeUnit.DAYS;
 
 /**
  * Created by Bartek on 2017-03-25.
  */
 @Repository
 public class TrainingsDAO extends DAO {
+
+  private static final Logger LOGGER = LogManager.getLogger(TrainingsDAO.class);
 
   public TrainingsDAO(@Nonnull final JdbcTemplate template, @Nonnull final AsyncDbSaver asyncDbSaver) {
     super(template, asyncDbSaver);
@@ -37,26 +40,26 @@ public class TrainingsDAO extends DAO {
       return;
     }
     template.execute
-        ("CREATE TABLE " + TRAININGS_TABLE_NAME + " (trainingsId INT NOT NULL AUTO_INCREMENT, category INT, place " +
+        ("CREATE TABLE " + TRAININGS_TABLE_NAME + " (trainingsId VARCHAR (50) NOT NULL, category VARCHAR (50), place " +
             "VARCHAR(250), price DOUBLE, lat DOUBLE, lng DOUBLE, description VARCHAR(500), capacity INT, owner " +
-            "INT, PRIMARY" +
-            " KEY(trainingsId));"
+            "VARCHAR (50), PRIMARY" +
+            " KEY(trainingsId)) COLLATE utf8_general_ci;"
         );
     if (tableExists(TRAININGS_INSTANCES_TABLE_NAME)) {
       return;
     }
     template.execute
-        ("CREATE TABLE " + TRAININGS_INSTANCES_TABLE_NAME + " (trainingsInsId INT NOT NULL AUTO_INCREMENT, " +
+        ("CREATE TABLE " + TRAININGS_INSTANCES_TABLE_NAME + " (trainingsInsId VARCHAR (50) NOT NULL, " +
             "trainingInsDateStart DATE, trainingInsDateEnd DATE," +
-            " idTrainings INT, PRIMARY" +
+            " idTrainings VARCHAR (50), PRIMARY" +
             " KEY(trainingsInsId));"
         );
     if (tableExists(TRAININGS_RESERVATIONS_TABLE_NAME)) {
       return;
     }
     template.execute
-        ("CREATE TABLE " + TRAININGS_RESERVATIONS_TABLE_NAME + " (trainingsResId INT NOT NULL AUTO_INCREMENT, " +
-            "customerId INT, idTrainingsIns INT, PRIMARY KEY(trainingsResId));"
+        ("CREATE TABLE " + TRAININGS_RESERVATIONS_TABLE_NAME + " (trainingsResId VARCHAR (50) NOT NULL, " +
+            "customerId VARCHAR (50), idTrainingsIns VARCHAR (50), PRIMARY KEY(trainingsResId));"
         );
   }
 
@@ -133,10 +136,14 @@ public class TrainingsDAO extends DAO {
       final Category category = training.getCategory();
       final User owner = training.getOwner();
       if (place != null && category != null && owner != null) {
-        final String SQL = "INSERT INTO " + TRAININGS_TABLE_NAME + " (category, place, price, lat, lng, " +
-            "description, capacity, owner) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        template.update(SQL, category.getId(), place.getName(), training.getPrice(), place.getLat(),
-            place.getLng(), training.getDescription(), training.getCapacity(), training.getOwner().getId());
+        final String SQL = "INSERT INTO " + TRAININGS_TABLE_NAME + " (trainingsId, category, place, price, lat, lng, " +
+            "description, capacity, owner) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+          template.update(SQL, training.getId(), category.getId(), place.getName(), training.getPrice(), place.getLat(),
+              place.getLng(), training.getDescription(), training.getCapacity(), training.getOwner().getId());
+        } catch(Exception e) {
+          LOGGER.error(e);
+        }
       }
     });
   }

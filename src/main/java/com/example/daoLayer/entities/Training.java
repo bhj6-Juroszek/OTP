@@ -1,5 +1,8 @@
 package com.example.daoLayer.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -7,14 +10,18 @@ import java.util.Objects;
 /**
  * Created by Bartek on 2017-03-23.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Training extends Entity {
-
+  @JsonProperty(required = false)
   private Category category;
+  @JsonProperty(required = false)
   private Place place;
   private double price;
   private String description;
   private long capacity;
+  @JsonProperty(required = false)
   private User owner;
+  @JsonProperty(required = false)
   private List<TrainingInstance> instances;
 
 

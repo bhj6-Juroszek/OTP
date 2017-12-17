@@ -1,5 +1,8 @@
 package com.example.daoLayer.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TrainingReservation extends Entity {
 
   private String trainingInstance;

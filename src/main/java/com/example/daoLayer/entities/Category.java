@@ -1,10 +1,13 @@
 package com.example.daoLayer.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Objects;
 
 /**
  * Created by Bartek on 2017-03-11.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Category extends Entity {
 
   private String name;
@@ -38,7 +41,7 @@ public class Category extends Entity {
 
   @Override
   public String toString() {
-    return this.name;
+    return String.format("Category:[%s]", name);
   }
 
   @Override

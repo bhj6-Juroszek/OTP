@@ -1,12 +1,15 @@
 package com.example.daoLayer.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.UUID;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Entity {
 
   protected String id;
 
-  public Entity() {
+  Entity() {
     this.id = UUID.randomUUID().toString();
   }
 

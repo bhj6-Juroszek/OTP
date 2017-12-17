@@ -1,8 +1,11 @@
 package com.example.daoLayer.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by Bartek on 2017-05-04.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Place extends Entity {
 
   private String name;

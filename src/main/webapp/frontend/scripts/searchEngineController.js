@@ -8,6 +8,7 @@ try {
         $scope.parents = [];
         $scope.citiesList = [];
         $scope.selectedCategory = null;
+        $scope.pickableCategories = [];
         $scope.getCategories = function () {
             $http({
                 method: 'GET',
@@ -19,9 +20,12 @@ try {
                     var category = response.data[i];
                     if (category.parent == 0) {
                         $scope.categories.push(category);
+                    } else {
+                        $scope.pickableCategories.push(category)
                     }
                     $scope.parents.push(JSON.parse("{\"id\":\"" + category.parent + "\", \"visible\":false}"));
                 }
+                userService.setPickableCategories($scope.pickableCategories);
             }, function errorCallback() {
                 $scope.categories = [];
             });
@@ -57,9 +61,9 @@ try {
                 method: 'GET',
                 url: userService.getHost() + 'cities'
             }).then(function successCallback(response) {
-                for(var i=0; (i<100 && i<response.data); i++) {
-                    $scope.citiesList.push(response.data[i])
-                }
+                    for (var i = 0; (i < 100 && i < response.data); i++) {
+                        $scope.citiesList.push(response.data[i])
+                    }
                 }
                 , function errorCallback() {
                 });

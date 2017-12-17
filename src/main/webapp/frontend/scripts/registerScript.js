@@ -1,7 +1,4 @@
-try {
-    var controller = $controller('myAppController', [])
-} catch (e) {
-    var app = angular.module('myApp');
+var app = angular.module('myApp');
     app.controller('myAppController', function ($scope, $http, $window, userService) {
         $scope.email = "jo";
         $scope.password = "";
@@ -36,8 +33,6 @@ try {
 
         };
 
-
-
         $scope.init = function () {
             $scope.email = "";
             $scope.password = "";
@@ -45,4 +40,3 @@ try {
             $scope.mailExists = false;
         }
     });
-}

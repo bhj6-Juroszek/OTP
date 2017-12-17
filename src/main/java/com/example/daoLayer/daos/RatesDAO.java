@@ -34,7 +34,7 @@ public class RatesDAO extends DAO {
     template.execute
         ("CREATE TABLE " + RATES_TABLE_NAME + " (rateId VARCHAR(50) NOT NULL, rateComment VARCHAR(250), rateValue " +
             "INT, " +
-            "ratedUserId INT, ratingUserId INT, rateDate DATE, PRIMARY KEY(rateId));"
+            "ratedUserId VARCHAR (50), ratingUserId VARCHAR (50), rateDate DATE, PRIMARY KEY(rateId));"
         );
   }
 

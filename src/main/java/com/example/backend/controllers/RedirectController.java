@@ -1,5 +1,6 @@
 package com.example.backend.controllers;
 
+import com.example.backend.model.UserManager;
 import com.example.daoLayer.daos.UsersDAO;
 import com.example.daoLayer.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,28 +23,20 @@ import static com.example.utils.SessionManager.DOMAIN_NAME;
 @RequestMapping("/")
 public class RedirectController {
 
-  private UsersDAO usersDAO;
+  private UserManager userManager;
   private static final String REDIRECT = String.format("://%sindex.html", DOMAIN_NAME);
 
   @RequestMapping(value = "/confirm", method = RequestMethod.GET)
-  public String processForm(@RequestParam("id") String token, HttpServletRequest request
-  ) {
-    if (token.equals("")) {
-      return request.getScheme() + REDIRECT;
-
+  public String processForm(@RequestParam("id") String token, HttpServletRequest request) {
+    final String redirectUrl ="redirect:"+ request.getScheme() + REDIRECT;
+    if (!token.equals("")) {
+      userManager.confirmAccount(token);
     }
-    System.out.println(token);
-    String redirectUrl = request.getScheme() + REDIRECT;
-    final User cust = usersDAO.getUserByConfirmation(token);
-    if (cust != null) {
-      cust.setConfirmation("");
-      usersDAO.updateRecord(cust);
-    }
-    return "redirect:" + redirectUrl;
+    return redirectUrl;
   }
 
   @Autowired
-  public void setUsersDAO(@Nonnull final UsersDAO usersDAO) {
-    this.usersDAO = usersDAO;
+  public void setUserManager(@Nonnull final UserManager userManager) {
+    this.userManager = userManager;
   }
 }
