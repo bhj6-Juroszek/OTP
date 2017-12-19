@@ -9,7 +9,7 @@ app.controller('trainingTemplateController', function ($scope, $http, $window, u
     $scope.setCurrentCategory = function (category) {
         $scope.currentCategory = category;
     };
-
+    var mainAdress = userService.getMainAdress();
     $scope.saveTrainingTemplate = function () {
         if ($scope.confirm()) {
             if ($scope.place === "") {
@@ -30,14 +30,15 @@ app.controller('trainingTemplateController', function ($scope, $http, $window, u
             }).then(function successCallback(response) {
                 $scope.returnCode = response.data;
                 if ($scope.returnCode === 1) {
-                    alert('Your account has been updated');
+                    alert('Training saved successfully');
+                }
+                else if ($scope.returnCode === 4) {
+                    alert('Session expired !');
+                    userService.clearImportantData();
                     $window.location.href = mainAdress;
                 }
-                else if ($scope.returnCode === 5) {
-                    alert('This mail is already registered!');
-                }
                 else {
-                    alert('Something went wrong. Try again later');
+                    alert('Couldn\'t find place, try again with something more general or without diacritic signs!');
                 }
             }, function errorCallback(response) {
                 alert('Could not connect to server. Please try again later');

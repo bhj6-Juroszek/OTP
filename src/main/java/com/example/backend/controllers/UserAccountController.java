@@ -1,5 +1,6 @@
 package com.example.backend.controllers;
 
+import com.example.backend.controllersEntities.responses.UserTrainingsResponse;
 import com.example.backend.model.JsonReader;
 import com.example.backend.model.TrainingManager;
 import com.example.backend.model.UserManager;
@@ -11,7 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nonnull;
 
+import java.util.List;
+
 import static com.example.utils.ResponseCode.NOT_AUTHENTICATED;
+import static com.example.utils.ResponseCode.SUCCESS;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @CrossOrigin
@@ -29,6 +34,20 @@ public class UserAccountController extends AuthenticatedController {
       return userManager.updateDetails(user);
     }
     return NOT_AUTHENTICATED;
+  }
+
+
+  @RequestMapping(value = "/getUserTrainings", method = GET)
+  public @ResponseBody
+  UserTrainingsResponse getUserTrainings(@RequestParam("uuid") final String uuid) {
+    final UserTrainingsResponse response = new UserTrainingsResponse();
+    if (authenticate(uuid)) {
+      response.setResponseCode(SUCCESS);
+      response.setUserTrainings(trainingManager.getUserTrainings(uuid));
+    } else {
+      response.setResponseCode(NOT_AUTHENTICATED);
+    }
+    return response;
   }
 
   @RequestMapping(value = "/saveTrainingTemplate", method = POST)

@@ -31,6 +31,24 @@ app.controller('settingsController', function ($scope, $http, $window, userServi
         $scope.schedule = false;
     };
 
+    var loadTrainings = function () {
+        $http({
+            method: 'GET',
+            url: userService.getHost() + 'getUserTrainings',
+            params: {"uuid": userService.getUUID()}
+        }).then(function successCallback(response) {
+            $scope.returnCode = response.data;
+            if ($scope.returnCode === 1) {
+                alert('Your account has been updated');
+            }
+            //TODO finish
+        }, function errorCallback(response) {
+            alert('Could not connect to server. Please try again later');
+        });
+    };
+    loadTrainings();
+
+
     $scope.changeDetailsSubmit = function () {
         if ($scope.confirm()) {
             user.name = $scope.userNameChange;

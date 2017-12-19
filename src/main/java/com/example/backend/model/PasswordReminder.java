@@ -50,7 +50,7 @@ public class PasswordReminder {
       final String hashedPassword = passwordEncoder.encode(newPassword);
       user.setPassword(hashedPassword);
       customersRep.updatePassword(user.getId(), hashedPassword);
-      sender.sendMail("Juroszek",
+      sender.sendMail("OTP",
           mail,
           "Your password has been changed",
           "Your new Password: " + newPassword);

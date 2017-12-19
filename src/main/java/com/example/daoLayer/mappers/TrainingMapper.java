@@ -17,14 +17,16 @@ public class TrainingMapper implements RowMapper<Training> {
   public Training mapRow(ResultSet rs, int rowNum) throws SQLException {
     final UserMapper userMapper = new UserMapper();
     final CategoryMapper categoryMapper = new CategoryMapper();
-    final PlaceMapper placeMapper = new PlaceMapper();
     final Training result = new Training();
     result.setId(rs.getString("trainingsId"));
     result.setDescription(rs.getString("description"));
     result.setPrice(rs.getDouble("price"));
     result.setCapacity(rs.getInt("capacity"));
 
-    final Place place = placeMapper.mapRow(rs, rowNum);
+    final Place place = new Place();
+    place.setName(rs.getString("place"));
+    place.setLat(rs.getDouble("lat"));
+    place.setLng(rs.getDouble("lng"));
     result.setPlace(place);
     final Category category = categoryMapper.mapRow(rs, rowNum);
     result.setCategory(category);

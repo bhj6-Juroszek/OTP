@@ -63,8 +63,8 @@ public class TrainingsDAO extends DAO {
         );
   }
 
-  public List<Training> getTrainings(final long categoryId, @Nonnull final Date from, @Nonnull final Date to) {
-    return getTrainings(categoryId, from, to, 0, 0.0, 0, null);
+  public List<Training> getTrainings(@Nullable String categoryId, @Nonnull final Date from, @Nonnull final Date to) {
+    return getTrainings(categoryId, from, to, null, 0.0, 0, null);
   }
 
   public List<Training> getTrainings(final long categoryId, @Nonnull final Date from, @Nonnull final Date to,
@@ -72,13 +72,10 @@ public class TrainingsDAO extends DAO {
     return getTrainings(categoryId, from, to, 0.0);
   }
 
-  public List<Training> getTrainings(final long categoryId, @Nonnull final Date fromDate, @Nonnull final Date toDate,
-      final long trainerId, final double maxPrice, final int maxDistance, @Nullable final Place placeAround) {
+  public List<Training> getTrainings(@Nullable final String categoryId, @Nullable final Date fromDate, @Nullable final Date toDate,
+      @Nullable final String trainerId, final double maxPrice, final int maxDistance, @Nullable final Place placeAround) {
     final StringBuilder SQL = new StringBuilder();
-    final MapSqlParameterSource parameterSource = new MapSqlParameterSource()
-        .addValue("categoryId", categoryId, Types.NUMERIC)
-        .addValue("fromDate", fromDate, Types.TIMESTAMP)
-        .addValue("toDate", toDate, Types.TIMESTAMP);
+    final MapSqlParameterSource parameterSource = new MapSqlParameterSource();
     SQL.append("SELECT * FROM " + TRAININGS_TABLE_NAME + " tr " +
         "LEFT OUTER JOIN " + TRAININGS_INSTANCES_TABLE_NAME + " trIns ON tr.trainingsId = trIns.idTrainings " +
         "LEFT OUTER JOIN " + TRAININGS_RESERVATIONS_TABLE_NAME + " trRes ON trIns.trainingsInsId = trRes" +
@@ -87,31 +84,56 @@ public class TrainingsDAO extends DAO {
         "INNER JOIN " + USERS_TABLE_NAME + " usrs ON tr.owner = usrs.userId " +
         "LEFT OUTER JOIN " + "(SELECT userId AS c_userId, userName AS c_userName, adress AS c_adress, mail AS c_mail," +
         " " +
-        "imageUrl AS c_imageUrl FROM " + USERS_TABLE_NAME + ") usrsRes ON usrsRes.c_userId = trRes.customerId " +
-        "WHERE (cats.categoryId = :categoryId " +
-        "OR cats.categoryParent = :categoryId) " +
-        "AND (trIns.trainingInsDateStart BETWEEN :fromDate AND :toDate) ");
+        "imageUrl AS c_imageUrl FROM " + USERS_TABLE_NAME + ") usrsRes ON usrsRes.c_userId = trRes.customerId ");
     applyTrainerFilter(SQL, parameterSource, trainerId);
     applyMaxPriceFilter(SQL, parameterSource, maxPrice);
+    applyCategoryFilter(SQL, parameterSource, categoryId);
+    applyDateFilter(SQL, parameterSource, fromDate, toDate);
     return applyDistanceFilter(parameterJdbcTemplate.query(SQL.toString(),
         parameterSource,
         new TrainingWithInstancesExtractor()), maxDistance, placeAround);
   }
 
+  private void applyDateFilter(@Nonnull final StringBuilder builder,
+      @Nonnull final MapSqlParameterSource parameterSource, @Nullable final Date dateFrom, @Nullable final Date dateTo) {
+    if (dateFrom != null && dateTo != null) {
+      resolveWhenOrAndQuery(builder);
+      builder.append(" (trIns.trainingInsDateStart BETWEEN :fromDate AND :toDate) ");
+     parameterSource.addValue("fromDate", dateFrom, Types.TIMESTAMP)
+          .addValue("toDate", dateTo, Types.TIMESTAMP);
+    }
+  }
+
+  private void applyCategoryFilter(@Nonnull final StringBuilder builder,
+      @Nonnull final MapSqlParameterSource parameterSource, @Nullable final String categoryId) {
+    if (categoryId != null) {
+      resolveWhenOrAndQuery(builder);
+      builder.append(" (cats.categoryId = :categoryId OR cats.categoryParent = :categoryId) ");
+      parameterSource.addValue("categoryId", categoryId, Types.VARCHAR);
+    }
+  }
+
   private void applyTrainerFilter(@Nonnull final StringBuilder builder,
-      @Nonnull final MapSqlParameterSource parameterSource, final long trainerId) {
-    if (trainerId != 0) {
-      builder.append(" AND usrs.userId = :trainerId ");
-      parameterSource.addValue("trainerId", trainerId, Types.NUMERIC);
+      @Nonnull final MapSqlParameterSource parameterSource, @Nullable final String trainerId) {
+    if (trainerId != null) {
+      resolveWhenOrAndQuery(builder);
+      builder.append(" usrs.userId = :trainerId ");
+      parameterSource.addValue("trainerId", trainerId, Types.VARCHAR);
     }
   }
 
   private void applyMaxPriceFilter(@Nonnull final StringBuilder builder,
       @Nonnull final MapSqlParameterSource parameterSource, final double maxPrice) {
     if (maxPrice > 0.0) {
-      builder.append(" AND tr.price <= :maxPrice ");
+      resolveWhenOrAndQuery(builder);
+      builder.append(" tr.price <= :maxPrice ");
       parameterSource.addValue("maxPrice", maxPrice, Types.DOUBLE);
     }
+  }
+
+  private void resolveWhenOrAndQuery(@Nonnull final StringBuilder builder) {
+    final String whereOrAnd = (builder.toString().contains("WHERE")) ? " AND" : " WHERE";
+    builder.append(whereOrAnd);
   }
 
   private List<Training> applyDistanceFilter(@Nonnull final List<Training> trainings, final int maxDistance,

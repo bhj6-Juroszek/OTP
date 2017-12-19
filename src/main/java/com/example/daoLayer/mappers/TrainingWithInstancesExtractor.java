@@ -10,10 +10,7 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import javax.annotation.Nonnull;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TrainingWithInstancesExtractor implements ResultSetExtractor<List<Training>> {
 
@@ -27,17 +24,18 @@ public class TrainingWithInstancesExtractor implements ResultSetExtractor<List<T
     final Map<TrainingInstance, Training> trainingInstancesMap = new HashMap();
     while (rs.next()) {
       final Training training = trainingMapper.mapRow(rs, 0);
-      final TrainingInstance trainingInstance = mapTrainingInstance(rs);
-      final TrainingReservation trainingReservation = mapTrainingReservation(rs);
+      final Optional<TrainingInstance> trainingInstance = mapTrainingInstance(rs);
+      final Optional<TrainingReservation> trainingReservation = mapTrainingReservation(rs);
       resultMap.putIfAbsent(training, PLACEHOLDER);
-      resultMap.computeIfPresent(training, (key, value) -> {
-        trainingInstancesMap.putIfAbsent(trainingInstance, key);
-        trainingInstancesMap.computeIfPresent(trainingInstance, (instanceKey, instanceValue) -> {
-          instanceKey.getTrainingReservations().add(trainingReservation);
+      trainingInstance.ifPresent(trainingInstanceValue -> resultMap.computeIfPresent(training, (key, value) -> {
+        trainingInstancesMap.putIfAbsent(trainingInstanceValue, key);
+        trainingInstancesMap.computeIfPresent(trainingInstanceValue, (instanceKey, instanceValue) -> {
+          trainingReservation
+              .ifPresent(trainingReservation1 -> instanceKey.getTrainingReservations().add(trainingReservation1));
           return key;
         });
         return PLACEHOLDER;
-      });
+      }));
     }
     for (Map.Entry<TrainingInstance, Training> e : trainingInstancesMap.entrySet()) {
       e.getValue().getInstances().add(e.getKey());
@@ -45,30 +43,30 @@ public class TrainingWithInstancesExtractor implements ResultSetExtractor<List<T
     return new ArrayList<>(resultMap.keySet());
   }
 
-  private TrainingReservation mapTrainingReservation(@Nonnull final ResultSet rs) throws SQLException {
+  private Optional<TrainingReservation> mapTrainingReservation(@Nonnull final ResultSet rs) throws SQLException {
     final String id = rs.getString("trainingsResId");
     if (id == null) {
-      return null;
+      return Optional.empty();
     }
     final TrainingReservation trainingReservation = new TrainingReservation();
     trainingReservation.setId(id);
     trainingReservation.setTrainingInstance(rs.getString("idTrainingsIns"));
     final User customer = mapCustomer(rs);
     trainingReservation.setCustomer(customer);
-    return trainingReservation;
+    return Optional.of(trainingReservation);
   }
 
-  private TrainingInstance mapTrainingInstance(@Nonnull final ResultSet rs) throws SQLException {
+  private Optional<TrainingInstance> mapTrainingInstance(@Nonnull final ResultSet rs) throws SQLException {
     final String id = rs.getString("trainingsInsId");
     if (id == null) {
-      return null;
+      return Optional.empty();
     }
     final TrainingInstance trainingInstance = new TrainingInstance();
     trainingInstance.setId(id);
     trainingInstance.setDateEnd(rs.getTimestamp("trainingInsDateEnd"));
     trainingInstance.setDateStart(rs.getTimestamp("trainingInsDateStart"));
     trainingInstance.setTrainingParent(rs.getString("idTrainings"));
-    return trainingInstance;
+    return Optional.of(trainingInstance);
   }
 
   private User mapCustomer(@Nonnull final ResultSet rs) throws SQLException {

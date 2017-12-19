@@ -82,8 +82,8 @@
             <li class="active">Left Sidebar</li>
         </ol>
 
-        <div class="row" ng-controller="settingsController">
 
+        <div class="row" ng-controller="settingsController">
             <!-- Sidebar -->
             <aside class="col-md-4 sidebar sidebar-left">
 
@@ -157,13 +157,25 @@
                                ng-model="capacity" width="2" min="1">
                     </div>
 
-                <div class="widget categoriesb">
-                    <a class="btn" ng-click="saveTrainingTemplate()">Save training template</a>
-                </div>
+                    <div class="widget categoriesb">
+                        <a class="btn" ng-click="saveTrainingTemplate()">Save training template</a>
+                    </div>
                 </div>
             </div>
             <!-- /ADD TRAINING TEMPLATE -->
 
+            <!-- ADD TRAINING INSTANCE -->
+            <div class="col-md-8 maincontent container" ng-show="trainings"
+                 ng-controller="trainingTemplateController">
+                <div class="widget">
+
+
+                    <div class="widget categoriesb">
+                        <a class="btn" ng-click="saveTrainingTemplate()">Save training</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /ADD TRAINING INSTANCE -->
 
         </div>
     </div>

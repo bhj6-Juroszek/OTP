@@ -16,8 +16,7 @@ try {
                 alert('You have been loged out');
                 window.location.href = mainAdress;
             }, function errorCallback() {
-                userService.setUUID(null);
-                userService.setUserContext(null);
+                userService.clearImportantData();
                 alert('Session expired');
                 window.location.href = mainAdress;
             });

@@ -4,8 +4,10 @@ import com.example.daoLayer.daos.TrainingsDAO;
 import com.example.daoLayer.entities.Category;
 import com.example.daoLayer.entities.Place;
 import com.example.daoLayer.entities.Training;
+import com.example.daoLayer.entities.User;
 import com.example.utils.MailManager;
 import com.example.utils.ResponseCode;
+import com.example.utils.SessionManager;
 import org.omg.PortableInterceptor.SUCCESSFUL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Nonnull;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static com.example.utils.ResponseCode.*;
 
@@ -24,13 +27,15 @@ public class TrainingManager {
 
   private final MailManager mailManager;
   private final TrainingsDAO trainingsDAO;
-  private JsonReader jsonReader;
+  private final JsonReader jsonReader;
+  private final SessionManager sessionManager;
 
   @Autowired
-  public TrainingManager(@Nonnull final MailManager mailManager, @Nonnull final TrainingsDAO trainingsDAO, @Nonnull final JsonReader jsonReader) {
+  public TrainingManager(@Nonnull final MailManager mailManager, @Nonnull final TrainingsDAO trainingsDAO, @Nonnull final JsonReader jsonReader, @Nonnull final SessionManager sessionManager) {
     this.mailManager = mailManager;
     this.trainingsDAO = trainingsDAO;
     this.jsonReader = jsonReader;
+    this.sessionManager = sessionManager;
   }
 
   private static final String[] DAYS = {
@@ -76,6 +81,12 @@ public class TrainingManager {
       return SUCCESS;
     }
     return INVALID_DATA;
+  }
+
+  public List<Training> getUserTrainings(@Nonnull final String uuid) {
+    final User loggedUser = sessionManager.getLoggedUsers().get(uuid).getUser();
+    return trainingsDAO.getTrainings(null, null, null,
+    loggedUser.getId(), 0, 0, null);
   }
 
 

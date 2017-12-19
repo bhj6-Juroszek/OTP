@@ -12,7 +12,8 @@ try {
             getUUID: getUUID,
             setUUID: setUUID,
             getHost: getHost,
-            getMainAdress: getMainAdress
+            getMainAdress: getMainAdress,
+            clearImportantData: clearImportantData
         };
 
         // .................
@@ -52,6 +53,10 @@ try {
         }
         function setPickableCategories(categories) {
             sessionStorage.setItem("categories", JSON.stringify(categories))
+        }
+        function clearImportantData() {
+            setUUID(null);
+            setUserContext(null);
         }
     });
 }

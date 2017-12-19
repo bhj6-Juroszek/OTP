@@ -87,6 +87,7 @@
                     <option ng-repeat="y in citiesList" data-tokens="y.name">{{y.name}}</option>
                 </select>
         </div>
+        <aside class="col-md-4 sidebar sidebar-left">
         <ul class="categoriesb">
             <li class="categoriesb" ng-repeat="x in categories">
                 <ul class="categoriesb subitem">
@@ -97,6 +98,7 @@
                 </ul>
             </li>
         </ul>
+        </aside>
         <a ng-click="search()" class="categoriesb">SEARCH</a>
     </div>
 
