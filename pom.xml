@@ -85,24 +85,11 @@
 			<artifactId>tomcat-jasper-el</artifactId>
 			<version>${tomcat.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-jsp-api</artifactId>
 			<version>${tomcat.version}</version>
-		</dependency>
-
-
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>2.6.1</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.6.1</version>
-			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
@@ -263,23 +250,6 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>com.heroku.sdk</groupId>
-				<artifactId>heroku-maven-plugin</artifactId>
-				<version>0.4.4</version>
-				<configuration>
-					<jdkVersion>1.8</jdkVersion>
-					<appName>software-architecture</appName>
-					<includeTarget>false</includeTarget>
-					<includes>
-						<include>target/my-app-1.0.jar</include>
-					</includes>
-					<processTypes>
-						<web>java -jar target/executable-1.jar</web>
-					</processTypes>
-				</configuration>
 			</plugin>
 		</plugins>
 

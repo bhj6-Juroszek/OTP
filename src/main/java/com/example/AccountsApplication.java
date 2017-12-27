@@ -10,9 +10,6 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
 
 import static org.apache.log4j.Level.INFO;
 
@@ -32,15 +29,6 @@ public class AccountsApplication extends SpringBootServletInitializer {
     context = SpringApplication.run(AccountsApplication.class, args);
     LOGGER.log(INFO, "Started Application");
     LOGGER.log(INFO, "Finished loading cities list");
-  }
-
-  private ApiInfo apiInfo() {
-    return new ApiInfoBuilder()
-        .title("Software Architecture")
-        .description("Simple  web application")
-        .contact(new Contact("Bartłomiej Juroszek", "", "jurbar369@gmail.com"))
-        .version("1.0")
-        .build();
   }
 
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
