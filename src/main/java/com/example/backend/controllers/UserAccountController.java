@@ -1,7 +1,6 @@
 package com.example.backend.controllers;
 
 import com.example.backend.controllersEntities.responses.UserTrainingsResponse;
-import com.example.backend.model.JsonReader;
 import com.example.backend.model.TrainingManager;
 import com.example.backend.model.UserManager;
 import com.example.daoLayer.entities.Training;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nonnull;
 
-import java.util.List;
+import java.util.Date;
 
 import static com.example.utils.ResponseCode.NOT_AUTHENTICATED;
 import static com.example.utils.ResponseCode.SUCCESS;
@@ -36,7 +35,6 @@ public class UserAccountController extends AuthenticatedController {
     return NOT_AUTHENTICATED;
   }
 
-
   @RequestMapping(value = "/getUserTrainings", method = GET)
   public @ResponseBody
   UserTrainingsResponse getUserTrainings(@RequestParam("uuid") final String uuid) {
@@ -56,13 +54,25 @@ public class UserAccountController extends AuthenticatedController {
       @RequestParam("categoryId") final String categoryId, @RequestParam("price") final Double price,
       @RequestParam("description") final String description, @RequestParam("capacity") final int capacity) {
     if (authenticate(uuid)) {
-    final User user = manager.getLoggedUsers().get(uuid).getUser();
-    final Training training = new Training();
-    training.setOwner(user);
-    training.setPrice(price);
-    training.setCapacity(capacity);
-    training.setDescription(description);
-    return trainingManager.saveTrainingTemplate(training, place, categoryId);
+      final User user = manager.getLoggedUsers().get(uuid).getUser();
+      final Training training = new Training();
+      training.setOwner(user);
+      training.setPrice(price);
+      training.setCapacity(capacity);
+      training.setDescription(description);
+      return trainingManager.saveTrainingTemplate(training, place, categoryId);
+    }
+    return NOT_AUTHENTICATED;
+  }
+
+  @RequestMapping(value = "/saveTrainingInstance", method = POST)
+  public @ResponseBody
+  int saveTrainingInstance(@RequestParam("uuid") final String uuid, @RequestParam("date") final long date,
+      @RequestParam("trainingTemplate") final String templateId, @RequestParam("duration") final double duration) {
+    if (authenticate(uuid)) {
+      final Date startDate = new Date(date);
+      trainingManager.saveTrainingInstance(templateId, startDate, duration);
+      return SUCCESS;
     }
     return NOT_AUTHENTICATED;
   }

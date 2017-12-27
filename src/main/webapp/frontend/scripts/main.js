@@ -6,7 +6,7 @@ jQuery(document).ready(function($){
 	
 	//should add a loding while the events are organized 
 
-	function SchedulePlan( element ) {
+	function SchedulePlan( element) {
 		this.element = element;
 		this.timeline = this.element.find('.timeline');
 		this.timelineItems = this.timeline.find('li');
@@ -115,11 +115,11 @@ jQuery(document).ready(function($){
 		this.modalHeader.find('.event-date').text(event.find('.event-date').text());
 		this.modal.attr('data-event', event.parent().attr('data-event'));
 
-		//update event content
-		this.modalBody.find('.event-info').load(event.parent().attr('data-content')+'.html .event-info > *', function(data){
-			//once the event content has been loaded
-			self.element.addClass('content-loaded');
-		});
+		// //update event content
+		// this.modalBody.load('event.html', function(data){
+         //    //once the event content has been loaded
+		// 	self.element.addClass('content-loaded');
+		// });
 
 		this.element.addClass('modal-is-open');
 

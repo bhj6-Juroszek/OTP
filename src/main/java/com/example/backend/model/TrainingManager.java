@@ -1,10 +1,8 @@
 package com.example.backend.model;
 
 import com.example.daoLayer.daos.TrainingsDAO;
-import com.example.daoLayer.entities.Category;
-import com.example.daoLayer.entities.Place;
-import com.example.daoLayer.entities.Training;
-import com.example.daoLayer.entities.User;
+import com.example.daoLayer.entities.*;
+import com.example.utils.DateUtils;
 import com.example.utils.MailManager;
 import com.example.utils.ResponseCode;
 import com.example.utils.SessionManager;
@@ -81,6 +79,14 @@ public class TrainingManager {
       return SUCCESS;
     }
     return INVALID_DATA;
+  }
+
+  public void saveTrainingInstance(@Nonnull final String templateID, @Nonnull final Date date, final double duration) {
+    final TrainingInstance trainingInstance = new TrainingInstance();
+    trainingInstance.setDateStart(date);
+    trainingInstance.setDateEnd(DateUtils.addHoursToDate(date, duration));
+    trainingInstance.setTrainingParent(templateID);
+    trainingsDAO.saveTrainingInstance(trainingInstance);
   }
 
   public List<Training> getUserTrainings(@Nonnull final String uuid) {

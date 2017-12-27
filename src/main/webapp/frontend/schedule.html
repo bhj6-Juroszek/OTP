@@ -7,6 +7,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" rel="stylesheet">
 	<link rel="stylesheet" href="assets/css/reset.css"> <!-- CSS reset -->
 	<link rel="stylesheet" href="assets/css/style.css"> <!-- Resource style -->
+    <link rel="stylesheet" href="assets/css/main.css">
   	
 	<title>Schedule Template | CodyHouse</title>
 </head>
@@ -14,6 +15,10 @@
 <div class="cd-schedule loading">
 	<div class="timeline">
 		<ul>
+            <li><span>07:00</span></li>
+            <li><span>07:30</span></li>
+            <li><span>08:00</span></li>
+            <li><span>08:30</span></li>
 			<li><span>09:00</span></li>
 			<li><span>09:30</span></li>
 			<li><span>10:00</span></li>
@@ -33,6 +38,14 @@
 			<li><span>17:00</span></li>
 			<li><span>17:30</span></li>
 			<li><span>18:00</span></li>
+			<li><span>18:30</span></li>
+			<li><span>19:00</span></li>
+			<li><span>19:30</span></li>
+			<li><span>20:00</span></li>
+			<li><span>20:30</span></li>
+			<li><span>21:00</span></li>
+			<li><span>21:30</span></li>
+			<li><span>22:00</span></li>
 		</ul>
 	</div> <!-- .timeline -->
 
@@ -156,19 +169,19 @@
 				<div class="top-info"><span>Friday</span></div>
 
 				<ul>
-					<li class="single-event" data-start="10:00" data-end="11:00"  data-content="event-rowing-workout" data-event="event-2">
+					<li class="single-event" data-start="10:00" data-end="11:00"  data-content="event" data-event="event-2">
 						<a href="#0">
 							<em class="event-name">Rowing Workout</em>
 						</a>
 					</li>
 
-					<li class="single-event" data-start="12:30" data-end="14:00" data-content="event-abs-circuit" data-event="event-1">
+					<li class="single-event" data-start="12:30" data-end="14:00" data-content="event" data-event="event-1">
 						<a href="#0">
 							<em class="event-name">Abs Circuit</em>
 						</a>
 					</li>
 
-					<li class="single-event" data-start="15:45" data-end="19:20"  data-content="event-yoga-1" data-event="event-3">
+					<li class="single-event" data-start="15:45" data-end="19:20"  data-content="event" data-event="event-3">
 						<a href="#0">
 							<em class="event-name">Yoga Level 1</em>
 						</a>
@@ -188,11 +201,16 @@
 			<div class="header-bg"></div>
 		</header>
 
-		<div class="body">
-			<div class="event-info"></div>
-			<div class="body-bg"></div>
+		<div class="body settingsform" ng-app="myApp" ng-controller="trainingViewController">
+            <aside class="col-md-4 sidebar sidebar-left">
+                <div class="btn-group-vertical">
+                    <button ng-click="show()" class=" categoriesb">Change account detail
+                    </button>
+                    <button class=" categoriesb" ng-show="test">Add training template
+                    </button>
+                </div>
+            </aside>
 		</div>
-
 		<a href="#0" class="close">Close</a>
 	</div>
 
@@ -204,5 +222,12 @@
 	if( !window.jQuery ) document.write('<script src="js/jquery-3.0.0.min.js"><\/script>');
 </script>
 <script src="scripts/main.js"></script> <!-- Resource jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<script src="scripts/userService.js"></script>
+<script src="scripts/trainingViewController.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="assets/js/headroom.min.js"></script>
+<script src="assets/js/jQuery.headroom.min.js"></script>
 </body>
 </html>

@@ -76,7 +76,7 @@ try {
                 }
             }
         };
-        $scope.test = function (category) {
+        $scope.selectMainCategory = function (category) {
             setVisible(category.id);
             $scope.setSelectedCategory(category);
         };

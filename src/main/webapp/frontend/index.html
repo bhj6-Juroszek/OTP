@@ -17,7 +17,8 @@
     <!-- Custom styles for our template -->
     <link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen">
     <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
     <!-- Latest compiled and minified JavaScript -->
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -34,7 +35,7 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span
                         class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button>
                 <a class="navbar-brand" href="index.html"><img src="assets/images/favicon.ico"
-                                                               alt="Logo placeholder"></a>
+                                                               alt="Logo"></a>
             </div>
             <ul class="nav navbar-nav pull-right">
                 <li class="active"><a href="#">Home</a></li>
@@ -55,7 +56,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{userInfoText}} </a>
                             <ul class="dropdown-menu">
                                 <li><a href="settings.html">Account Settings </a></li>
-                                <li><a href="#">Messages </a></li>
+                                <li><a href="schedule.html">Look at schedule </a></li>
                                 <li><a href="#">Favourites Snippets </a></li>
                                 <li ng-click="logOut()" ng-app="myApp" ng-controller="logOutController">><a href="#">Sign
                                     Out </a></li>
@@ -72,34 +73,39 @@
     <header id="head">
         <div class="container">
             <div class="row">
-                <h1 class="lead" ng-hide="authData" >Lorem ipsum</h1>
-                <h1 class="lead" ng-show="authData" >Welcome {{userInfoText}}</h1>
+                <h1 class="lead" ng-hide="authData">Lorem ipsum</h1>
+                <h1 class="lead" ng-show="authData">Welcome {{userInfoText}}</h1>
             </div>
         </div>
     </header>
     <!-- /Header -->
 
 
-    <div class="container" ng-controller="searchEngineController" ng-show="authData" ng-app="myApp"
+    <div class="container settingsform" ng-controller="searchEngineController" ng-show="authData" ng-app="myApp"
          data-ng-init="initSearcher()">
         <div class="row">
-                <select class="selectpicker" >
-                    <option ng-repeat="y in citiesList" data-tokens="y.name">{{y.name}}</option>
-                </select>
+            <select class="selectpicker">
+                <option ng-repeat="y in citiesList" data-tokens="y.name">{{y.name}}</option>
+            </select>
         </div>
         <aside class="col-md-4 sidebar sidebar-left">
-        <ul class="categoriesb">
-            <li class="categoriesb" ng-repeat="x in categories">
-                <ul class="categoriesb subitem">
-                    <a class="btn" ng-click="test(x)">{{x.name}}</a>
-                    <li ng-repeat="y in getSubCategories(x)" ng-show="getVisibility(y.parent)">
-                        <a class="btn" ng-click="setSelectedCategory(y)">{{y.name}}</a>
+            <div class="sidenav">
+                <ul class="btn-group-vertical">
+                    <li ng-repeat="x in categories">
+                        <button ng-click="selectMainCategory(x)" class="categoriesb">{{x.name}}
+                        </button>
+                        <ul>
+                            <li ng-repeat="y in getSubCategories(x)" ng-show="getVisibility(y.parent)">
+                                <button ng-click="setSelectedCategory(y)" class="categoriesb subitem">{{y.name}}
+                                </button>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
-            </li>
-        </ul>
+            </div>
         </aside>
-        <a ng-click="search()" class="categoriesb">SEARCH</a>
+        <button ng-click="search()" class=" categoriesb subitem">SEARCH
+        </button>
     </div>
 
 
@@ -270,7 +276,7 @@
 <!-- JavaScript libs are placed at the end of the document so the pages load faster -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="assets/js/headroom.min.js"></script>
 <script src="assets/js/jQuery.headroom.min.js"></script>
 <script src="assets/js/html5shiv.js"></script>

@@ -1,15 +1,21 @@
 var app = angular.module('myApp');
 app.controller('settingsController', function ($scope, $http, $window, userService) {
-    var user = userService.getUserContext().user;
+    var user = ((ctx = userService.getUserContext()) === null) ? null: ctx.user;
+    if(user === null) {
+        $window.location.href = userService.getMainAdress();
+    }
     $scope.details = false;
     $scope.trainingsTemplate = false;
-    $scope.trainings = false;
+    $scope.addTrInstanceVisibility = false;
     $scope.schedule = false;
     $scope.userNameChange = user.name;
     $scope.loginChange = user.login;
     $scope.passwordChange;
     $scope.adressChange = user.adress;
     $scope.imageUrl = user.imageUrl;
+    $scope.userTrainings = [];
+    $scope.userTrainingsInstances = [];
+
 
     $scope.accountDetails = function () {
         hideEverything();
@@ -21,13 +27,13 @@ app.controller('settingsController', function ($scope, $http, $window, userServi
     };
     $scope.addTrainings = function () {
         hideEverything();
-        $scope.trainings = true;
+        $scope.addTrInstanceVisibility = true;
     };
 
     var hideEverything = function () {
         $scope.details = false;
         $scope.trainingsTemplate = false;
-        $scope.trainings = false;
+        $scope.addTrInstanceVisibility = false;
         $scope.schedule = false;
     };
 
@@ -37,17 +43,21 @@ app.controller('settingsController', function ($scope, $http, $window, userServi
             url: userService.getHost() + 'getUserTrainings',
             params: {"uuid": userService.getUUID()}
         }).then(function successCallback(response) {
-            $scope.returnCode = response.data;
-            if ($scope.returnCode === 1) {
-                alert('Your account has been updated');
+            if (response.data.responseCode === 1) {
+                    for(var i = 0; i < response.data.userTrainings.length; i++) {
+                        var uTraining = response.data.userTrainings[i];
+                        $scope.userTrainings.push(uTraining);
+                    }
+                    $scope.userTrainingsInstances = [];
+            } else {
+                return [];
             }
             //TODO finish
         }, function errorCallback(response) {
-            alert('Could not connect to server. Please try again later');
+            return [];
         });
     };
     loadTrainings();
-
 
     $scope.changeDetailsSubmit = function () {
         if ($scope.confirm()) {

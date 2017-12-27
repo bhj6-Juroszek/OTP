@@ -14,12 +14,12 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static com.example.daoLayer.DAOHelper.*;
+import static java.sql.Types.*;
 import static java.util.concurrent.TimeUnit.DAYS;
 
 /**
@@ -36,24 +36,25 @@ public class TrainingsDAO extends DAO {
 
   @Override
   public void createTable() {
-    if (tableExists(TRAININGS_TABLE_NAME)) {
-      return;
+    if (!tableExists(TRAININGS_TABLE_NAME)) {
+
+      template.execute
+          ("CREATE TABLE " + TRAININGS_TABLE_NAME + " (trainingsId VARCHAR (50) NOT NULL, category VARCHAR (50), " +
+              "place " +
+
+              "VARCHAR(250), price DOUBLE, lat DOUBLE, lng DOUBLE, description VARCHAR(500), capacity INT, owner " +
+              "VARCHAR (50), PRIMARY" +
+              " KEY(trainingsId)) COLLATE utf8_general_ci;"
+          );
     }
-    template.execute
-        ("CREATE TABLE " + TRAININGS_TABLE_NAME + " (trainingsId VARCHAR (50) NOT NULL, category VARCHAR (50), place " +
-            "VARCHAR(250), price DOUBLE, lat DOUBLE, lng DOUBLE, description VARCHAR(500), capacity INT, owner " +
-            "VARCHAR (50), PRIMARY" +
-            " KEY(trainingsId)) COLLATE utf8_general_ci;"
-        );
-    if (tableExists(TRAININGS_INSTANCES_TABLE_NAME)) {
-      return;
+    if (!tableExists(TRAININGS_INSTANCES_TABLE_NAME)) {
+      template.execute
+          ("CREATE TABLE " + TRAININGS_INSTANCES_TABLE_NAME + " (trainingsInsId VARCHAR (50) NOT NULL, " +
+              "trainingInsDateStart DATETIME, trainingInsDateEnd DATETIME," +
+              " idTrainings VARCHAR (50), PRIMARY" +
+              " KEY(trainingsInsId));"
+          );
     }
-    template.execute
-        ("CREATE TABLE " + TRAININGS_INSTANCES_TABLE_NAME + " (trainingsInsId VARCHAR (50) NOT NULL, " +
-            "trainingInsDateStart DATE, trainingInsDateEnd DATE," +
-            " idTrainings VARCHAR (50), PRIMARY" +
-            " KEY(trainingsInsId));"
-        );
     if (tableExists(TRAININGS_RESERVATIONS_TABLE_NAME)) {
       return;
     }
@@ -72,8 +73,10 @@ public class TrainingsDAO extends DAO {
     return getTrainings(categoryId, from, to, 0.0);
   }
 
-  public List<Training> getTrainings(@Nullable final String categoryId, @Nullable final Date fromDate, @Nullable final Date toDate,
-      @Nullable final String trainerId, final double maxPrice, final int maxDistance, @Nullable final Place placeAround) {
+  public List<Training> getTrainings(@Nullable final String categoryId, @Nullable final Date fromDate,
+      @Nullable final Date toDate,
+      @Nullable final String trainerId, final double maxPrice, final int maxDistance,
+      @Nullable final Place placeAround) {
     final StringBuilder SQL = new StringBuilder();
     final MapSqlParameterSource parameterSource = new MapSqlParameterSource();
     SQL.append("SELECT * FROM " + TRAININGS_TABLE_NAME + " tr " +
@@ -95,12 +98,13 @@ public class TrainingsDAO extends DAO {
   }
 
   private void applyDateFilter(@Nonnull final StringBuilder builder,
-      @Nonnull final MapSqlParameterSource parameterSource, @Nullable final Date dateFrom, @Nullable final Date dateTo) {
+      @Nonnull final MapSqlParameterSource parameterSource, @Nullable final Date dateFrom,
+      @Nullable final Date dateTo) {
     if (dateFrom != null && dateTo != null) {
       resolveWhenOrAndQuery(builder);
       builder.append(" (trIns.trainingInsDateStart BETWEEN :fromDate AND :toDate) ");
-     parameterSource.addValue("fromDate", dateFrom, Types.TIMESTAMP)
-          .addValue("toDate", dateTo, Types.TIMESTAMP);
+      parameterSource.addValue("fromDate", dateFrom, TIMESTAMP)
+          .addValue("toDate", dateTo, TIMESTAMP);
     }
   }
 
@@ -109,7 +113,7 @@ public class TrainingsDAO extends DAO {
     if (categoryId != null) {
       resolveWhenOrAndQuery(builder);
       builder.append(" (cats.categoryId = :categoryId OR cats.categoryParent = :categoryId) ");
-      parameterSource.addValue("categoryId", categoryId, Types.VARCHAR);
+      parameterSource.addValue("categoryId", categoryId, VARCHAR);
     }
   }
 
@@ -118,7 +122,7 @@ public class TrainingsDAO extends DAO {
     if (trainerId != null) {
       resolveWhenOrAndQuery(builder);
       builder.append(" usrs.userId = :trainerId ");
-      parameterSource.addValue("trainerId", trainerId, Types.VARCHAR);
+      parameterSource.addValue("trainerId", trainerId, VARCHAR);
     }
   }
 
@@ -127,7 +131,7 @@ public class TrainingsDAO extends DAO {
     if (maxPrice > 0.0) {
       resolveWhenOrAndQuery(builder);
       builder.append(" tr.price <= :maxPrice ");
-      parameterSource.addValue("maxPrice", maxPrice, Types.DOUBLE);
+      parameterSource.addValue("maxPrice", maxPrice, DOUBLE);
     }
   }
 
@@ -158,12 +162,23 @@ public class TrainingsDAO extends DAO {
       final Category category = training.getCategory();
       final User owner = training.getOwner();
       if (place != null && category != null && owner != null) {
-        final String SQL = "INSERT INTO " + TRAININGS_TABLE_NAME + " (trainingsId, category, place, price, lat, lng, " +
-            "description, capacity, owner) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        final String SQL = "INSERT INTO " + TRAININGS_TABLE_NAME + " (trainingsId, category, place, price, " +
+            "lat, lng, " +
+            "description, capacity, owner) VALUES (:trainingsId, :category, :place, :price, :lat, :lng, :description," +
+            " " +
+            ":capacity, :owner) ";
         try {
-          template.update(SQL, training.getId(), category.getId(), place.getName(), training.getPrice(), place.getLat(),
-              place.getLng(), training.getDescription(), training.getCapacity(), training.getOwner().getId());
-        } catch(Exception e) {
+          parameterJdbcTemplate.update(SQL,
+              new MapSqlParameterSource().addValue("trainingsId", training.getId(), VARCHAR)
+                  .addValue("place", place.getName(), VARCHAR)
+                  .addValue("price", training.getPrice(), DOUBLE)
+                  .addValue("lat", place.getLat(), DOUBLE)
+                  .addValue("lng", place.getLng(), DOUBLE)
+                  .addValue("description", training.getDescription(), VARCHAR)
+                  .addValue("capacity", training.getCapacity(), NUMERIC)
+                  .addValue("owner", owner.getId(), VARCHAR)
+                  .addValue("category", category.getId(), VARCHAR));
+        } catch (Exception e) {
           LOGGER.error(e);
         }
       }
@@ -172,18 +187,27 @@ public class TrainingsDAO extends DAO {
 
   public void saveTrainingInstance(@Nonnull final TrainingInstance trainingInstance) {
     asyncSaver.execute(() -> {
-      final String SQL = "MERGE INTO" + TRAININGS_INSTANCES_TABLE_NAME + " USING dual " +
-          "            ON (idTrainings = :idTrainings AND ((trainingInsDateStart BETWEEN :trainingInsDateStart AND " +
-          ":trainingInsDateEnd) OR " +
-          "(trainingInsDateEnd BETWEEN :trainingInsDateStart AND :trainingInsDateEnd))) " +
-          "WHEN NOT MATCHED THEN INSERT INTO " + TRAININGS_INSTANCES_TABLE_NAME + "(idTrainings, " +
-          "trainingInsDateStart, " +
-          "trainingInsDateEnd) " +
-          "VALUES (:idTrainings, :trainingInsDateStart, :trainingInsDateEnd)";
-      parameterJdbcTemplate.update(SQL,
-          new MapSqlParameterSource().addValue("idTrainings", trainingInstance.getTrainingParent(), Types.NUMERIC)
-              .addValue("trainingInsDateStart", trainingInstance.getDateStart(), Types.TIMESTAMP)
-              .addValue("trainingInsDateEnd", trainingInstance.getDateEnd(), Types.TIMESTAMP));
+      final String SQL =
+          "INSERT INTO " + TRAININGS_INSTANCES_TABLE_NAME + "(trainingsInsId, idTrainings, " +
+              "trainingInsDateStart, " +
+              "trainingInsDateEnd) " +
+              "SELECT * FROM (SELECT :trainingsInsId, :idTrainings, :trainingInsDateStart, :trainingInsDateEnd) AS " +
+              "tmp " +
+              "WHERE NOT EXISTS (" +
+              "    SELECT * FROM " + TRAININGS_INSTANCES_TABLE_NAME + " WHERE idTrainings = :idTrainings AND (" +
+              "(trainingInsDateStart BETWEEN :trainingInsDateStart AND " +
+              ":trainingInsDateEnd) OR " +
+              "(trainingInsDateEnd BETWEEN :trainingInsDateStart AND :trainingInsDateEnd))" +
+              ") LIMIT 1";
+      try {
+        parameterJdbcTemplate.update(SQL,
+            new MapSqlParameterSource().addValue("idTrainings", trainingInstance.getTrainingParent(), VARCHAR)
+                .addValue("trainingsInsId", trainingInstance.getId(), VARCHAR)
+                .addValue("trainingInsDateStart", trainingInstance.getDateStart(), TIMESTAMP)
+                .addValue("trainingInsDateEnd", trainingInstance.getDateEnd(), TIMESTAMP));
+      } catch (Exception e) {
+        LOGGER.error(e);
+      }
     });
   }
 

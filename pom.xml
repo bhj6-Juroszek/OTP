@@ -30,7 +30,6 @@
 		<project.reporting.outputencoding>utf-8</project.reporting.outputencoding>
 		<java.version>1.8</java.version>
 		<tomcat.version>8.0.28</tomcat.version>
-		<vaadin.theme>mytheme</vaadin.theme>
         <log4j-version>2.6.2</log4j-version>
 
 	</properties>
@@ -145,48 +144,6 @@
             </exclusions>
 		</dependency>
 
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-spring-boot-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
-			<version>1.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-client-compiler</artifactId>
-			<version>7.6.3</version>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>validation-api</artifactId>
-					<groupId>javax.validation</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-server</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-push</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-client-compiled</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-themes</artifactId>
-		</dependency>
-
-
-
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -205,11 +162,6 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
 			<version>4.0.4.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.vaadin.spring</groupId>
-			<artifactId>spring-vaadin</artifactId>
-			<version>0.0.5.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -237,27 +189,14 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.vaadin.tapio</groupId>
-			<artifactId>googlemaps</artifactId>
-			<version>1.3.4</version>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client-compiler</artifactId>
+            <version>7.6.3</version>
+        </dependency>
 
+    </dependencies>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.vaadin</groupId>
-				<artifactId>vaadin-bom</artifactId>
-				<version>7.7.3</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
-
-		</dependencies>
-	</dependencyManagement>
 
 	<build>
 		<plugins>
@@ -273,9 +212,6 @@
 								<exclude>*.war</exclude>
 								<exclude>dependency/*.jar</exclude>
 							</excludes>
-						</fileset>
-						<fileset>
-							<directory>src/main/resources/VAADIN/VAADIN.themes/mytheme</directory>
 						</fileset>
 					</filesets>
 				</configuration>
@@ -345,45 +281,6 @@
 					</processTypes>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>java</goal>
-						</goals>
-						<configuration>
-							<classpathScope>compile</classpathScope>
-							<mainClass>com.vaadin.sass.SassCompiler</mainClass>
-							<arguments>
-								<argument>src/main/resources/VAADIN/themes/mytheme/styles.scss</argument>
-								<argument>src/main/resources/VAADIN/themes/mytheme/styles.css</argument>
-							</arguments>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>com.vaadin</groupId>
-				<artifactId>vaadin-maven-plugin</artifactId>
-				<version>7.7.3</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>resources</goal>
-							<goal>update-widgetset</goal>
-							<goal>compile</goal>
-							<goal>update-theme</goal>
-							<goal>compile-theme</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
 		</plugins>
 
 		<resources>
@@ -400,41 +297,5 @@
 			<name>Spring Releases</name>
 			<url>https://repo.spring.io/libs-release</url>
 		</repository>
-		<repository>
-			<id>vaadin-addons</id>
-			<url>http://maven.vaadin.com/vaadin-addons</url>
-		</repository>
-
-		<repository>
-			<id>vaadin-snapshots</id>
-			<url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>vaadin-snapshots</id>
-			<url>http://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>spring-releases</id>
-			<name>Spring Releases</name>
-			<url>https://repo.spring.io/libs-release</url>
-		</pluginRepository>
-	</pluginRepositories>
-
-
+    </repositories>
 </project>

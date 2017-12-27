@@ -48,28 +48,32 @@ public class JsonReader {
     return x * PI / 180;
   }
 
-  public Place getPlace(@Nonnull final String placeName) throws JSONException {
-    final String attributeUrl = String.format(
-        "http://maps.google.com/maps/api/geocode/json?address=%s&sensor" +
-            "=false&region=pl",
-        placeName);
-    final String strippedUrl = StringUtils.stripAccents(attributeUrl);
-    final String strippedUrl2 = strippedUrl.replace("ł", "l").replace(" ", "+");
+  Place getPlace(@Nonnull final String placeName) throws JSONException {
     final Place result = new Place();
-    try (InputStream is = new URL(strippedUrl2).openStream()) {
-      final BufferedReader rd = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-      final String jsonText = readAll(rd);
-      final JSONObject json = new JSONObject(jsonText);
-      final JSONArray results = (JSONArray) json.get("results");
-      JSONObject object = results.getJSONObject(0);
-      final JSONArray array = object.getJSONArray("address_components");
-      result.setName(array.getJSONObject(0).getString("long_name"));
-      object = object.getJSONObject("geometry");
-      object = object.getJSONObject("location");
-      result.setLat((object.getDouble("lat")));
-      result.setLng((object.getDouble("lng")));
-    } catch (Exception ex) {
-      return null;
+    if (placeName.equals("") || placeName.equalsIgnoreCase("online")) {
+      result.setName("online");
+    } else {
+      final String attributeUrl = String.format(
+          "http://maps.google.com/maps/api/geocode/json?address=%s&sensor" +
+              "=false&region=pl",
+          placeName);
+      final String strippedUrl = StringUtils.stripAccents(attributeUrl);
+      final String strippedUrl2 = strippedUrl.replace("ł", "l").replace(" ", "+");
+      try (InputStream is = new URL(strippedUrl2).openStream()) {
+        final BufferedReader rd = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        final String jsonText = readAll(rd);
+        final JSONObject json = new JSONObject(jsonText);
+        final JSONArray results = (JSONArray) json.get("results");
+        JSONObject object = results.getJSONObject(0);
+        final JSONArray array = object.getJSONArray("address_components");
+        result.setName(array.getJSONObject(0).getString("long_name"));
+        object = object.getJSONObject("geometry");
+        object = object.getJSONObject("location");
+        result.setLat((object.getDouble("lat")));
+        result.setLng((object.getDouble("lng")));
+      } catch (Exception ex) {
+        return null;
+      }
     }
     return result;
   }

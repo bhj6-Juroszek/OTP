@@ -8,7 +8,7 @@
 
     <title>Account settings</title>
 
-    <link rel="shortcut icon" href="assets/images/gt_favicon.png">
+    <link rel="shortcut icon" href="assets/images/favicon.ico">
 
     <link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
@@ -17,6 +17,7 @@
     <!-- Custom styles for our template -->
     <link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen">
     <link rel="stylesheet" href="assets/css/main.css">
+    <!--<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -75,7 +76,7 @@
     <header id="head" class="secondary"></header>
 
     <!-- container -->
-    <div class="container">
+    <div class="container settingsform">
 
         <ol class="breadcrumb">
             <li><a href="index.html">Home</a></li>
@@ -86,97 +87,100 @@
         <div class="row" ng-controller="settingsController">
             <!-- Sidebar -->
             <aside class="col-md-4 sidebar sidebar-left">
-
-                <div class="row widget categoriesb">
-                    <a class="btn" ng-click="accountDetails()">Change account details</a>
+                <div class="btn-group-vertical">
+                <button ng-click="accountDetails()" class=" categoriesb">Change account detail
+                </button>
+                <button ng-click="trainingTemplate()" class=" categoriesb">Add training template
+                </button>
+                <button ng-click="addTrainings()" class=" categoriesb">Add trainings
+                </button>
                 </div>
-                <div class="row widget categoriesb">
-                    <a class="btn" ng-click="trainingTemplate()">Add training template</a>
-                </div>
-                <div class="row widget categoriesb">
-                    <a class="btn" ng-click="addTrainings()">Add trainings</a>
-                </div>
-
-
             </aside>
             <!-- /Sidebar -->
             <!-- DETAILS -->
             <div class="col-md-8 maincontent container " ng-show="details">
+                First name:<br>
                 <div class="widget">
-                    Name
-                    <input type="text" name="Name" class="settingsForm"
+                    <input type="text" name="Name" class="form-control"
                            ng-model="userNameChange" width="50">
                 </div>
+                Login:<br>
                 <div class="widget">
-                    Login
-                    <input type="text" name="Login" class="settingsForm"
+                    <input type="text" name="Login" class="form-control"
                            ng-model="loginChange" width="50">
                 </div>
+                Password:<br>
                 <div class="widget">
-                    Password
-                    <input type="password" name="Username" class="settingsForm"
+                    <input type="password" name="Password" class="form-control"
                            ng-model="passwordChange" width="50">
                 </div>
+                Adress:<br>
                 <div class="widget">
-                    Adress
-                    <input type="text" name="Username" class="settingsForm"
+                    <input type="text" name="adressChange" class="form-control"
                            ng-model="adressChange" width="50">
                 </div>
-                <div class="widget categoriesb">
-                    <a class="btn" ng-click="changeDetailsSubmit()">Submit changes</a>
-                </div>
+                <br>
+                <button ng-click="changeDetailsSubmit()" class="btn primKey"
+                >Save changes
+                </button>
             </div>
             <!-- /DETAILS -->
 
             <!-- ADD TRAINING TEMPLATE -->
             <div class="col-md-8 maincontent container" ng-show="trainingsTemplate"
                  ng-controller="trainingTemplateController">
-                <div class="widget">
-                    Pick category
-                    <select class="selectpicker" ng-model="categorySelect"
-                            ng-options="category as category.name for category in templateCategories">
-                    </select>
-                    <div class="widget">
-                        Training place (leave empty if online)
-                        <input type="text" name="Place" class="settingsForm"
-                               ng-model="place" width="50">
-                    </div>
-                    <div class="widget">
-                        Price [$]
-                        <input type="number" name="Price" class="settingsForm"
-                               ng-model="price" width="5" min="0.0">
-                    </div>
-                    <div class="widget">
-                        Description
-                        <input type="text" name="Description" class="settingsForm"
-                               ng-model="description" width="50">
-                    </div>
-                    <div class="widget">
-                        Group size
-                        <input type="number" name="Capacity" class="settingsForm"
-                               ng-model="capacity" width="2" min="1">
-                    </div>
-
-                    <div class="widget categoriesb">
-                        <a class="btn" ng-click="saveTrainingTemplate()">Save training template</a>
-                    </div>
-                </div>
+                Pick category<br>
+                <select class="selectpicker" ng-model="categorySelect"
+                        ng-options="category as category.name for category in templateCategories">
+                </select>
+                <br>
+                Training place (leave empty if online)<br>
+                <input type="text" name="Place" class="form-control"
+                       ng-model="place" width="50">
+                <br>Price [$]<br>
+                <input type="number" name="Price" class="form-control"
+                       ng-model="price" width="5" min="0.1">
+                <br>Description<br>
+                <input type="text" name="Description" class="form-control"
+                       ng-model="description" width="50" height="4">
+                <br>Group size<br>
+                <input type="number" name="Capacity" class="form-control"
+                       ng-model="capacity" width="2" min="1">
+                <button ng-click="saveTrainingTemplate()" class="btn primKey"
+                >Save
+                </button>
             </div>
+
             <!-- /ADD TRAINING TEMPLATE -->
 
             <!-- ADD TRAINING INSTANCE -->
-            <div class="col-md-8 maincontent container" ng-show="trainings"
-                 ng-controller="trainingTemplateController">
+            <div class="col-md-8 maincontent container" ng-show="addTrInstanceVisibility"
+                 ng-controller="trainingInstanceController">
                 <div class="widget">
-
-
-                    <div class="widget categoriesb">
-                        <a class="btn" ng-click="saveTrainingTemplate()">Save training</a>
+                    <div class="container">
+                        <div class="row">
+                            <br>Select template for this training<br>
+                            <select class="selectpicker" ng-model="userTrainingSelect"
+                                    ng-options="userTraining as userTraining.description for userTraining in userTrainings">
+                            </select>
+                        </div>
+                        <div class="row">
+                            <br>Select date of training start<br>
+                            <input type="date" name="trday" ng-model="date" class="form-control">
+                            <br>Select time of training start<br>
+                            <input type="time" name="trtime" ng-model="hours" class="form-control">
+                            <br>Select training duration in hours<br>
+                            <input type="number" name="duration" class="form-control"
+                                   ng-model="duration" width="5" min="0.1">
+                        </div>
+                        <br>
+                        <button ng-click="saveTrainingInstance()" class="btn primKey"
+                        >Save
+                        </button>
                     </div>
                 </div>
+                <!-- /ADD TRAINING INSTANCE -->
             </div>
-            <!-- /ADD TRAINING INSTANCE -->
-
         </div>
     </div>
 
@@ -202,10 +206,8 @@
                         <h3 class="widget-title">Follow me</h3>
                         <div class="widget-body">
                             <p class="follow-me-icons">
-                                <a href=""><i class="fa fa-twitter fa-2"></i></a>
-                                <a href=""><i class="fa fa-dribbble fa-2"></i></a>
                                 <a href=""><i class="fa fa-github fa-2"></i></a>
-                                <a href=""><i class="fa fa-facebook fa-2"></i></a>
+                                <a href=""><i class="fa fa-linkedin fa-2"></i></a>
                             </p>
                         </div>
                     </div>
@@ -263,7 +265,7 @@
 
 <!-- JavaScript libs are placed at the end of the document so the pages load faster -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="assets/js/headroom.min.js"></script>
 <script src="assets/js/jQuery.headroom.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
@@ -273,5 +275,6 @@
 <script src="scripts/logOutScript.js"></script>
 <script src="scripts/settingsController.js"></script>
 <script src="scripts/trainingTemplateController.js"></script>
+<script src="scripts/trainingInstanceController.js"></script>
 </body>
 </html>
