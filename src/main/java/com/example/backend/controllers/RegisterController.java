@@ -1,24 +1,11 @@
 package com.example.backend.controllers;
 
 import com.example.backend.controllersEntities.requests.RegisterRequest;
-import com.example.backend.model.UserManager;
-import com.example.utils.SessionManager;
-import com.example.daoLayer.daos.UsersDAO;
-import com.example.utils.MailManager;
-import com.example.daoLayer.entities.User;
+import com.example.backend.helpers.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Nonnull;
-import java.util.UUID;
-
-import static com.example.utils.ResponseCode.ACCOUNT_EXISTS;
-import static com.example.utils.ResponseCode.INVALID_DATA;
-import static com.example.utils.ResponseCode.SUCCESS;
-import static com.example.utils.SessionManager.HOST_NAME;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @CrossOrigin

@@ -1,5 +1,6 @@
 package com.example.backend.controllers;
 
+import com.example.backend.contexts.UserContext;
 import com.example.utils.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,4 +19,5 @@ public abstract class AuthenticatedController {
   boolean authenticate(@Nonnull final String uuid) {
     return (manager.getLoggedUsers().containsKey(uuid));
   }
+
 }

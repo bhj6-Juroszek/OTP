@@ -384,6 +384,7 @@ ul {
     list-style-type: none;
 }
 .settingsform {
+    color: darkgoldenrod;
     height: 850px;
     width: 100%;
     background-image: url(../images/bg_context.jpg);
@@ -393,9 +394,48 @@ ul {
     width: 150px;
     height: 80px
 }
+.top-info {
+    color: darkgoldenrod;
+}
+
+.scheduleMain {
+    background: #181015 url(../images/bg_header.jpg);
+}
+.modal-content{
+    background-image: url(../images/bg_header.jpg);
+}
 
 .combo {
     width: 200px;
+}
+
+.modalOk {
+    border: 1px solid goldenrod;
+    border-radius: 14px;
+    color: darkgoldenrod;
+    text-shadow: none;
+    font-family: Roboto, sans-serif;
+    font-size: 12px;
+    padding: 10px 20px 10px 20px;
+    margin-bottom: 3px;
+    text-decoration: none;
+    opacity: 0.7;
+    text-align: center;
+    background: linear-gradient(90deg, rgba(211, 211, 211, 0.01) 0%, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.1) 75%, rgba(211, 211, 211, 0.01) 100%);
+    width: auto;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.1), inset 0 0 1px rgba(255, 255, 255, 0.6);
+}
+.close {
+    color: ghostwhite;
+}
+
+.btn-default{
+    color: ghostwhite;
+    border-color: ghostwhite;;
+}
+.centered {
+    left: 50%;
+    right: 50%;
 }
 
 

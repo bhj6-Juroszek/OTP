@@ -1,6 +1,6 @@
 package com.example.daoLayer.daos;
 
-import com.example.backend.model.JsonReader;
+import com.example.backend.helpers.JsonReader;
 import com.example.daoLayer.AsyncDbSaver;
 import com.example.daoLayer.entities.*;
 import com.example.daoLayer.mappers.TrainingMapper;
@@ -191,10 +191,11 @@ public class TrainingsDAO extends DAO {
           "INSERT INTO " + TRAININGS_INSTANCES_TABLE_NAME + "(trainingsInsId, idTrainings, " +
               "trainingInsDateStart, " +
               "trainingInsDateEnd) " +
-              "SELECT * FROM (SELECT :trainingsInsId, :idTrainings, :trainingInsDateStart, :trainingInsDateEnd) AS " +
+              "SELECT * FROM (SELECT :trainingsInsId AS trainingsInsId, :idTrainings AS idTrainings, :trainingInsDateStart AS trainingInsDateStart, :trainingInsDateEnd AS trainingInsDateEnd) AS " +
               "tmp " +
               "WHERE NOT EXISTS (" +
-              "    SELECT * FROM " + TRAININGS_INSTANCES_TABLE_NAME + " WHERE idTrainings = :idTrainings AND (" +
+              "    SELECT idTrainings, trainingInsDateStart, trainingInsDateEnd   FROM " +
+              TRAININGS_INSTANCES_TABLE_NAME + " WHERE idTrainings = :idTrainings AND (" +
               "(trainingInsDateStart BETWEEN :trainingInsDateStart AND " +
               ":trainingInsDateEnd) OR " +
               "(trainingInsDateEnd BETWEEN :trainingInsDateStart AND :trainingInsDateEnd))" +

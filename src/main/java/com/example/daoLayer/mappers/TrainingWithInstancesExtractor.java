@@ -38,7 +38,10 @@ public class TrainingWithInstancesExtractor implements ResultSetExtractor<List<T
       }));
     }
     for (Map.Entry<TrainingInstance, Training> e : trainingInstancesMap.entrySet()) {
-      e.getValue().getInstances().add(e.getKey());
+      resultMap.computeIfPresent(e.getValue(), (key,value)->{
+        key.getInstances().add(e.getKey());
+        return value;
+      });
     }
     return new ArrayList<>(resultMap.keySet());
   }

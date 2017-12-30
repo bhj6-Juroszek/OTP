@@ -1,4 +1,4 @@
-package com.example.backend.model;
+package com.example.backend.helpers;
 
 import com.example.daoLayer.daos.UsersDAO;
 import com.example.daoLayer.entities.User;

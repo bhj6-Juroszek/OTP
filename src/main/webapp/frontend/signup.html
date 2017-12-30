@@ -75,51 +75,51 @@
                 </header>
 
                 <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-                            <h3 class="thin text-center">Register</h3>
-                            <hr>
+                    <h3 class="thin text-center">Register</h3>
+                    <hr>
 
-                            <form name="registerForm" ng-submit="register()" novalidate>
-                                <div class="form-group"
-                                     ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine }">
-                                    Email Address
-                                    <input type="email" name="email" class="form-control" ng-model="email"
-                                           required>
+                    <form name="registerForm" ng-submit="register()" novalidate>
+                        <div class="form-group"
+                             ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine }">
+                            Email Address
+                            <input type="email" name="email" class="form-control" ng-model="email"
+                                   required>
 
-                                    <p ng-show="registerForm.email.$invalid && !registerForm.email.$pristine"
-                                       class="help-block">
-                                        Email is required.</p>
-                                </div>
-                                <div class="form-group"
-                                     ng-class="{ 'has-error' : (registerForm.password.$invalid && !registerForm.password.$pristine)}">
-                                    Password
-                                    <input type="password" name="password" class="form-control"
-                                           ng-model="password">
-                                    <p ng-show="(registerForm.password.$invalid && !registerForm.password.$pristine)"
-                                       class="help-block">Password can't be empty!</p>
-                                </div>
+                            <p ng-show="registerForm.email.$invalid && !registerForm.email.$pristine"
+                               class="help-block">
+                                Email is required.</p>
+                        </div>
+                        <div class="form-group"
+                             ng-class="{ 'has-error' : (registerForm.password.$invalid && !registerForm.password.$pristine)}">
+                            Password
+                            <input type="password" name="password" class="form-control"
+                                   ng-model="password">
+                            <p ng-show="(registerForm.password.$invalid && !registerForm.password.$pristine)"
+                               class="help-block">Password can't be empty!</p>
+                        </div>
 
-                                <div class="form-group"
-                                     ng-class="{ 'has-error' : (registerForm.password.$invalid && !registerForm.password.$pristine)}">
-                                    Confirm password
-                                    <input type="password" name="passwordConfirm" class="form-control"
-                                           ng-model="passwordConfirm">
-                                    <p ng-show="(registerForm.passwordConfirm.$invalid && !registerForm.passwordConfirm.$pristine)"
-                                       class="help-block">Password can't be empty!</p>
-                                    <p ng-show="(passwordConfirm !== password)"
-                                       class="help-block">Passwords must be the same!</p>
-                                </div>
+                        <div class="form-group"
+                             ng-class="{ 'has-error' : (registerForm.password.$invalid && !registerForm.password.$pristine)}">
+                            Confirm password
+                            <input type="password" name="passwordConfirm" class="form-control"
+                                   ng-model="passwordConfirm">
+                            <p ng-show="(registerForm.passwordConfirm.$invalid && !registerForm.passwordConfirm.$pristine)"
+                               class="help-block">Password can't be empty!</p>
+                            <p ng-show="(passwordConfirm !== password)"
+                               class="help-block">Passwords must be the same!</p>
+                        </div>
 
-                                <hr>
+                        <hr>
 
-                                <div class="row">
-                                    <div class="col-lg-4 text-right">
-                                        <button type="submit" class="btn primKey"
-                                                ng-disabled="registerForm.$invalid || (passwordConfirm !== password)">Register
-                                        </button>
+                        <div class="row">
+                            <div class="col-lg-4 text-right">
+                                <button type="submit" class="btn primKey"
+                                        ng-disabled="registerForm.$invalid || (passwordConfirm !== password)">Register
+                                </button>
 
-                                    </div>
-                                </div>
-                            </form>
+                            </div>
+                        </div>
+                    </form>
                 </div>
 
             </article>
@@ -215,7 +215,8 @@
 <script src="assets/js/jQuery.headroom.min.js"></script>
 <script src="assets/js/template.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
 <script src="scripts/userService.js"></script>
-<script src="scripts/registerScript.js"></script>
+<script src="scripts/common/registerScript.js"></script>
 </body>
 </html>

@@ -1,8 +1,8 @@
 package com.example.backend.controllers;
 
 import com.example.backend.controllersEntities.responses.UserTrainingsResponse;
-import com.example.backend.model.TrainingManager;
-import com.example.backend.model.UserManager;
+import com.example.backend.helpers.TrainingManager;
+import com.example.backend.helpers.UserManager;
 import com.example.daoLayer.entities.Training;
 import com.example.daoLayer.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;

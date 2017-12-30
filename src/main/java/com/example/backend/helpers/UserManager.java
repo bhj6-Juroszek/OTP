@@ -1,4 +1,4 @@
-package com.example.backend.model;
+package com.example.backend.helpers;
 
 import com.example.backend.contexts.UserContext;
 import com.example.backend.controllersEntities.responses.LoginResponse;

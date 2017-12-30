@@ -2,7 +2,7 @@ package com.example.backend.controllers;
 
 import com.example.backend.controllersEntities.requests.LoginRequest;
 import com.example.backend.controllersEntities.responses.LoginResponse;
-import com.example.backend.model.UserManager;
+import com.example.backend.helpers.UserManager;
 import com.example.utils.ResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

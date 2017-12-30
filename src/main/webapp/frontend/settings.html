@@ -27,7 +27,7 @@
 </head>
 
 <body>
-<div ng-app="myApp" ng-controller="mainController" ng-init="init()" ng-show="authData">
+<div ng-app="myApp" ng-controller="userController" ng-init="init()" ng-show="authData">
     <!-- Fixed navbar -->
     <div class="navbar navbar-inverse navbar-fixed-top headroom">
         <div class="container">
@@ -271,8 +271,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 <script src="scripts/userService.js"></script>
 <script src="assets/js/template.js"></script>
-<script src="scripts/mainScript.js"></script>
-<script src="scripts/logOutScript.js"></script>
+<script src="scripts/common/userController.js"></script>
+<script src="scripts/common/logOutScript.js"></script>
 <script src="scripts/settingsController.js"></script>
 <script src="scripts/trainingTemplateController.js"></script>
 <script src="scripts/trainingInstanceController.js"></script>

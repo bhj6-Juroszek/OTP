@@ -1,4 +1,4 @@
-package com.example.backend.model;
+package com.example.backend.helpers;
 
 import com.example.daoLayer.daos.RatesDAO;
 import com.example.daoLayer.entities.Profile;

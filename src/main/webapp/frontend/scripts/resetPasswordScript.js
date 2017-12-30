@@ -1,5 +1,5 @@
 try {
-    var controller = $controller('resetPasswordController', [])
+    var controller = $controller('resetPasswordController')
 } catch (e) {
     var app = angular.module('myApp');
     app.controller('resetPasswordController', function ($scope, $http, userService, $window) {

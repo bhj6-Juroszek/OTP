@@ -1,5 +1,5 @@
 var app = angular.module('myApp');
-app.controller('mainController', function ($scope, $http, userService) {
+app.controller('userController', function ($scope, $http, userService) {
     var start = $scope.init = function () {
         $scope.authData = false;
         if (userService.getUserContext() !== null) {

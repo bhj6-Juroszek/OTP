@@ -1,7 +1,7 @@
 package com.example.backend.controllers;
 
 import com.example.daoLayer.entities.Category;
-import com.example.backend.model.CategoriesManager;
+import com.example.backend.helpers.CategoriesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;

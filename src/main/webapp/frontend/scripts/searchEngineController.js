@@ -1,5 +1,5 @@
 try {
-    var controller = $controller('searchEngineController', [])
+    var controller = $controller('searchEngineController')
 } catch (e) {
     var app = angular.module('myApp');
     app.controller('searchEngineController', function ($scope, $http, $window, userService) {

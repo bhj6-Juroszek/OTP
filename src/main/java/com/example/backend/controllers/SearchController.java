@@ -6,7 +6,7 @@ import com.example.daoLayer.entities.Category;
 import com.example.daoLayer.entities.Training;
 import com.example.daoLayer.entities.User;
 import com.example.daoLayer.entities.Place;
-import com.example.backend.model.TrainingManager;
+import com.example.backend.helpers.TrainingManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
