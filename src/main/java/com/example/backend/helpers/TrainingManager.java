@@ -1,5 +1,7 @@
 package com.example.backend.helpers;
 
+import com.example.backend.controllersEntities.requests.BookingRequest;
+import com.example.backend.controllersEntities.responses.BookingResponse;
 import com.example.backend.controllersEntities.responses.ScheduleResponse;
 import com.example.daoLayer.daos.TrainingsDAO;
 import com.example.daoLayer.entities.*;
@@ -14,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.example.utils.DateUtils.*;
+import static com.example.utils.ResponseCode.GENERAL_FAIL;
 import static com.example.utils.ResponseCode.INVALID_DATA;
 import static com.example.utils.ResponseCode.SUCCESS;
 
@@ -56,6 +59,17 @@ public class TrainingManager {
       return SUCCESS;
     }
     return INVALID_DATA;
+  }
+
+  public synchronized BookingResponse bookTraining(@Nonnull final BookingRequest bookingRequest) {
+    final BookingResponse response = new BookingResponse();
+    response.setResponseCode(GENERAL_FAIL);
+    final boolean success = trainingsDAO
+        .saveTrainingReservation(bookingRequest.getTrainingId(), bookingRequest.getTrainingReservation());
+    if(success) {
+      response.setResponseCode(SUCCESS);
+    }
+    return response;
   }
 
   public boolean removeTrainingInstance(@Nonnull final User user, @Nonnull final String instanceId) {

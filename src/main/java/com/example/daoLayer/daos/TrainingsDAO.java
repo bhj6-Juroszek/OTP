@@ -62,6 +62,9 @@ public class TrainingsDAO extends DAO {
         ("CREATE TABLE " + TRAININGS_RESERVATIONS_TABLE_NAME + " (trainingsResId VARCHAR (50) NOT NULL, " +
             "customerId VARCHAR (50), idTrainingsIns VARCHAR (50), PRIMARY KEY(trainingsResId));"
         );
+    template.execute
+        ("CREATE INDEX uniInx ON " + TRAININGS_RESERVATIONS_TABLE_NAME + " (customerId, idTrainingsIns);"
+        );
   }
 
   public List<Training> getTrainings(@Nullable String categoryId, @Nonnull final Date from, @Nonnull final Date to) {
@@ -211,15 +214,22 @@ public class TrainingsDAO extends DAO {
     });
   }
 
-  public void saveTrainingReservation(@Nonnull final TrainingReservation trainingReservation) {
-    asyncSaver.execute(() -> {
-      final User customer = trainingReservation.getCustomer();
-      if (customer != null) {
-        final String SQL = "INSERT INTO " + TRAININGS_RESERVATIONS_TABLE_NAME + " (customerId, idTrainingIns) VALUES " +
-            "(?, ?)";
-        template.update(SQL, customer.getId(), trainingReservation.getTrainingInstance());
+  public boolean saveTrainingReservation(@Nonnull final String trainingTemplateId, @Nonnull final TrainingReservation trainingReservation) {
+    final Training training = getTrainingById(trainingTemplateId);
+    for (TrainingInstance trainingInstance: training.getInstances()) {
+      if(trainingInstance.getId().equals(trainingReservation.getTrainingInstance())) {
+        if(training.getCapacity() > trainingInstance.getTrainingReservations().size()) {
+          final User customer = trainingReservation.getCustomer();
+          if (customer != null) {
+            final String SQL = "INSERT INTO " + TRAININGS_RESERVATIONS_TABLE_NAME + " (customerId, idTrainingIns) VALUES " +
+                "(?, ?) ";
+            template.update(SQL, customer.getId(), trainingReservation.getTrainingInstance());
+            return true;
+        }
+        }
       }
-    });
+    }
+    return false;
   }
 
   public void updateTraining(@Nonnull final Training training) {

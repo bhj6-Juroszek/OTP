@@ -6,7 +6,7 @@ import com.example.daoLayer.entities.Training;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScheduleResponse extends Response {
+public class ScheduleResponse extends ResponseWithCode {
   private Week scheduleWeek;
   private List<Training> trainings;
 

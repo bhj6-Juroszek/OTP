@@ -3,15 +3,17 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="" class="close" ng-click="cancel()">&times;</button>
-                <h4>{{modalTitle}}</h4>
+                <label><h4>{{modalTitle}}</h4></label>
             </div>
             <div class="modal-body" >
-                <iframe width="360" height="270" frameborder="0" ng-src="{{mapSource}}"></iframe>
+                <iframe width="360" height="270" frameborder="0" ng-src="{{mapSource}}"></iframe><br>
+                <label>Taken: {{modalBody}}</label>
             </div>
             <div class="modal-footer">
+                <label style="margin-right: 25px;">{{modalFooter}}</label>
                 <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
-                <button type="button" ng-show="owner" class="btn modalOk" ng-click="delete()">Delete this training</button>
-                <button type="button" ng-hide="owner" class="btn modalOk" ng-click="reserve()">Sign in this training</button>
+                <button type="button" ng-show="owner" ng-disabled="taken" class="btn modalOk" ng-click="delete()">Delete this training</button>
+                <button type="button" ng-hide="owner" ng-disabled="full" class="btn modalOk" ng-click="reserve()">Sign in this training</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

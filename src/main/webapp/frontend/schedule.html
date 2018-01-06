@@ -41,7 +41,7 @@
                                                                    alt="Logo"></a>
                 </div>
                 <ul class="nav navbar-nav pull-right">
-                    <li class="active"><a href="#">Home</a></li>
+                    <li class="active"><a href="index.html">Home</a></li>
                     <li><a href="about.html">About</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
@@ -59,7 +59,7 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{userInfoText}} </a>
                                 <ul class="dropdown-menu">
                                     <li><a href="settings.html">Account Settings </a></li>
-                                    <li><a href="schedule.html">Look at schedule </a></li>
+                                    <li><a ng-click="goToScheduleAsOwner()"  href="#">Look at schedule </a></li>
                                     <li><a href="#">Favourites Snippets </a></li>
                                     <li ng-click="logOut()" ng-app="myApp" ng-controller="logOutController">><a
                                             href="#">Sign
@@ -78,13 +78,9 @@
     <br>
     <br>
     <div ng-controller="initialScheduleController">
-        <div class="row top-info" style="padding-left: 50%">
-            <br>Select date
-            <input type="date" name="currentDate" ng-model="currentDate" class="form-control" ng-change="getSchedule()">
-        </div>
         <modal visible="showModal"></modal>
-        <div class="cd-schedule loading">
-            <div class="timeline settingsform" style="height: auto">
+        <div class="cd-schedule loading" style="margin-left: 15%;">
+            <div class="timeline settingsform" style="height: auto;">
 
                 <ul>
                     <li><span>06:00</span></li>
@@ -126,14 +122,33 @@
                 <ul>
                     <li class="events-group" ng-repeat="day in scheduleWeek">
                         <div class="top-info"><span>{{day.name}} {{day.day}}.{{day.month}}</span></div>
-                        <button data-toggle="modal" class = "btn primKey" ng-repeat="training in getTrainingsFromDate(day)" ng-click="toggleModal(training)" ng-style = "getTrainingStyle(training)">{{training.description}}</button>
+                        <button data-toggle="modal" class="btn trainingScheduleButton"
+                                ng-repeat="training in getTrainingsFromDate(day)" ng-click="toggleModal(training)"
+                                ng-style="getTrainingStyle(training)">{{training.description}}<br>{{training.hoursStart}}:{{training.minutesStart}}-
+                            {{training.hoursEnd}}:{{training.minutesEnd}}<br>
+                            Price: {{training.price}}
+                        </button>
                     </li>
 
                 </ul>
-      </div>
+            </div>
 
             <div class="cover-layer"></div>
         </div> <!-- .cd-schedule -->
+        <aside class="col-md-4 sidebar sidebar-left container text-center">
+            <div class="sidenav">
+                <label class="text-left" style="font-size: 30px; "><b>Category</b></label><br>
+                <div>
+                    <ul class="btn-group-vertical">
+                        <li>
+                            <br>Select date
+                            <input type="date" name="currentDate" ng-model="currentDate" class="form-control"
+                                   ng-change="getSchedule()">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -142,12 +157,13 @@
 </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="assets/js/notify.js"></script>
 <script src="scripts/userService.js"></script>
 <script src="scripts/schedule/initialScheduleController.js"></script>
 <script src="scripts/common/logOutScript.js"></script>
 <script src="scripts/common/userController.js"></script>
 <script src="scripts/schedule/trainingViewController.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="assets/js/headroom.min.js"></script>
 <script src="assets/js/jQuery.headroom.min.js"></script>

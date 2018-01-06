@@ -9,4 +9,5 @@ public class ResponseCode {
   public static final int NOT_AUTHENTICATED = 4;
   public static final int ACCOUNT_EXISTS = 5;
   public static final int ALREADY_LOGGED_IN = 6;
+  public static final int GENERAL_FAIL = 7;
 }

@@ -35,40 +35,37 @@
                 <!-- Button for smallest screens -->
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span
                         class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button>
-                <a class="navbar-brand" href="index.html"><img src="assets/images/logo.png"
-                                                               alt="Progressus HTML5 template"></a>
+                <a class="navbar-brand" href="index.html"><img src="assets/images/favicon.ico"
+                                                               alt="Logo"></a>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav pull-right">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li class="active"><a href="settings.html">Settings</a></li>
-                            <li><a href="sidebar-right.html">Right Sidebar</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="contact.html">Contact</a></li>
-                    <li>
-                        <a class="btn" ng-hide="authData" href="logIn.html" title="LOG IN">LOG IN</a></li>
-                    <li ng-show="authData">
-                        <ul class="nav navbar-nav">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{userInfoText}} </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="settings.html">Account Settings </a></li>
-                                    <li><a href="#">Messages </a></li>
-                                    <li><a href="#">Favourites Snippets </a></li>
-                                    <li ng-click="logOut()" ng-app="myApp" ng-controller="logOutController">><a
-                                            href="#">Sign
-                                        Out </a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div><!--/.nav-collapse -->
+            <ul class="nav navbar-nav pull-right">
+                <li class="active"><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="settings.html">Left Sidebar</a></li>
+                        <li class="active"><a href="sidebar-right.html">Right Sidebar</a></li>
+                    </ul>
+                </li>
+                <li><a href="contact.html">Contact</a></li>
+                <li>
+                    <a class="btn" ng-hide="authData" href="logIn.html" title="LOG IN">LOG IN</a></li>
+                <li ng-show="authData">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{userInfoText}} </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="settings.html">Account Settings </a></li>
+                                <li><a ng-click="goToScheduleAsOwner()"  href="#">Look at schedule </a></li>
+                                <li><a href="#">Favourites Snippets </a></li>
+                                <li ng-click="logOut()" ng-app="myApp" ng-controller="logOutController">><a href="#">Sign
+                                    Out </a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     </div>
     <!-- /.navbar -->
@@ -86,7 +83,8 @@
 
         <div class="row" ng-controller="settingsController">
             <!-- Sidebar -->
-            <aside class="col-md-4 sidebar sidebar-left">
+            <aside class="col-md-4 sidebar sidebar-left container text-center">
+                <div class="sidenav">
                 <div class="btn-group-vertical">
                 <button ng-click="accountDetails()" class=" categoriesb">Change account detail
                 </button>
@@ -94,6 +92,7 @@
                 </button>
                 <button ng-click="addTrainings()" class=" categoriesb">Add trainings
                 </button>
+                </div>
                 </div>
             </aside>
             <!-- /Sidebar -->
@@ -269,6 +268,7 @@
 <script src="assets/js/headroom.min.js"></script>
 <script src="assets/js/jQuery.headroom.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<script src="assets/js/notify.js"></script>
 <script src="scripts/userService.js"></script>
 <script src="assets/js/template.js"></script>
 <script src="scripts/common/userController.js"></script>

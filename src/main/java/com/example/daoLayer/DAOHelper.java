@@ -2,14 +2,19 @@ package com.example.daoLayer;
 
 import com.example.daoLayer.daos.*;
 import com.example.utils.PlacesLoader;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 
 /**
  * Created by Bartek on 2017-05-04.
  */
 @Component
+@Order(9)
 public class DAOHelper {
 
   public static final String TRAININGS_TABLE_NAME = "trainings";
@@ -33,8 +38,6 @@ public class DAOHelper {
     this.profilesDAO = profilesDAO;
     this.ratesDAO = ratesDAO;
     this.loader = placesLoader;
-    createAll();
-    loadCountries();
   }
 
   private CategoriesDAO categoriesDAO;
@@ -45,15 +48,18 @@ public class DAOHelper {
   private TrainingsDAO trainingsDAO;
   private PlacesLoader loader;
 
+
+  @PostConstruct
   private void createAll() {
-    categoriesDAO.createTable();
-    placesDAO.createTable();
-    usersDAO.createTable();
-    profilesDAO.createTable();
-    ratesDAO.createTable();
-    trainingsDAO.createTable();
+//    categoriesDAO.createTable();
+//    placesDAO.createTable();
+//    usersDAO.createTable();
+//    profilesDAO.createTable();
+//    ratesDAO.createTable();
+//    trainingsDAO.createTable();
   }
 
+  @PostConstruct
   private void loadCountries() {
 //    loader.saveCities(placesDAO);
 //    loader.saveCountries(placesDAO);

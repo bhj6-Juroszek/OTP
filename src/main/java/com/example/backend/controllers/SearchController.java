@@ -9,24 +9,30 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @CrossOrigin
 @Controller
 @RequestMapping("/")
-public class SearchController {
+public class SearchController extends AuthenticatedController {
 
   private TrainingManager trainingManager;
   private PlacesDAO placesDAO;
 
   @RequestMapping(value = "/trainingsWithFilter", method = POST)
   @ResponseBody public List<Training> getTrainingsWithFilters(@RequestBody TrainingsWithFilterRequest request) {
-    return   trainingManager
-        .getTrainingsByFilters(request.getCity(), request.getRange(), request.getCategoryId(),
-            request.getDateFirst(), request.getDateLast(), request.getMaxPrice(), request.getSortBy(), request.getShowOnline());
+    if(authenticate(request.getUuid())) {
+      return trainingManager
+          .getTrainingsByFilters(request.getCity(), request.getRange(), request.getCategoryId(),
+              request.getDateFirst(), request.getDateLast(), request.getMaxPrice(), request.getSortBy(),
+              request.getShowOnline());
+    }
+    return emptyList();
   }
 
   @RequestMapping(value = "/countries", method = GET)

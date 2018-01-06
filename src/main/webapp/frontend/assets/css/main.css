@@ -11,7 +11,23 @@
 }
 html,body {
     height:100%;
+}/* Removes the clear button from date inputs */
+input[type="date"]::-webkit-clear-button {
+    display: none;
 }
+
+/* Removes the spin button */
+input[type="date"]::-webkit-inner-spin-button {
+    display: none;
+}
+
+/* Always display the drop down caret */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    color: #2c3e50;
+}
+
+
+
 #head.secondary {
     height: 100px;
     min-height: 100px;
@@ -339,7 +355,7 @@ img.pull-left {
     color: whitesmoke;
     text-shadow: none;
     font-family: Roboto, sans-serif;
-    font-size: 25px;
+    font-size: 20px;
     font-weight: bold;
     padding: 10px 20px 10px 20px;
     margin-bottom: 10px;
@@ -348,7 +364,7 @@ img.pull-left {
     display: block; /* Make the links appear below each other */
     text-align: center;
     background: linear-gradient(90deg, rgba(211, 211, 211, 0.01) 0%, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.1) 75%, rgba(211, 211, 211, 0.01) 100%);
-    width: 250px;
+    width: 160px;
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.1), inset 0 0 1px rgba(255, 255, 255, 0.6);
 }
 .sidenav {
@@ -361,12 +377,12 @@ img.pull-left {
             linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
     background-color: #131313;
     background-size: 20px 20px;
-    width: 400px;
+    width: 35%;
     border-radius: 15%;
     border: 2px solid whitesmoke;
     min-height: 1000px;
     overflow: hidden;
-
+    color: goldenrod;
 }
 
 
@@ -466,8 +482,46 @@ ul {
     margin-right: 5%;
 }
 
-.trainingsList li{
-    margin-bottom: 15px;
+
+
+@media (min-width: 768px) {
+    .trainingItem {
+        width: 750px
+    }
+}
+
+@media (min-width: 992px) {
+    .trainingItem {
+        width: 970px
+    }
+}
+
+@media (min-width: 1200px) {
+    .trainingItem {
+        width: 1170px
+    }
+}
+
+@media (min-width: 768px) {
+    .trainingItemMenu {
+        width: 750px
+    }
+}
+
+@media (min-width: 992px) {
+    .trainingItemMenu {
+        width: 970px
+    }
+}
+
+@media (min-width: 1200px) {
+    .trainingItemMenu {
+        width: 1170px
+    }
+}
+
+.trainingsList label{
+    width: 15%;
 }
 .page-link {
     color: goldenrod;
@@ -475,13 +529,33 @@ ul {
 }
 
 
-.trainingItem:hover {
-    border: 1px solid goldenrod;
-    border-radius: 5%;
+.trainingItemMenu {
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 5px;
+    border-radius: 75%;
+    background: #959595; /* Old browsers */
+    background: -moz-linear-gradient(top, #959595 0%, #0d0d0d 46%, #010101 50%, #0a0a0a 53%, #4e4e4e 76%, #383838 87%, #1b1b1b 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, #959595 0%,#0d0d0d 46%,#010101 50%,#0a0a0a 53%,#4e4e4e 76%,#383838 87%,#1b1b1b 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, #959595 0%,#0d0d0d 46%,#010101 50%,#0a0a0a 53%,#4e4e4e 76%,#383838 87%,#1b1b1b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#959595', endColorstr='#1b1b1b',GradientType=0 ); /* IE6-9 */
+}
+.trainingItemMenu label {
+    margin-top: 50px;
+    margin-bottom: 15px;
+    font-size: 25px;
+    color: darkblue;
 }
 
-.trainingItem label{
-    width: 15%;
+
+.trainingItem {
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 5px;
+}
+.trainingItem:hover {
+    border: 1px solid goldenrod;
+    border-radius: 10%;
 }
 
 .slider .slider-selection {
@@ -504,7 +578,22 @@ select {
     margin-left: 15px;
     background-color: darkslategrey;
     color: black;
-    border-color: gold;
+    border-color: darkgoldenrod;
+}
+
+.trainingScheduleButton{
+    border-radius: 12%;
+    border: solid darkgoldenrod 1px;
+    color: slategray;
+    background: rgb(149,149,149); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(149,149,149,1) 0%, rgba(13,13,13,1) 46%, rgba(1,1,1,1) 50%, rgba(10,10,10,1) 53%, rgba(78,78,78,1) 76%, rgba(56,56,56,1) 87%, rgba(27,27,27,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(149,149,149,1) 0%,rgba(13,13,13,1) 46%,rgba(1,1,1,1) 50%,rgba(10,10,10,1) 53%,rgba(78,78,78,1) 76%,rgba(56,56,56,1) 87%,rgba(27,27,27,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(149,149,149,1) 0%,rgba(13,13,13,1) 46%,rgba(1,1,1,1) 50%,rgba(10,10,10,1) 53%,rgba(78,78,78,1) 76%,rgba(56,56,56,1) 87%,rgba(27,27,27,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#959595', endColorstr='#1b1b1b',GradientType=0 ); /* IE6-9 */
+}
+
+.trainingScheduleButtonTaken{
+    border: red 5px;
 }
 
 

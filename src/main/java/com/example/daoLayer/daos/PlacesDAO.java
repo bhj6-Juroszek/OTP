@@ -3,11 +3,13 @@ package com.example.daoLayer.daos;
 import com.example.daoLayer.AsyncDbSaver;
 import com.example.daoLayer.entities.Country;
 import com.example.daoLayer.entities.Place;
+import com.example.daoLayer.mappers.CityMapper;
 import com.example.daoLayer.mappers.CountryMapper;
 import com.example.daoLayer.mappers.PlaceMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
@@ -35,14 +37,45 @@ public class PlacesDAO extends DAO {
     super(template, asyncDbSaver);
   }
 
+  private String resolveTableName(@Nonnull final String countryCode) {
+    if(countryCode.contains(" ")) return "unknown";
+    return "cities_of_"+countryCode;
+  }
+
+  private void createTable(@Nonnull final String tableName) {
+
+  }
+
   @Override
   public void createTable() {
-    if (!tableExists(PLACES_TABLE_NAME)) {
-      template.execute
-          ("CREATE TABLE " + PLACES_TABLE_NAME + " (placeId VARCHAR(50) NOT NULL, placeName VARCHAR(250), " +
-              "placeLat DOUBLE, placeLng DOUBLE, countryCode VARCHAR(10), " +
-              "PRIMARY KEY(placeId));"
-          );
+    List<Country> countries = getCountries();
+    for(Country country: countries) {
+      try {
+        String SQL = "SELECT * FROM " + PLACES_TABLE_NAME + " WHERE countryCode = \""+country.getCountryId()+"\"";
+        final List<Place> loadedPlaces = template.query(SQL, new RowMapperResultSetExtractor<>(new PlaceMapper()));
+        String tableName;
+        if (!tableExists((tableName = resolveTableName(country.getCountryId())))) {
+          template.execute
+              ("CREATE TABLE " + tableName + " (placeName VARCHAR(250), placeLat DOUBLE, placeLng DOUBLE, " +
+                  "PRIMARY KEY(placeName, placeLat, placeLng));"
+              );
+        }
+        for (Place loadedPlace : loadedPlaces) {
+          asyncSaver.execute(() -> {
+            String SQL2 = "insert into " + tableName + " (placeName, placeLat, placeLng) values (?, ?, ?)";
+            template.update(SQL2, loadedPlace.getName(), loadedPlace.getLat(), loadedPlace.getLng());
+            SQL2 = "DELETE FROM " + PLACES_TABLE_NAME + " WHERE placeId = ?";
+            template.update(SQL2, loadedPlace.getId());
+            LOGGER.info("updated");
+          });
+        }
+        } catch(Exception e){
+        if (e instanceof CannotGetJdbcConnectionException) {
+          createTable();
+        }
+          LOGGER.error(e);
+        }
+
     }
     if (tableExists(COUNTRIES_TABLE_NAME)) {
       return;
@@ -56,10 +89,10 @@ public class PlacesDAO extends DAO {
   public void saveToDB(@Nonnull final Place place) {
     asyncSaver.execute(() -> {
       try {
-        final String SQL = "insert into " + PLACES_TABLE_NAME + " (placeId, placeName, placeLat, placeLng, " +
+        final String SQL = "insert into " + resolveTableName(place.getCountryCode()) + " (placeName, placeLat, placeLng, " +
             "countryCode) values (?, " +
-            "?, ?, ?, ?)";
-        template.update(SQL, place.getId(), place.getName(), place.getLat(), place.getLng(), place.getCountryCode());
+            "?, ?, ?)";
+        template.update(SQL, place.getName(), place.getLat(), place.getLng(), place.getCountryCode());
       } catch (Exception e) {
         LOGGER.error(e);
       }
@@ -79,9 +112,8 @@ public class PlacesDAO extends DAO {
 
   private List<Place> getCities(@Nonnull final String countryCode) {
     try {
-      final String SQL = "select * from " + PLACES_TABLE_NAME + " WHERE countryCode = ?";
-      final List<Place> loadedPlaces = template.query(SQL, new Object[]{countryCode},
-          new RowMapperResultSetExtractor<>(new PlaceMapper()));
+      final String SQL = "select * from " + resolveTableName(countryCode);
+      final List<Place> loadedPlaces = template.query(SQL, new RowMapperResultSetExtractor<>(new CityMapper()));
       LOGGER.info("Loaded places: {}", loadedPlaces);
       final Set<Place> placesSet = new HashSet<>(loadedPlaces);
      return new ArrayList<>(placesSet);
@@ -96,11 +128,11 @@ public class PlacesDAO extends DAO {
       return getCities(countryCode);
     }
     try {
-      final String SQL = "SELECT * FROM " + PLACES_TABLE_NAME + " where countryCode = ? AND lower(placeName) LIKE " +
+      final String SQL = "SELECT * FROM " + resolveTableName(countryCode) + " where lower(placeName) LIKE " +
           "lower(?);";
       final List<Place> loadedPlaces = template.query(SQL,
-          new Object[]{countryCode, (prefix+"%")},
-          new RowMapperResultSetExtractor<>(new PlaceMapper()));
+          new Object[]{(prefix+"%")},
+          new RowMapperResultSetExtractor<>(new CityMapper()));
       LOGGER.info("Loaded places: {}", loadedPlaces);
       final Set<Place> placesSet = new HashSet<>(loadedPlaces);
       return new ArrayList<>(placesSet);

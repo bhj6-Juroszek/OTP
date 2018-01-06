@@ -1,4 +1,4 @@
 package com.example.backend.controllersEntities.responses;
 
-public interface Response {
+public class BookingResponse extends ResponseWithCode {
 }

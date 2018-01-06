@@ -1,60 +1,89 @@
+var app = angular.module('myApp', []).factory('userService', function () {
+    return {
+        getUserContext: getUserContext,
+        setUserContext: setUserContext,
+        getPickableCategories: getPickableCategories,
+        setPickableCategories: setPickableCategories,
+        getUUID: getUUID,
+        setUUID: setUUID,
+        getHost: getHost,
+        getMainAdress: getMainAdress,
+        clearImportantData: clearImportantData,
+        getScheduleViewData: getScheduleViewData,
+        setScheduleViewData: setScheduleViewData,
+        goToScheduleAsOwner: goToScheduleAsOwner
+    };
 
-var app = angular.module('myApp', []);
-    app.factory('userService', function () {
+    // .................
 
-        return {
-            getUserContext: getUserContext,
-            setUserContext: setUserContext,
-            getPickableCategories: getPickableCategories,
-            setPickableCategories: setPickableCategories,
-            getUUID: getUUID,
-            setUUID: setUUID,
-            getHost: getHost,
-            getMainAdress: getMainAdress,
-            clearImportantData: clearImportantData,
-        };
+    function getUserContext() {
+        if (!sessionStorage['user']) {
+            return null;
+        }
+        return JSON.parse(sessionStorage.getItem("user"));
+    }
 
-        // .................
+    function setUserContext(value) {
+        sessionStorage.setItem("user", JSON.stringify(value))
+    }
 
-        function getUserContext() {
-            if(!sessionStorage['user']) {
-                return null;
-            }
-            return JSON.parse(sessionStorage.getItem("user"));
+    function getUUID() {
+        if (!sessionStorage['UUID']) {
+            return null;
         }
+        return sessionStorage.getItem("UUID");
+    }
 
-        function setUserContext(value) {
-            sessionStorage.setItem("user", JSON.stringify(value))
-        }
+    function setUUID(value) {
+        sessionStorage.setItem("UUID", value)
+    }
 
-        function getUUID() {
-            if(!sessionStorage['UUID']) {
-                return null;
-            }
-            return sessionStorage.getItem("UUID");
-        }
+    function getHost() {
+        return 'http://localhost:8181/';
+    }
 
-        function setUUID(value) {
-            sessionStorage.setItem("UUID", value)
+    function getMainAdress() {
+        return 'index.html';
+    }
+
+    function getPickableCategories() {
+        if (!sessionStorage['categories']) {
+            return [];
         }
-        function getHost() {
-            return 'http://localhost:8181/';
+        return JSON.parse(sessionStorage.getItem("categories"));
+    }
+
+    function setPickableCategories(categories) {
+        sessionStorage.setItem("categories", JSON.stringify(categories))
+    }
+
+    function clearImportantData() {
+        setUUID(null);
+        setUserContext(null);
+        setScheduleViewData(null);
+    }
+
+    function getScheduleViewData() {
+        if (!sessionStorage['scheduleViewData']) {
+            return null;
         }
-        function getMainAdress() {
-            return 'index.html';
+        return JSON.parse(sessionStorage.getItem("scheduleViewData"));
+    }
+
+    function setScheduleViewData(data) {
+        sessionStorage.setItem("scheduleViewData", JSON.stringify(data))
+    }
+
+    function goToScheduleAsOwner() {
+        if (sessionStorage['user']) {
+
+            var data = {
+                owner: getUserContext().user
+            };
+            sessionStorage.setItem("scheduleViewData", JSON.stringify(data));
+            window.location.href = "schedule.html"
         }
-        function getPickableCategories() {
-            if(!sessionStorage['categories']) {
-                return [];
-            }
-            return JSON.parse(sessionStorage.getItem("categories"));
-        }
-        function setPickableCategories(categories) {
-            sessionStorage.setItem("categories", JSON.stringify(categories))
-        }
-        function clearImportantData() {
-            setUUID(null);
-            setUserContext(null);
-        }
-    });
+    }
+});
+
 

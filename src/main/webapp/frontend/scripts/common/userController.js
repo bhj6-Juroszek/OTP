@@ -10,4 +10,5 @@ app.controller('userController', function ($scope, $http, userService) {
 
     };
     start();
+    $scope.goToScheduleAsOwner = userService.goToScheduleAsOwner;
 });

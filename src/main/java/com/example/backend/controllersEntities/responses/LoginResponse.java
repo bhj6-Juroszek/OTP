@@ -4,7 +4,7 @@ import com.example.backend.contexts.UserContext;
 
 import java.util.UUID;
 
-public class LoginResponse extends Response{
+public class LoginResponse extends ResponseWithCode {
 
   private UserContext userContext;
   private String uuid;

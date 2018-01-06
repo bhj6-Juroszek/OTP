@@ -1,17 +1,19 @@
 package com.example.backend.controllers;
 
+import com.example.backend.controllersEntities.requests.BookingRequest;
+import com.example.backend.controllersEntities.responses.BookingResponse;
+import com.example.backend.controllersEntities.responses.ResponseWithCode;
 import com.example.backend.controllersEntities.responses.ScheduleResponse;
 import com.example.backend.helpers.TrainingManager;
+import com.example.backend.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nonnull;
 import java.util.Date;
 
+import static com.example.backend.utils.ResponseUtils.*;
 import static com.example.utils.ResponseCode.NOT_AUTHENTICATED;
 import static com.example.utils.ResponseCode.SUCCESS;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
@@ -47,6 +49,15 @@ public class ScheduleController extends AuthenticatedController {
       return trainingManager.removeTrainingInstance(manager.getLoggedUsers().get(uuid).getUser(), instanceId);
     }
     return false;
+  }
+
+  @RequestMapping(value = "/bookTraining", method = DELETE)
+  public @ResponseBody
+  ResponseWithCode bookTraining(@RequestBody BookingRequest bookingRequest) {
+    if (authenticate(bookingRequest.getUuid())) {
+      return trainingManager.bookTraining(bookingRequest);
+    }
+    return prepareNotAuthenticatedResponse();
   }
 
   @Autowired

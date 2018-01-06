@@ -4,7 +4,7 @@ import com.example.daoLayer.entities.Training;
 
 import java.util.List;
 
-public class UserTrainingsResponse extends Response {
+public class UserTrainingsResponse extends ResponseWithCode {
 
   private List<Training> userTrainings;
 

@@ -3,9 +3,13 @@ package com.example.daoLayer.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import static java.util.Collections.*;
 
 /**
  * Created by Bartek on 2017-03-23.
@@ -31,6 +35,9 @@ public class Training extends Entity {
   }
 
   public List<TrainingInstance> getInstances() {
+    if(instances == null) {
+      return emptyList();
+    }
     return instances;
   }
 

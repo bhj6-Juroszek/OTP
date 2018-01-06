@@ -1,5 +1,5 @@
 app.controller('signInController', function ($scope, $http, userService, $window) {
-        var mainAdress = 'index.html';
+        var mainAdress = userService.getMainAdress();
         $scope.logIn = function () {
             $http({
                 method: 'POST',

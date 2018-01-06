@@ -5,18 +5,70 @@ app.controller('initialScheduleController', function ($scope, userService, $http
     var halfHourBasic = 96.25;
     var dayWidth = 14.28;
     var secondBasic = (halfHourBasic / 30) / 60;
+    var params = {};
     $scope.scheduleWeek = [];
     $scope.scheduleWeekHtml = [];
     $scope.scheduleTrainings = [];
+    $scope.owner = false;
+    var initializeModalData = function () {
+        $scope.pickedTraining = null;
+        $scope.mapSource = "";
+        $scope.modalTitle = 'Put here your header';
+        $scope.modalBody = 'Put here your body';
+        $scope.modalFooter = '';
+        $scope.full = false;
+        $scope.taken = false;
+    };
+    initializeModalData();
+
+    $scope.toggleModal = function (training) {
+        $scope.pickedTraining = training;
+        $scope.buttonClicked = training.description;
+        var lat = training.place.lat;
+        var lng = training.place.lng;
+        var bookedBy = training.trainingReservations.length;
+        $scope.modalTitle = training.description;
+        $scope.modalBody = bookedBy + "/" + training.size;
+        if (bookedBy >= training.size) {
+            $scope.modalFooter = "This training is already taken.";
+            $scope.full = true;
+        }
+        if (bookedBy > 0) {
+            $scope.modalFooter = "You can't delete training that was already booked.";
+            $scope.taken = true;
+        }
+        $scope.owner = training.owner.id === userService.getUserContext().user.id;
+        $scope.mapSource = $sce.trustAsResourceUrl("http://maps.google.com/maps?q=" + lat + "," + lng + "&z=15&output=embed");
+        $scope.showModal = true;
+
+    };
+    var getParams = function (isInitial) {
+        params = {
+            "uuid": userService.getUUID(),
+            "trainerId": userService.getUserContext().user.id,
+            "date": Date.parse($scope.currentDate.toString())
+        };
+        var scheduleInitialData = userService.getScheduleViewData();
+        if (scheduleInitialData !== null) {
+            params.trainerId = scheduleInitialData.owner.id;
+            if(isInitial) {
+            if(scheduleInitialData.date !== undefined) {
+                params.date = Date.parse(scheduleInitialData.date.toString());
+            }
+            if(scheduleInitialData.training !== undefined) {
+                $scope.toggleModal(scheduleInitialData.training);
+            }
+            }
+        }
+    };
+    getParams(true);
+
     $scope.getSchedule = function () {
+        getParams(false);
         $http({
             method: 'GET',
             url: userService.getHost() + 'schedule/getUserSchedule',
-            params: {
-                "uuid": userService.getUUID(),
-                "trainerId": userService.getUserContext().user.id,
-                "date": Date.parse($scope.currentDate.toString())
-            },
+            params: params,
             headers: {'Content-Type': 'application/json'}
         }).then(function successCallback(response) {
             $scope.scheduleWeek = response.data.scheduleWeek.days;
@@ -28,12 +80,28 @@ app.controller('initialScheduleController', function ($scope, userService, $http
                     var trainingInstance = trainingInstances[y];
                     trainingInstance.description = responseTraining.description;
                     trainingInstance.capacity = responseTraining.capacity;
-                    trainingInstance.lat = responseTraining.place.lat;
-                    trainingInstance.lng = responseTraining.place.lng;
-                    trainingInstance.ownerId = responseTraining.owner.id;
+                    trainingInstance.place = responseTraining.place;
+                    trainingInstance.price = responseTraining.price;
+                    trainingInstance.owner = responseTraining.owner;
                     trainingInstance.size = responseTraining.capacity;
                     trainingInstance.dateEnd = new Date(trainingInstance.dateEnd);
+                    var hours = trainingInstance.hoursEnd = trainingInstance.dateEnd.getHours();
+                    var minutes = trainingInstance.minutesEnd = trainingInstance.dateEnd.getMinutes();
+                    if (hours < 10) {
+                        trainingInstance.hoursEnd = "0" + hours;
+                    }
+                    if (minutes < 10) {
+                        trainingInstance.minutesEnd = "0" + minutes;
+                    }
                     trainingInstance.dateStart = new Date(trainingInstance.dateStart);
+                    hours = trainingInstance.hoursStart = trainingInstance.dateStart.getHours();
+                    minutes = trainingInstance.minutesStart = trainingInstance.dateStart.getMinutes();
+                    if (hours < 10) {
+                        trainingInstance.hoursStart = "0" + hours;
+                    }
+                    if (minutes < 10) {
+                        trainingInstance.minutesStart = "0" + minutes;
+                    }
                     trainingInstance.length = (trainingInstance.dateEnd - trainingInstance.dateStart) / 1000;
                     $scope.scheduleTrainings.push(trainingInstance);
                 }
@@ -43,50 +111,32 @@ app.controller('initialScheduleController', function ($scope, userService, $http
 
     };
     $scope.getSchedule();
+
     $scope.getTrainingsFromDate = function (day) {
         var result = [];
         for (var i = 0; i < $scope.scheduleTrainings.length; i++) {
-            var scheduleTraining =$scope.scheduleTrainings[i];
-            if (scheduleTraining.dateStart.getUTCDate() == day.day && (scheduleTraining.dateStart.getMonth()+1) == day.month) {
+            var scheduleTraining = $scope.scheduleTrainings[i];
+            if (scheduleTraining.dateStart.getUTCDate() == day.day && (scheduleTraining.dateStart.getMonth() + 1) == day.month) {
                 result.push(scheduleTraining);
             }
         }
         return result;
     };
-
     $scope.getTrainingStyle = function (training) {
-        var topPercentage = (((training.dateStart.getHours()-6) * 3600 + training.dateStart.getMinutes() * 60) * secondBasic) + halfHourBasic;
-        var height = training.length *secondBasic;
-        var topString = Math.round(topPercentage * 100) / 100+"%";
-        var heightString = Math.round(height * 100) / 100+"%";
-        var widthString = dayWidth+"%";
+        var topPercentage = (((training.dateStart.getHours() - 6) * 3600 + training.dateStart.getMinutes() * 60) * secondBasic) + halfHourBasic;
+        var height = training.length * secondBasic;
+        var topString = Math.round(topPercentage * 100) / 100 + "%";
+        var heightString = Math.round(height * 100) / 100 + "%";
+        var widthString = dayWidth + "%";
         return {
             "position": 'absolute',
             "top": topString,
-            "height":heightString,
-            "width":widthString
+            "height": heightString,
+            "width": widthString
         };
     };
-    $scope.pickedTraining = null;
-    $scope.mapSource = "";
-    $scope.modalTitle = 'Put here your header';
-    $scope.modalBody = 'Put here your body';
-    $scope.footer = 'Put here your footer';
-    $scope.owner = false;
-
-    $scope.toggleModal = function(training){
-        $scope.pickedTraining = training;
-        $scope.buttonClicked = training.description;
-        var lat = training.lat;
-        var lng = training.lng;
-        $scope.owner = training.ownerId === userService.getUserContext().user.id;
-        $scope.mapSource = $sce.trustAsResourceUrl("http://maps.google.com/maps?q="+lat+","+lng+"&z=15&output=embed");
-        $scope.showModal = true;
-
-    };
-
     $scope.delete = function () {
-        if($scope.pickedTraining.trainingReservations.length !== 0) {
+        if ($scope.pickedTraining.trainingReservations.length !== 0) {
 
         } else {
             $http({
@@ -98,7 +148,7 @@ app.controller('initialScheduleController', function ($scope, userService, $http
                 },
                 headers: {'Content-Type': 'application/json'}
             }).then(function successCallback(response) {
-                if(response.data) {
+                if (response.data) {
                     $window.location.reload();
                     $scope.showModal = false;
                 }
@@ -108,7 +158,7 @@ app.controller('initialScheduleController', function ($scope, userService, $http
     };
 
     $scope.reserve = function () {
-        if($scope.pickedTraining.trainingReservations.length > $scope.pickedTraining.size) {
+        if ($scope.pickedTraining.trainingReservations.length > $scope.pickedTraining.size) {
             $scope.showModal = false;
         } else {
 
@@ -116,6 +166,7 @@ app.controller('initialScheduleController', function ($scope, userService, $http
     };
     $scope.cancel = function () {
         $scope.showModal = false;
+        initializeModalData();
     };
 
 });
@@ -125,24 +176,24 @@ app.directive('modal', function () {
         templateUrl: '../frontend/trainingModal.html',
         restrict: 'E',
         transclude: true,
-        replace:true,
-        scope:true,
+        replace: true,
+        scope: true,
         link: function postLink(scope, element, attrs) {
-            scope.$watch(attrs.visible, function(value){
-                if(value == true)
+            scope.$watch(attrs.visible, function (value) {
+                if (value === true)
                     $(element).modal('show');
                 else
                     $(element).modal('hide');
             });
 
-            $(element).on('shown.bs.modal', function(){
-                scope.$apply(function(){
+            $(element).on('shown.bs.modal', function () {
+                scope.$apply(function () {
                     scope.$parent[attrs.visible] = true;
                 });
             });
 
-            $(element).on('hidden.bs.modal', function(){
-                scope.$apply(function(){
+            $(element).on('hidden.bs.modal', function () {
+                scope.$apply(function () {
                     scope.$parent[attrs.visible] = false;
                 });
             });

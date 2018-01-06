@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TrainingsWithFilterRequest implements Request {
+public class TrainingsWithFilterRequest extends AuthenticatedRequest {
   @JsonProperty(required = false)
   private Place city;
   @JsonProperty(required = false)
