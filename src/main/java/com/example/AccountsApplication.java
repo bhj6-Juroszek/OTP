@@ -28,7 +28,6 @@ public class AccountsApplication extends SpringBootServletInitializer {
   public static void main(String[] args) {
     context = SpringApplication.run(AccountsApplication.class, args);
     LOGGER.log(INFO, "Started Application");
-    LOGGER.log(INFO, "Finished loading cities list");
   }
 
   public void addResourceHandlers(ResourceHandlerRegistry registry) {

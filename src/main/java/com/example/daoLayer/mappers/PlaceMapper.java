@@ -17,6 +17,7 @@ public class PlaceMapper implements RowMapper<Place> {
     place.setName(rs.getString("placeName"));
     place.setLat(rs.getDouble("placeLat"));
     place.setLng(rs.getDouble("placeLng"));
+    place.setCountryCode(rs.getString("countryCode"));
     return place;
 
   }

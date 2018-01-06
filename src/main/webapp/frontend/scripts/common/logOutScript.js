@@ -1,8 +1,4 @@
-try {
-    var controller = $controller('logOutController', [])
-} catch (e) {
-    var app = angular.module('myApp');
-    app.controller('logOutController', function ($scope, $http, userService, $window) {
+app.controller('logOutController', function ($scope, $http, userService) {
         var mainAdress = userService.getMainAdress();
         var uuid = userService.getUUID();
         $scope.logOut = function () {
@@ -13,14 +9,19 @@ try {
             }).then(function successCallback() {
                 userService.setUUID(null);
                 userService.setUserContext(null);
-                alert('You have been loged out');
-                window.location.href = mainAdress;
+                $.notify('You have been loged out', "info");
+                setTimeout(function () {
+                    window.location.href = mainAdress;
+                }, 500);
+
             }, function errorCallback() {
                 userService.clearImportantData();
-                alert('Session expired');
-                window.location.href = mainAdress;
+                $.notify('Session expired', "error");
+                setTimeout(function () {
+                    window.location.href = mainAdress;
+                }, 500);
             });
         };
     });
-}
+
 

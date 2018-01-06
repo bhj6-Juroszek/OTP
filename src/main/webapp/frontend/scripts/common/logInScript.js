@@ -1,8 +1,4 @@
-try {
-    var controller = $controller('signInController', [])
-} catch (e) {
-    var app = angular.module('myApp');
-    app.controller('signInController', function ($scope, $http, userService, $window) {
+app.controller('signInController', function ($scope, $http, userService, $window) {
         var mainAdress = 'index.html';
         $scope.logIn = function () {
             $http({
@@ -18,22 +14,24 @@ try {
                 if ($scope.loginResponse.responseCode === 1) {
                     userService.setUserContext($scope.loginResponse.userContext);
                     userService.setUUID($scope.loginResponse.uuid);
-                    alert('Logged In succesfully on : ' + $scope.loginResponse.userContext.user.mail);
-                    $window.location.href = mainAdress;
+                    var message = 'Logged In succesfully on : ' + $scope.loginResponse.userContext.user.mail;
+                    $.notify(message, "success");
+                    setTimeout(function(){
+                        $window.location.href = mainAdress;
+                    }, 500);
+
                 } else if ($scope.loginResponse.responseCode === 2) {
-                    alert('Wrong credentials! ');
+                    $.notify('Wrong credentials! ', "warn");
                     init();
                 }else if ($scope.loginResponse.responseCode === 3) {
-                    alert('Account doesn\'t exist!');
+                    $.notify('Account doesn\'t exist!', "error");
                     init();
                 } else {
-                    $scope.email = "";
-                    $scope.password = "";
-                    $scope.validPassword = false;
+                    init();
                     $window.location.href = mainAdress;
                 }
             }, function errorCallback(response) {
-                alert('Could not connect to server. Please try again later');
+                $.notify('Could not connect to server. Please try again later', "error");
             });
         };
         $scope.init = function () {
@@ -42,5 +40,4 @@ try {
             $scope.validPassword = true;
         }
     });
-}
 

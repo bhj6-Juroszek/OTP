@@ -1,6 +1,4 @@
-var app = angular.module('myApp');
 app.controller('trainingInstanceController', function ($scope, $http, $window, userService) {
-    var mainAdress = userService.getMainAdress();
     $scope.date;
     $scope.hours;
     $scope.duration;
@@ -28,9 +26,16 @@ app.controller('trainingInstanceController', function ($scope, $http, $window, u
                 },
                 headers: {'Content-Type': 'application/json'}
             }).then(function successCallback(response) {
-                var a = 0;
+                if(response.data === 1) {
+                    $.notify('Training instance successfully saved', "success");
+                } else {
+                    setTimeout(function () {
+                        window.location.href = userService.getMainAdress()
+                    },1000);
+                }
+
             }, function errorCallback(response) {
-                alert('Could not connect to server. Please try again later');
+                $.notify('Could not connect to server. Please try again later', "error");
             });
         }
     }

@@ -1,38 +1,59 @@
 package com.example.backend.controllersEntities.requests;
 
+import com.example.daoLayer.entities.Place;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TrainingsWithFilterRequest implements Request {
-
-  private String cityName;
-  private double range;
-  private long categoryId;
+  @JsonProperty(required = false)
+  private Place city;
+  @JsonProperty(required = false)
+  private int range;
+  @JsonProperty(required = false)
+  private String categoryId;
+  @JsonProperty(required = false)
   private Date dateFirst;
+  @JsonProperty(required = false)
   private Date dateLast;
+  @JsonProperty(required = false)
   private double maxPrice;
+  @JsonProperty(required = false)
   private String sortBy;
+  @JsonProperty(required = false)
+  private boolean showOnline;
 
-  public String getCityName() {
-    return cityName;
+  public boolean getShowOnline() {
+    return showOnline;
   }
 
-  public void setCityName(final String cityName) {
-    this.cityName = cityName;
+  public void setShowOnline(final boolean showOnline) {
+    this.showOnline = showOnline;
   }
 
-  public double getRange() {
+  public Place getCity() {
+    return city;
+  }
+
+  public void setCity(final Place city) {
+    this.city = city;
+  }
+
+  public int getRange() {
     return range;
   }
 
-  public void setRange(final double range) {
+  public void setRange(final int range) {
     this.range = range;
   }
 
-  public long getCategoryId() {
+  public String getCategoryId() {
     return categoryId;
   }
 
-  public void setCategoryId(final long categoryId) {
+  public void setCategoryId(final String categoryId) {
     this.categoryId = categoryId;
   }
 

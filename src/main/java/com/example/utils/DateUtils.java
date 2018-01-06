@@ -29,11 +29,11 @@ public class DateUtils {
   public static Date addHoursToDate(@Nonnull final Date basicDate, final double hours) {
     final int addMinutes = (int)hours*60%60;
     final int addHours = (int)(hours*60-addMinutes)/60;
-    final Calendar cal = getInstance(); // creates calendar
-    cal.setTime(basicDate); // sets calendar time/date
-    cal.add(HOUR_OF_DAY, addHours); // adds one hour
-    cal.add(MINUTE, addMinutes);
-    return cal.getTime();
+    final Calendar calendar = getInstance(); // creates calendar
+    calendar.setTime(basicDate); // sets calendar time/date
+    calendar.add(HOUR_OF_DAY, addHours); // adds one hour
+    calendar.add(MINUTE, addMinutes);
+    return calendar.getTime();
   }
 
   public static  java.sql.Date getSQLDate(@Nonnull final Date date) {

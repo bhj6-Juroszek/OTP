@@ -1,7 +1,5 @@
-try {
-    getUserContext().user;
-} catch (e) {
-    var app = angular.module('myApp', []);
+
+var app = angular.module('myApp', []);
     app.factory('userService', function () {
 
         return {
@@ -13,7 +11,7 @@ try {
             setUUID: setUUID,
             getHost: getHost,
             getMainAdress: getMainAdress,
-            clearImportantData: clearImportantData
+            clearImportantData: clearImportantData,
         };
 
         // .................
@@ -59,4 +57,4 @@ try {
             setUserContext(null);
         }
     });
-}
+

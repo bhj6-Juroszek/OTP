@@ -1,6 +1,7 @@
 package com.example.daoLayer;
 
 import com.example.daoLayer.daos.*;
+import com.example.utils.PlacesLoader;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
@@ -20,17 +21,20 @@ public class DAOHelper {
   public static final String USERS_TABLE_NAME = "users";
   public static final String PROFILES_TABLE_NAME = "profiles";
   public static final String PLACES_TABLE_NAME = "cities";
+  public static final String COUNTRIES_TABLE_NAME = "countries";
 
   DAOHelper(@Nonnull final CategoriesDAO categoriesDAO, @Nonnull final PlacesDAO placesDAO,
       @Nonnull final UsersDAO usersDAO, @Nonnull final ProfilesDAO profilesDAO, @Nonnull final RatesDAO ratesDAO,
-      @Nonnull final TrainingsDAO trainingsDAO) {
+      @Nonnull final TrainingsDAO trainingsDAO, @Nonnull final PlacesLoader placesLoader) {
     this.categoriesDAO = categoriesDAO;
     this.placesDAO = placesDAO;
     this.usersDAO = usersDAO;
     this.trainingsDAO = trainingsDAO;
     this.profilesDAO = profilesDAO;
     this.ratesDAO = ratesDAO;
+    this.loader = placesLoader;
     createAll();
+    loadCountries();
   }
 
   private CategoriesDAO categoriesDAO;
@@ -39,6 +43,7 @@ public class DAOHelper {
   private ProfilesDAO profilesDAO;
   private RatesDAO ratesDAO;
   private TrainingsDAO trainingsDAO;
+  private PlacesLoader loader;
 
   private void createAll() {
     categoriesDAO.createTable();
@@ -47,5 +52,10 @@ public class DAOHelper {
     profilesDAO.createTable();
     ratesDAO.createTable();
     trainingsDAO.createTable();
+  }
+
+  private void loadCountries() {
+//    loader.saveCities(placesDAO);
+//    loader.saveCountries(placesDAO);
   }
 }

@@ -14,13 +14,13 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static com.example.daoLayer.DAOHelper.*;
 import static java.sql.Types.*;
 import static java.util.concurrent.TimeUnit.DAYS;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Created by Bartek on 2017-03-25.
@@ -83,10 +83,9 @@ public class TrainingsDAO extends DAO {
         "LEFT OUTER JOIN " + TRAININGS_INSTANCES_TABLE_NAME + " trIns ON tr.trainingsId = trIns.idTrainings " +
         "LEFT OUTER JOIN " + TRAININGS_RESERVATIONS_TABLE_NAME + " trRes ON trIns.trainingsInsId = trRes" +
         ".idTrainingsIns " +
-        "INNER JOIN " + CATEGORIES_TABLE_NAME + " cats ON tr.category = cats.categoryId " +
+        "INNER JOIN " + CATEGORIES_TABLE_NAME + " cats ON (tr.category = cats.categoryId OR tr.category = cats.categoryParent) " +
         "INNER JOIN " + USERS_TABLE_NAME + " usrs ON tr.owner = usrs.userId " +
-        "LEFT OUTER JOIN " + "(SELECT userId AS c_userId, userName AS c_userName, adress AS c_adress, mail AS c_mail," +
-        " " +
+        "LEFT OUTER JOIN " + "(SELECT userId AS c_userId, userName AS c_userName, adress AS c_adress, mail AS c_mail, " +
         "imageUrl AS c_imageUrl FROM " + USERS_TABLE_NAME + ") usrsRes ON usrsRes.c_userId = trRes.customerId ");
     applyTrainerFilter(SQL, parameterSource, trainerId);
     applyMaxPriceFilter(SQL, parameterSource, maxPrice);
@@ -140,20 +139,19 @@ public class TrainingsDAO extends DAO {
     builder.append(whereOrAnd);
   }
 
+  private List<Training> applyOnlineFilter(@Nonnull final List<Training> trainings) {
+    return trainings.stream().filter(training -> training.getPlace().getName().equals("online")).collect(
+        toList());
+  }
+
   private List<Training> applyDistanceFilter(@Nonnull final List<Training> trainings, final int maxDistance,
       @Nullable final Place place) {
     if (maxDistance == 0 || place == null) {
       return trainings;
     }
-    final List<Training> result = new ArrayList<>();
     final JsonReader reader = new JsonReader();
-    for (Training training : trainings) {
-      final Place trainingPlace = training.getPlace();
-      if (reader.distance(place, trainingPlace) <= maxDistance) {
-        result.add(training);
-      }
-    }
-    return result;
+    return trainings.stream().filter(training -> reader.distance(place, training.getPlace()) <= maxDistance).collect(
+        toList());
   }
 
   public void saveTraining(@Nonnull final Training training) {
@@ -191,7 +189,8 @@ public class TrainingsDAO extends DAO {
           "INSERT INTO " + TRAININGS_INSTANCES_TABLE_NAME + "(trainingsInsId, idTrainings, " +
               "trainingInsDateStart, " +
               "trainingInsDateEnd) " +
-              "SELECT * FROM (SELECT :trainingsInsId AS trainingsInsId, :idTrainings AS idTrainings, :trainingInsDateStart AS trainingInsDateStart, :trainingInsDateEnd AS trainingInsDateEnd) AS " +
+              "SELECT * FROM (SELECT :trainingsInsId AS trainingsInsId, :idTrainings AS idTrainings, " +
+              ":trainingInsDateStart AS trainingInsDateStart, :trainingInsDateEnd AS trainingInsDateEnd) AS " +
               "tmp " +
               "WHERE NOT EXISTS (" +
               "    SELECT idTrainings, trainingInsDateStart, trainingInsDateEnd   FROM " +

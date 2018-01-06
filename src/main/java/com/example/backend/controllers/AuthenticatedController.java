@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.Nonnull;
+import java.util.Date;
 
 @Controller
 public abstract class AuthenticatedController {
@@ -17,7 +18,12 @@ public abstract class AuthenticatedController {
   }
 
   boolean authenticate(@Nonnull final String uuid) {
-    return (manager.getLoggedUsers().containsKey(uuid));
+    final UserContext userContext = manager.getLoggedUsers().get(uuid);
+    if(userContext == null) {
+      return false;
+    }
+    userContext.setLastTouched(new Date().getTime());
+    return true;
   }
 
 }

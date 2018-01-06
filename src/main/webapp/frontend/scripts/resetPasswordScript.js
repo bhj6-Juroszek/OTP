@@ -1,8 +1,4 @@
-try {
-    var controller = $controller('resetPasswordController')
-} catch (e) {
-    var app = angular.module('myApp');
-    app.controller('resetPasswordController', function ($scope, $http, userService, $window) {
+app.controller('resetPasswordController', function ($scope, $http, userService, $window) {
         var mainAdress = userService.getMainAdress();
         $scope.mail = "jurbar369@gmail.com";
         $scope.resetPassword = function () {
@@ -13,13 +9,17 @@ try {
             }).then(function successCallback() {
                 userService.setUUID(null);
                 userService.setUserContext(null);
-                alert('Password successfully changed ');
-                $window.location.href = mainAdress;
+                $.notify('Password successfully changed ', "success");
+                setTimeout(function () {
+                    $window.location.href = mainAdress;
+                },1000)
+
             }, function errorCallback() {
-                alert('Something went wrong');
-                $window.location.href = mainAdress;
+                $.notify('Something went wrong', "error");
+                setTimeout(function () {
+                    $window.location.href = mainAdress;
+                },1000)
             });
         };
     });
-}
 

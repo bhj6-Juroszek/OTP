@@ -1,5 +1,4 @@
-var app = angular.module('myApp');
-    app.controller('myAppController', function ($scope, $http, $window, userService) {
+app.controller('myAppController', function ($scope, $http, $window, userService) {
         $scope.email = "jo";
         $scope.password = "";
         $scope.passwordConfirm = "";
@@ -18,17 +17,20 @@ var app = angular.module('myApp');
             }).then(function successCallback(response) {
                 $scope.returnCode = response.data;
                 if ($scope.returnCode === 1) {
-                    alert('Your account has been succesfully registered. Check your email to confirm registration.');
-                    $window.location.href = mainAdress;
+                    $.notify('Your account has been succesfully registered. Check your email to confirm registration.', "success");
+                    setTimeout(function () {
+                        $window.location.href = mainAdress;
+                    },500)
+
                 }
                 else if ($scope.returnCode === 5) {
-                    alert('This mail is already registered!');
+                    $.notify('This mail is already registered!', "error");
                 }
                 else {
-                    alert('Something went wrong. Try again later');
+                    $.notify('Something went wrong. Try again later', "error");
                 }
             }, function errorCallback(response) {
-                alert('Could not connect to server. Please try again later');
+                $.notify('Could not connect to server. Please try again later', "error");
             });
 
         };

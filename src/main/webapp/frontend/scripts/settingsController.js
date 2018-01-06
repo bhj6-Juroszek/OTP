@@ -1,4 +1,3 @@
-var app = angular.module('myApp');
 app.controller('settingsController', function ($scope, $http, $window, userService) {
     var user = ((ctx = userService.getUserContext()) === null) ? null: ctx.user;
     if(user === null) {
@@ -30,35 +29,6 @@ app.controller('settingsController', function ($scope, $http, $window, userServi
         $scope.addTrInstanceVisibility = true;
     };
 
-    var hideEverything = function () {
-        $scope.details = false;
-        $scope.trainingsTemplate = false;
-        $scope.addTrInstanceVisibility = false;
-        $scope.schedule = false;
-    };
-
-    var loadTrainings = function () {
-        $http({
-            method: 'GET',
-            url: userService.getHost() + 'getUserTrainings',
-            params: {"uuid": userService.getUUID()}
-        }).then(function successCallback(response) {
-            if (response.data.responseCode === 1) {
-                    for(var i = 0; i < response.data.userTrainings.length; i++) {
-                        var uTraining = response.data.userTrainings[i];
-                        $scope.userTrainings.push(uTraining);
-                    }
-                    $scope.userTrainingsInstances = [];
-            } else {
-                return [];
-            }
-            //TODO finish
-        }, function errorCallback(response) {
-            return [];
-        });
-    };
-    loadTrainings();
-
     $scope.changeDetailsSubmit = function () {
         if ($scope.confirm()) {
             user.name = $scope.userNameChange;
@@ -80,14 +50,51 @@ app.controller('settingsController', function ($scope, $http, $window, userServi
             }).then(function successCallback(response) {
                 $scope.returnCode = response.data;
                 if ($scope.returnCode === 1) {
-                    alert('Your account has been updated');
+                    $.notify('Your account has been updated', "success");
+                } else {
+                    $.notify('Session expired', "error");
+                    setTimeout(function () {
+                       window.location.href = userService.getMainAdress();
+                    }, 1000);
                 }
                 //TODO finish
             }, function errorCallback(response) {
-                alert('Could not connect to server. Please try again later');
+                $.notify('Could not connect to server. Please try again later', "error");
             });
             clearDetails();
         }
+    };
+
+    $scope.confirm = function () {
+        return $window.confirm('Are you sure ?');
+    };
+
+    var hideEverything = function () {
+        $scope.details = false;
+        $scope.trainingsTemplate = false;
+        $scope.addTrInstanceVisibility = false;
+        $scope.schedule = false;
+    };
+
+    var loadTrainings = function () {
+        $http({
+            method: 'GET',
+            url: userService.getHost() + 'getUserTrainings',
+            params: {"uuid": userService.getUUID()}
+        }).then(function successCallback(response) {
+            if (response.data.responseCode === 1) {
+                for(var i = 0; i < response.data.userTrainings.length; i++) {
+                    var uTraining = response.data.userTrainings[i];
+                    $scope.userTrainings.push(uTraining);
+                }
+                $scope.userTrainingsInstances = [];
+            } else {
+                return [];
+            }
+            //TODO finish
+        }, function errorCallback(response) {
+            return [];
+        });
     };
 
     var clearDetails = function () {
@@ -97,8 +104,5 @@ app.controller('settingsController', function ($scope, $http, $window, userServi
         $scope.adressChange = user.adress;
         $scope.imageUrl = user.imageUrl;
     };
-
-    $scope.confirm = function () {
-        return $window.confirm('Are you sure ?');
-    };
+    loadTrainings();
 });

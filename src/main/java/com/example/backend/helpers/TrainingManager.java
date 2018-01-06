@@ -13,6 +13,7 @@ import javax.annotation.Nonnull;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.utils.DateUtils.*;
 import static com.example.utils.ResponseCode.INVALID_DATA;
 import static com.example.utils.ResponseCode.SUCCESS;
 
@@ -92,7 +93,7 @@ public class TrainingManager {
         trainerId, 0, 0, null);
   }
 
-//  public boolean saveTraining(@Nonnull final Training training,@Nonnull final  Date date) {
+  //  public boolean saveTraining(@Nonnull final Training training,@Nonnull final  Date date) {
 //    final java.sql.Date sqlDate = getSQLDate(date);
 //    training.setDate(sqlDate);
 //    return trainingsDAO.saveToDB(training);
@@ -124,14 +125,13 @@ public class TrainingManager {
 //    trainingsDAO.delete(training);
 //  }
 //
-//  @Nullable
-//  public List<Training> getTrainingsByFilters(final String cityName, final double range, final long categoryId,
-// @Nonnull final Date dateFirst,
-//      @Nonnull final Date dateLast, final double maxPrice, final String sortBy, final boolean showOnline) {
-//    java.sql.Date sqlDateFirst = getSQLDate(dateFirst);
-//    java.sql.Date sqlDateLast = getSQLDate(dateLast);
-//    return trainingsDAO
-//        .getTrainingsByFilter(cityName, range, categoryId, sqlDateFirst, sqlDateLast, maxPrice, sortBy, showOnline);
-//  }
+  public List<Training> getTrainingsByFilters(final Place city, final int range, final String categoryId,
+      @Nonnull final Date dateFirst,
+      @Nonnull final Date dateLast, final double maxPrice, final String sortBy, final boolean showOnline) {
+    java.sql.Date sqlDateFirst = getSQLDate(getStartOfDay(dateFirst));
+    java.sql.Date sqlDateLast = getSQLDate(getEndOfDay(dateLast));
+    return trainingsDAO
+        .getTrainings(categoryId, null, null, null, maxPrice, range, city);
+  }
 
 }

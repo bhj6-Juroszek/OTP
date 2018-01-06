@@ -1,4 +1,3 @@
-var app = angular.module('myApp');
 app.controller('trainingTemplateController', function ($scope, $http, $window, userService) {
     $scope.templateCategories = userService.getPickableCategories();
     $scope.place = "";

@@ -38,7 +38,7 @@
                                                                alt="Logo"></a>
             </div>
             <ul class="nav navbar-nav pull-right">
-                <li class="active"><a href="#">Home</a></li>
+                <li class="active"><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
@@ -80,16 +80,57 @@
     </header>
     <!-- /Header -->
 
-
-    <div class="container settingsform" ng-controller="searchEngineController" ng-show="authData" ng-app="myApp"
+    <!-- Filters -->
+    <div class=" settingsform" ng-controller="searchEngineController" ng-show="authData" ng-app="myApp"
          data-ng-init="initSearcher()">
-        <div class="row">
-            <select class="selectpicker">
-                <option ng-repeat="y in citiesList" data-tokens="y.name">{{y.name}}</option>
-            </select>
-        </div>
-        <aside class="col-md-4 sidebar sidebar-left">
-            <div class="sidenav">
+        <ul class="nav navbar-nav pull-right searcher ">
+            <li style="margin-right:15%;">
+                <div ><label></label></div>
+            </li>
+            <li style="margin-right: 2%;">
+
+            </li>
+            <li>
+                Date from
+                <input type="date" name="currentDate" ng-model="dateFrom" class="form-control" ng-change="validateDate()">
+            </li>
+            <li>
+                Date to
+                <input type="date" name="currentDate" ng-model="dateTo" class="form-control" ng-change="validateDate()">
+            </li>
+            <li>
+            <li>Select country
+            <input type=text list=countries class="form-control" ng-model="selectedCountry" ng-change="getCities()">
+            <datalist id="countries">
+                <option data-ng-repeat="country in countriesList" value="{{country.countryName}}" ></option>
+            </datalist></li>
+            </li>
+            <li>Select city
+                <input type=text list=cities class="form-control" ng-model="selectedCity" ng-change="getCities()">
+                <datalist id="cities">
+                    <option ng-repeat="city in citiesList" >{{city.name}}</option>
+                </datalist></li>
+            </li>
+            <li>Distance from city
+                <select class="form-control" ng-model="distance">
+                    <option ng-repeat="distance in distancesList" >{{distance.name}}</option>
+                </select>
+            </li>
+            <li style="margin-left: 2%">Show online trainings<br>
+                    <input type="checkbox" ng-model="showOnline">
+            </li>
+            <li style="margin-left: 2%">
+                <button ng-click="search()" class="btn categoriesb subitem">SEARCH
+                </button>
+            </li>
+        </ul>
+        <!-- Filters end -->
+
+        <!-- Categories bar -->
+        <aside class="col-md-4 sidebar sidebar-left container text-center">
+        <div class="sidenav">
+        <label class="text-left" style="font-size: 30px;margin-bottom: 5%; "><b>Category</b></label><br>
+            <div>
                 <ul class="btn-group-vertical">
                     <li ng-repeat="x in categories">
                         <button ng-click="selectMainCategory(x)" class="categoriesb">{{x.name}}
@@ -103,10 +144,30 @@
                     </li>
                 </ul>
             </div>
-        </aside>
-        <button ng-click="search()" class=" categoriesb subitem">SEARCH
-        </button>
+        </div></aside>
+
+        <!-- Categories bar end-->
+
+        <!-- Trainings -->
+        <ul class="trainingsList pull-left col-sl-8" style="margin-top: 5%;">
+            <li class="trainingItem" ng-click="goToSchedule()" ng-repeat="trainingFound in trainingsFoundOnPage"><a>
+                <img src={{trainingFound.owner.imageUrl}}
+                     alt="User image">
+                <label>{{trainingFound.owner.name}}</label>
+                <label>{{trainingFound.place.name}}</label>
+                <label>{{trainingFound.price}}</label>
+                <label>5 stars</label>
+            </a> </li>
+            <nav class="container">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" ng-repeat="page in pages" ng-click="selectPage(page.value)">{{page.name}}</a></li>
+                </ul>
+            </nav>
+        </ul>
+        <!-- Trainings end-->
+
     </div>
+
 
 
     <!-- Intro -->
@@ -281,6 +342,7 @@
 <script src="assets/js/jQuery.headroom.min.js"></script>
 <script src="assets/js/html5shiv.js"></script>
 <script src="assets/js/respond.min.js"></script>
+<script src="assets/js/notify.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 <script src="scripts/userService.js"></script>
 <script src="assets/js/template.js"></script>

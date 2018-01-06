@@ -14,10 +14,10 @@ public class AsyncDbSaver {
   private ThreadPoolExecutor executor;
 
   public AsyncDbSaver() {
-    this.executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
+    this.executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
   }
 
-  public<T> void execute(@Nonnull final Runnable task) {
+  public void execute(@Nonnull final Runnable task) {
     executor.submit(task);
   }
 
