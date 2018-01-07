@@ -2,8 +2,6 @@ package com.example.daoLayer;
 
 import com.example.daoLayer.daos.*;
 import com.example.utils.PlacesLoader;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -51,12 +49,12 @@ public class DAOHelper {
 
   @PostConstruct
   private void createAll() {
-//    categoriesDAO.createTable();
-//    placesDAO.createTable();
-//    usersDAO.createTable();
-//    profilesDAO.createTable();
-//    ratesDAO.createTable();
-//    trainingsDAO.createTable();
+    categoriesDAO.createTable();
+    placesDAO.createTable();
+    usersDAO.createTable();
+    profilesDAO.createTable();
+    ratesDAO.createTable();
+    trainingsDAO.createTable();
   }
 
   @PostConstruct

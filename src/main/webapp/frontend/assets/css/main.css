@@ -1,17 +1,20 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto); /* Header */
 #head {
-    background: #181015 url(../images/bg_header.jpg) no-repeat;
+    background: url(../images/bg_header.jpg) no-repeat;
     background-size: cover;
-    min-height: 520px;
+    min-height: 120px;
     text-align: center;
     padding-top: 240px;
     color: white;
     font-family: "Open sans", Helvetica, Arial;
     font-weight: 300;
 }
-html,body {
-    height:100%;
-}/* Removes the clear button from date inputs */
+
+html, body {
+    height: 100%;
+}
+
+/* Removes the clear button from date inputs */
 input[type="date"]::-webkit-clear-button {
     display: none;
 }
@@ -25,8 +28,6 @@ input[type="date"]::-webkit-inner-spin-button {
 input[type="date"]::-webkit-calendar-picker-indicator {
     color: #2c3e50;
 }
-
-
 
 #head.secondary {
     height: 100px;
@@ -149,7 +150,7 @@ blockquote {
 }
 
 label {
-    color: darkgoldenrod;
+    color: var(--cream);
 }
 
 .thin {
@@ -319,12 +320,67 @@ img.pull-left {
     margin: 0 5px;
 }
 
+@media (min-width: 768px) {
+    .trainingItem {
+        width: 750px
+    }
+}
+
+@media (min-width: 992px) {
+    .trainingItem {
+        width: 970px
+    }
+}
+
+@media (min-width: 1200px) {
+    .trainingItem {
+        width: 1170px
+    }
+}
+
+@media (min-width: 768px) {
+    .trainingItemMenu {
+        width: 750px
+    }
+}
+
+@media (min-width: 992px) {
+    .trainingItemMenu {
+        width: 970px
+    }
+}
+
+@media (min-width: 1200px) {
+    .trainingItemMenu {
+        width: 1170px
+    }
+}
+
+.trainingsList label {
+    width: 10%;
+}
+
+:root {
+    --important: #A92F41;
+    --dark: #252120;
+    --blues: #91C7a9;
+    --brownie: #848375;
+    --cream: #e5dfc5;
+    --amethyst: #9b59b6
+}
+
+.page-link {
+    color: var(--important);
+    background-color: var(--dark);
+}
+
 .panel-body .text-center {
-    color: darkgoldenrod;
+    color: var(--cream);
     font-size: 15px;
 }
+
 .form-group {
-    color: antiquewhite;
+    color: var(--important);
     font-size: 15px;
 }
 
@@ -332,12 +388,12 @@ img.pull-left {
     display: table-row;
 }
 
-.primKey  {
-    background: silver;
-    border: 1px solid goldenrod;
+.primKey {
+    background: var(--brownie);
+    border: 1px solid var(--blues);;
     border-radius: 14px;
     box-shadow: 1px 1px #444444;
-    color: darkgoldenrod;
+    color: var(--cream);
     text-align: center;
     text-shadow: none;
     font-family: Source Sans Pro, sans-serif;
@@ -350,9 +406,9 @@ img.pull-left {
 
 .categoriesb {
     list-style-type: none;
-    border: 3px solid darkgoldenrod;
-    border-radius: 25%;
-    color: whitesmoke;
+    border: 3px solid var(--blues);
+    border-radius: 5%;
+    color: var(--cream);;
     text-shadow: none;
     font-family: Roboto, sans-serif;
     font-size: 20px;
@@ -363,69 +419,63 @@ img.pull-left {
     opacity: 0.7;
     display: block; /* Make the links appear below each other */
     text-align: center;
-    background: linear-gradient(90deg, rgba(211, 211, 211, 0.01) 0%, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.1) 75%, rgba(211, 211, 211, 0.01) 100%);
+    background: var(--brownie);
     width: 160px;
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.1), inset 0 0 1px rgba(255, 255, 255, 0.6);
 }
+
 .sidenav {
-    background:
-            linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
-            linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
-            linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
-            linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
-            linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
-            linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
-    background-color: #131313;
-    background-size: 20px 20px;
+    background-color: var(--dark);
     width: 35%;
-    border-radius: 15%;
-    border: 2px solid whitesmoke;
-    min-height: 1000px;
+    min-height: 1500px;
     overflow: hidden;
-    color: goldenrod;
+    color: var(--important);
+    font-weight: bold;
 }
 
-
-.subitem  {
+.subitem {
     margin-left: 20px;
+    border-radius: 20%;
     border-color: #161a1c;
 }
 
 .categoriesb li :hover {
     color: darkslategrey;
-    border-color: blue;
+    border-color: var(--amethyst);
 }
+
 .categoriesb :hover {
     color: floralwhite;
 }
 
-.subitem :hover {
-    color: darkgoldenrod;
-    border-color: blue;
-}
 ul {
     padding: 0;
     list-style-type: none;
 }
+
 .settingsform {
-    color: darkgoldenrod;
+    color: var(--important);
+    font-weight: bold;
+    font-size: medium;
     min-height: 1200px;
     width: 100%;
-    background-color: #3e4147;
+    background-color: var(--dark);
 }
 
 .navbar-brand {
     width: 150px;
     height: 80px
 }
+
 .top-info {
-    color: darkgoldenrod;
+    color: var(--blues);
 }
 
 .scheduleMain {
     background: #181015 url(../images/bg_header.jpg);
 }
-.modal-content{
+
+.modal-content {
     background-image: url(../images/bg_header.jpg);
 }
 
@@ -434,9 +484,9 @@ ul {
 }
 
 .modalOk {
-    border: 1px solid goldenrod;
+    border: 1px solid var(--amethyst);
     border-radius: 14px;
-    color: darkgoldenrod;
+    color: var(--cream);
     text-shadow: none;
     font-family: Roboto, sans-serif;
     font-size: 12px;
@@ -445,155 +495,89 @@ ul {
     text-decoration: none;
     opacity: 0.7;
     text-align: center;
-    background: linear-gradient(90deg, rgba(211, 211, 211, 0.01) 0%, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.1) 75%, rgba(211, 211, 211, 0.01) 100%);
+    background: var(--dark);
     width: auto;
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.1), inset 0 0 1px rgba(255, 255, 255, 0.6);
 }
+
 .close {
-    color: ghostwhite;
+    color: var(--cream);
 }
 
-.btn-default{
-    color: ghostwhite;
-    border-color: ghostwhite;;
+.btn-default {
+    color: var(--cream);
+    border-color: var(--cream);;
 }
+
 .searcher {
-    background:
-            linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
-            linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
-            linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
-            linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
-            linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
-            linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
-    background-color: #131313;
-    background-size: 20px 20px;
+    background: url(../images/bg_header.jpg);
     width: 100%;
 }
-
 
 .centered {
     left: 50%;
     right: 50%;
 }
 
-.trainingsList img{
+.trainingsList img {
     width: 8%;
     height: 8%;
     margin-right: 5%;
 }
 
-
-
-@media (min-width: 768px) {
-    .trainingItem {
-        width: 750px
-    }
-}
-
-@media (min-width: 992px) {
-    .trainingItem {
-        width: 970px
-    }
-}
-
-@media (min-width: 1200px) {
-    .trainingItem {
-        width: 1170px
-    }
-}
-
-@media (min-width: 768px) {
-    .trainingItemMenu {
-        width: 750px
-    }
-}
-
-@media (min-width: 992px) {
-    .trainingItemMenu {
-        width: 970px
-    }
-}
-
-@media (min-width: 1200px) {
-    .trainingItemMenu {
-        width: 1170px
-    }
-}
-
-.trainingsList label{
-    width: 15%;
-}
-.page-link {
-    color: goldenrod;
-    background-color: gray;
-}
-
-
 .trainingItemMenu {
     margin-right: auto;
     margin-left: auto;
     margin-bottom: 5px;
-    border-radius: 75%;
-    background: #959595; /* Old browsers */
-    background: -moz-linear-gradient(top, #959595 0%, #0d0d0d 46%, #010101 50%, #0a0a0a 53%, #4e4e4e 76%, #383838 87%, #1b1b1b 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, #959595 0%,#0d0d0d 46%,#010101 50%,#0a0a0a 53%,#4e4e4e 76%,#383838 87%,#1b1b1b 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, #959595 0%,#0d0d0d 46%,#010101 50%,#0a0a0a 53%,#4e4e4e 76%,#383838 87%,#1b1b1b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#959595', endColorstr='#1b1b1b',GradientType=0 ); /* IE6-9 */
+    border-radius: 25%;
+    background: var(--dark);
 }
+
 .trainingItemMenu label {
     margin-top: 50px;
     margin-bottom: 15px;
     font-size: 25px;
-    color: darkblue;
+    color: #91c7a9;
 }
-
 
 .trainingItem {
     margin-right: auto;
     margin-left: auto;
     margin-bottom: 5px;
 }
-.trainingItem:hover {
-    border: 1px solid goldenrod;
-    border-radius: 10%;
-}
 
-.slider .slider-selection {
-    background: goldenrod;
-}
-.slider  {
-    background: ghostwhite;
+.trainingItem:hover {
+    border: 1px solid var(--cream);
+    border-radius: 10%;
 }
 
 select {
     width: inherit;
     margin-left: 15px;
-    background-color: darkslategrey;
-    color: black;
+    background-color: var(--dark);
+    color: var(--cream);
     font-size: medium;
 }
 
 .form-control {
     width: inherit;
     margin-left: 15px;
-    background-color: darkslategrey;
-    color: black;
-    border-color: darkgoldenrod;
+    background-color: var(--brownie);
+    color: var(--cream);
+    border-color: var(--blues);
 }
 
-.trainingScheduleButton{
+.trainingScheduleButton {
+    width: 70%;
     border-radius: 12%;
-    border: solid darkgoldenrod 1px;
-    color: slategray;
-    background: rgb(149,149,149); /* Old browsers */
-    background: -moz-linear-gradient(top, rgba(149,149,149,1) 0%, rgba(13,13,13,1) 46%, rgba(1,1,1,1) 50%, rgba(10,10,10,1) 53%, rgba(78,78,78,1) 76%, rgba(56,56,56,1) 87%, rgba(27,27,27,1) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, rgba(149,149,149,1) 0%,rgba(13,13,13,1) 46%,rgba(1,1,1,1) 50%,rgba(10,10,10,1) 53%,rgba(78,78,78,1) 76%,rgba(56,56,56,1) 87%,rgba(27,27,27,1) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, rgba(149,149,149,1) 0%,rgba(13,13,13,1) 46%,rgba(1,1,1,1) 50%,rgba(10,10,10,1) 53%,rgba(78,78,78,1) 76%,rgba(56,56,56,1) 87%,rgba(27,27,27,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#959595', endColorstr='#1b1b1b',GradientType=0 ); /* IE6-9 */
+    border: solid #91c7a9 2px;
+    color: var(--important);
+    background: var(--cream);
 }
 
-.trainingScheduleButtonTaken{
-    border: red 5px;
+.trainingScheduleButtonTaken {
+    border: var(--amethyst) solid 5px;
+    background: var(--brownie);
 }
 
 

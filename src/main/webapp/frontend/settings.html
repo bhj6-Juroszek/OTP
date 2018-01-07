@@ -130,7 +130,7 @@
                  ng-controller="trainingTemplateController">
                 Pick category<br>
                 <select class="selectpicker" ng-model="categorySelect"
-                        ng-options="category as category.name for category in templateCategories">
+                        ng-options="category as category.fullName for category in templateCategories">
                 </select>
                 <br>
                 Training place (leave empty if online)<br>
