@@ -108,7 +108,16 @@
             <!-- Edit profile -->
             <div class="col-md-8 maincontent container widget" ng-show="editingProfile">
                 Your profile content
-                <textarea class="form-control" style="min-height: 250px; "  ng-model="xxx"></textarea><br>
+                <textarea class="form-control" style="min-height: 250px; "  ng-model="xxxx"></textarea><br>
+                Show email
+                <input class="form-control " type="checkbox" ng-model="xxx">
+                Show adress
+                <input class="form-control " type="checkbox" ng-model="xxx">
+                Facebook fanpage:
+                <input type="text" name="Login" class="form-control"
+                       ng-model="loginChange" width="50">
+                Website links:
+                <input type="text" class="form-control" id="tokenfield" value="red,green,blue" />
             </div>
             <!-- /Edit profile -->
 
@@ -179,7 +188,7 @@
             <!-- ADD TRAINING INSTANCE -->
             <div class="col-md-8 maincontent container" ng-show="addTrInstanceVisibility"
                  ng-controller="trainingInstanceController">
-                <div ng-hide="foundMatchingTrainings">
+                <div ng-show="userTrainings.length > 0">
                     <div class="widget">
                         <div class="container">
                             <div class="row">
@@ -205,10 +214,11 @@
                     </div>
                     <!-- /ADD TRAINING INSTANCE -->
                 </div>
-                <div ng-show="foundMatchingTrainings">
-                    <label>No trainings viable to add instance found!</label>
+                <div ng-show="userTrainings.length === 0">
+                    <label>No trainings viable to add instance has been found!</label>
                 </div>
             </div>
+
         </div>
     </div>
 

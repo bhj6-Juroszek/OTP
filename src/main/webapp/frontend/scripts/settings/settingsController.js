@@ -57,7 +57,10 @@ app.controller('settingsController', function ($scope, $http, $window, userServi
                 $scope.returnCode = response.data;
                 if ($scope.returnCode === 1) {
                     $.notify('Your account has been updated', "success");
-                } else {
+                } else if($scope.returnCode === 5)  {
+                    $.notify('Login already taken', "error");
+                }
+                else {
                     $.notify('Session expired', "error");
                     setTimeout(function () {
                        window.location.href = userService.getMainAdress();

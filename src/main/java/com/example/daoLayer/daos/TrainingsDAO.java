@@ -128,7 +128,7 @@ public class TrainingsDAO extends DAO {
       @Nullable final Date dateTo) {
     if (dateFrom != null && dateTo != null) {
       resolveWhereOrAndQuery(builder);
-      builder.append(" ( (trIns.trainingInsDateStart BETWEEN :fromDate AND :toDate) OR cats.isTheoretical = 1) ");
+      builder.append(" ( (trIns.trainingInsDateStart BETWEEN :fromDate AND :toDate) OR cats.theoretical = 1) ");
       parameterSource.addValue("fromDate", dateFrom, TIMESTAMP)
           .addValue("toDate", dateTo, TIMESTAMP);
     }

@@ -322,37 +322,37 @@ img.pull-left {
 
 @media (min-width: 768px) {
     .trainingItem {
-        width: 750px
+        width: 550px
     }
 }
 
 @media (min-width: 992px) {
     .trainingItem {
-        width: 970px
+        width: 770px
     }
 }
 
 @media (min-width: 1200px) {
     .trainingItem {
-        width: 1170px
+        width: 970px
     }
 }
 
 @media (min-width: 768px) {
     .trainingItemMenu {
-        width: 750px
+        width: 550px
     }
 }
 
 @media (min-width: 992px) {
     .trainingItemMenu {
-        width: 970px
+        width: 770px
     }
 }
 
 @media (min-width: 1200px) {
     .trainingItemMenu {
-        width: 1170px
+        width: 970px
     }
 }
 
@@ -547,8 +547,8 @@ ul {
 }
 
 .trainingItem:hover {
-    border: 1px solid var(--cream);
-    border-radius: 10%;
+    border: 2px solid var(--blues);
+    border-radius: 5%;
 }
 
 select {
