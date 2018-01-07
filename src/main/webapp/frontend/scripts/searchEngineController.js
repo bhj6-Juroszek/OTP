@@ -29,10 +29,18 @@ app.controller('searchEngineController', function ($scope, $http, $window, userS
             for (var i = 0, l = response.data.length; i < l; i++) {
                 var category = response.data[i];
                 if (category.parent == 0) {
+                    category.fullName = category.name;
                     $scope.categories.push(category);
                 } else {
-                    $scope.pickableCategories.push(category)
+                    for (var y = 0; y < $scope.allCategories.length; y++) {
+                        if (category.parent === $scope.allCategories[y].id) {
+                            category.fullName = $scope.allCategories[y].name + "/" + category.name;
+                        }
+                    }
+                    $scope.pickableCategories.push(category);
                 }
+
+
                 $scope.parents.push(JSON.parse("{\"id\":\"" + category.parent + "\", \"visible\":false}"));
             }
             userService.setPickableCategories($scope.pickableCategories);
@@ -86,7 +94,7 @@ app.controller('searchEngineController', function ($scope, $http, $window, userS
     };
 
     $scope.selectMainCategory = function (category) {
-        if(category !== null) {
+        if (category !== null) {
             setVisible(category.id);
         }
         $scope.setSelectedCategory(category);
