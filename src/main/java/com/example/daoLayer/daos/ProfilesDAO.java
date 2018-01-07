@@ -2,22 +2,27 @@ package com.example.daoLayer.daos;
 
 import com.example.daoLayer.AsyncDbSaver;
 import com.example.daoLayer.entities.Profile;
-import com.example.daoLayer.mappers.ProfileMapper;
+import com.example.daoLayer.mappers.ProfilesExtractor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
-import static com.example.daoLayer.DAOHelper.PLACES_TABLE_NAME;
 import static com.example.daoLayer.DAOHelper.PROFILES_TABLE_NAME;
+import static java.sql.Types.VARCHAR;
 
 /**
  * Created by Bartek on 2017-03-10.
  */
 @Repository
 public class ProfilesDAO extends DAO {
+private static final Logger LOGGER = LogManager.getLogger(ProfilesDAO.class);
 
   ProfilesDAO(@Nonnull final JdbcTemplate template, @Nonnull final AsyncDbSaver asyncDbSaver) {
     super(template, asyncDbSaver);
@@ -29,62 +34,52 @@ public class ProfilesDAO extends DAO {
       return;
     }
     template.execute
-        ("CREATE TABLE " + PROFILES_TABLE_NAME + " (profileId VARCHAR(50) NOT NULL, profileOwnerId VARCHAR(50), profileContent VARCHAR(1500), " +
+        ("CREATE TABLE " + PROFILES_TABLE_NAME + " (profileId VARCHAR(50) NOT NULL, profileOwnerId VARCHAR(50), " +
+            "profileContent VARCHAR(1500), " +
             "PRIMARY KEY(profileId));"
         );
   }
 
-  public boolean saveToDB(@Nonnull final Profile profile) {
-    final String SQL = "INSERT INTO " + PROFILES_TABLE_NAME + " (profileId, profileOwnerId, profileContent) VALUES (?, ?)";
-
-    if (!exists(profile)) {
-      template.update(SQL, profile.getId(), profile.getOwnerId(), profile.getContent());
-    } else {
-      return false;
-    }
-    return true;
-  }
-
-  private boolean exists(@Nonnull final Profile profile) {
-    final Integer cnt = template.queryForObject(
-        "SELECT count(*) FROM " + PROFILES_TABLE_NAME + " WHERE profileOwnerId = ?", Integer.class, profile.getOwnerId());
-    return cnt != null && cnt > 0;
+  public void saveToDB(@Nonnull final Profile profile) {
+    asyncSaver.execute(() -> {
+      try {
+        final String SQL = "INSERT INTO " + PROFILES_TABLE_NAME + " (profileId, profileOwnerId, profileContent, showMail," +
+            " showAddress, facebookLink, linkedInLink ) VALUES (?,?,?,?,?,?,?)";
+        template.update(SQL, profile.getId(), profile.getOwnerId(), profile.getContent(), profile.isShowMail(),
+            profile.isShowAddress(), profile.getFacebookLink(), profile.getLinkedInLink());
+      } catch (Exception e) {
+        LOGGER.error(e);
+      }
+    });
   }
 
   public void delete(@Nonnull final Profile profile) {
-
     final String SQL = "DELETE FROM " + PROFILES_TABLE_NAME + " WHERE profileId = ?";
     template.update(SQL, profile.getId());
   }
 
   @Nullable
-  public Profile getProfileById(@Nonnull final String profileId) {
+  public Profile getProfileByUser(@Nonnull final String ownerId) {
     try {
-      final String SQL = "SELECT * FROM " + PROFILES_TABLE_NAME + " WHERE profileId = ?";
-      return template.queryForObject(SQL,
-          new Object[]{profileId}, new ProfileMapper());
+      final String SQL = "SELECT * FROM " + PROFILES_TABLE_NAME + " " +
+          "LEFT OUTER JOIN social_links ON userId = :ownerId " +
+          "LEFT OUTER JOIN rates ON rateduserId = :ownerId " +
+          "WHERE profileOwnerId = :ownerId";
+      final List<Profile> profiles = parameterJdbcTemplate
+          .query(SQL, new MapSqlParameterSource().addValue("ownerId", ownerId, VARCHAR),
+              new ProfilesExtractor());
+      if (profiles.isEmpty() || profiles.size() > 1) {
+        return null;
+      }
+      return profiles.get(0);
     } catch (EmptyResultDataAccessException ex) {
       return null;
     }
   }
 
-  @Nullable
-  public Profile getProfileByUser(@Nonnull final String profileId) {
-    try {
-      final String SQL = "SELECT * FROM " + PROFILES_TABLE_NAME + " WHERE profileOwnerId = ?";
-      return template.queryForObject(SQL,
-          new Object[]{profileId}, new ProfileMapper());
-    } catch (EmptyResultDataAccessException ex) {
-      return null;
-    }
-  }
-
-  public boolean updateRecord(@Nonnull final Profile profile) {
-    if (exists(profile)) {
-      final String SQL = "UPDATE " + PROFILES_TABLE_NAME + " SET profileOwnerId = ?, profileContent = ? WHERE profileId= ?;";
+  public void updateRecord(@Nonnull final Profile profile) {
+      final String SQL = "UPDATE " + PROFILES_TABLE_NAME + " SET profileOwnerId = ?, profileContent = ? WHERE " +
+          "profileId= ?;";
       template.update(SQL, profile.getOwnerId(), profile.getContent(), profile.getId());
-      return true;
-    }
-    return false;
   }
 }

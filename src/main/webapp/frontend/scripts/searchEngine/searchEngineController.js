@@ -172,7 +172,7 @@ app.controller('searchEngineController', function ($scope, $http, $window, userS
                     trainingInstance.owner = training.owner;
                     trainingInstance.price = training.price;
                     trainingInstance.size = training.capacity;
-                    if (training.owner.imageUrl === null) {
+                    if (training.owner.imageUrl === null || training.owner.imageUrl === "") {
                         training.owner.imageUrl = defaultImageString;
                     }
                     trainingInstance.description = training.description;

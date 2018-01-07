@@ -57,9 +57,13 @@ public class DAOHelper {
     trainingsDAO.createTable();
   }
 
-  @PostConstruct
-  private void loadCountries() {
-//    loader.saveCities(placesDAO);
-//    loader.saveCountries(placesDAO);
-  }
+  /**
+   * Method used to load Cities and countries from CSV files
+   */
+
+//  @PostConstruct
+//  private void loadCountries() {
+////    loader.saveCities(placesDAO);
+////    loader.saveCountries(placesDAO);
+//  }
 }

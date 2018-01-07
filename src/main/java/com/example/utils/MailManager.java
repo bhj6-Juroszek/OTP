@@ -38,6 +38,7 @@ public class MailManager {
   }
 
   public boolean sendMail(@Nonnull final String from, @Nonnull final String to, @Nonnull final String subject, @Nonnull final String content) {
+    LOGGER.info("Attempting to send mail from {} to {}", from , to);
     final SimpleMailMessage msg = new SimpleMailMessage();
     msg.setFrom(from);
     msg.setSubject(subject);

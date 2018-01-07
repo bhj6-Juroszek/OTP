@@ -98,5 +98,8 @@ var app = angular.module('myApp', []).factory('userService', function () {
     }
 
 });
+app.config(function($locationProvider) {
+    $locationProvider.html5Mode(true);
+});
 
 

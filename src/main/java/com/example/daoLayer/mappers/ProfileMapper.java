@@ -15,7 +15,10 @@ public class ProfileMapper implements RowMapper<Profile> {
         profile.setId(rs.getString("profileId"));
         profile.setOwnerId(rs.getString("profileOwnerId"));
         profile.setContent(rs.getString("profileContent"));
+        profile.setShowMail(rs.getBoolean("showMail"));
+        profile.setShowAddress(rs.getBoolean("showAddress"));
+        profile.setFacebookLink(rs.getString("facebookLink"));
+        profile.setLinkedInLink("linkedinLink");
         return profile;
-
     }
 }

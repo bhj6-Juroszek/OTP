@@ -19,4 +19,9 @@ public class Country {
   public void setCountryName(final String countryName) {
     this.countryName = countryName;
   }
+
+  @Override
+  public String toString() {
+    return String.format("Country:[code:%s, name:%s]", countryId, countryName);
+  }
 }

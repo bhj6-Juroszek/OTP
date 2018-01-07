@@ -25,4 +25,15 @@ public abstract class Entity {
   public int hashCode() {
     return this.id.hashCode();
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if(o != null) {
+      if(o instanceof Entity) {
+        final Entity entity = (Entity)o;
+        return id.equals(((Entity) o).getId());
+      }
+    }
+    return false;
+  }
 }

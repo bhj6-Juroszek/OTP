@@ -31,7 +31,7 @@ public class TrainingMapper implements RowMapper<Training> {
     final Category category = categoryMapper.mapRow(rs, rowNum);
     result.setCategory(category);
     final User owner = userMapper.mapRow(rs, rowNum);
-    owner.setPassword(null).setLogin(null).setImageUrl(null).setConfirmation(null);
+    owner.setPassword(null).setLogin(null).setConfirmation(null);
     result.setOwner(owner);
     return result;
   }

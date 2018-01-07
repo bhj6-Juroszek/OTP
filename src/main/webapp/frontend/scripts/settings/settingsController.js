@@ -66,12 +66,15 @@ app.controller('settingsController', function ($scope, $http, $window, userServi
                        window.location.href = userService.getMainAdress();
                     }, 1000);
                 }
-                //TODO finish
             }, function errorCallback(response) {
                 $.notify('Could not connect to server. Please try again later', "error");
             });
             clearDetails();
         }
+    };
+
+    $scope.profile = function () {
+      window.location.href = "userProfile.html?userId="+userService.getUserContext().user.id;
     };
 
     $scope.confirm = function () {

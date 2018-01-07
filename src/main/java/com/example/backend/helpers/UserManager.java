@@ -99,6 +99,10 @@ public class UserManager {
     return INVALID_DATA;
   }
 
+  public User getUser(@Nonnull final String userId) {
+    return usersDAO.getUserById(userId);
+  }
+
   public int updateDetails(@Nonnull final User user) {
     if (usersDAO.existsAnother(user.getLogin(), "login", user.getId()) || usersDAO
         .existsAnother(user.getMail(), "mail", user.getId())) {

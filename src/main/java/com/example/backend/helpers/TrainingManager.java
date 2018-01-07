@@ -78,12 +78,12 @@ public class TrainingManager {
       final String customerMail = trainingReservationBooked.getCustomer().getMail();
       final String ownerMail = success.getOwner().getMail();
       final String messageToOwner = String
-          .format("Greetings trainer. User :%s just booked your training %s on %s", customerMail,
-              success.getDescription(), trainingInstance.getDateStart().toString());
+          .format("Greetings trainer. User :%s just booked your training %s on %s. Training reservation Id:%s", customerMail,
+              success.getDescription(), trainingInstance.getDateStart().toString(), trainingReservation.getId());
       final String messageToCustomer = String.format(
           "Greetings user. Yours booking of training %s, on %s has been registered. Contact trainer for more details " +
-              "on mail: %s",
-          success.getDescription(), trainingInstance.getDateStart().toString(), ownerMail);
+              "on mail: %s Training reservation Id:%s",
+          success.getDescription(), trainingInstance.getDateStart().toString(), ownerMail, trainingReservation.getId());
       mailManager.sendMailAsynchronously("OTP", ownerMail, "New training booking", messageToOwner);
       mailManager.sendMailAsynchronously("OTP", customerMail, "You have booked training", messageToCustomer);
     }
