@@ -4,6 +4,7 @@ app.controller('settingsController', function ($scope, $http, $window, userServi
         $window.location.href = userService.getMainAdress();
     }
     $scope.details = false;
+    $scope.editingProfile = false;
     $scope.trainingsTemplate = false;
     $scope.addTrInstanceVisibility = false;
     $scope.schedule = false;
@@ -14,11 +15,16 @@ app.controller('settingsController', function ($scope, $http, $window, userServi
     $scope.imageUrl = user.imageUrl;
     $scope.userTrainings = [];
     $scope.userTrainingsInstances = [];
+    $scope.foundMatchingTrainings = false;
 
 
     $scope.accountDetails = function () {
         hideEverything();
         $scope.details = true;
+    };
+    $scope.editProfile = function () {
+        hideEverything();
+        $scope.editingProfile = true;
     };
     $scope.trainingTemplate = function () {
         hideEverything();
@@ -74,6 +80,7 @@ app.controller('settingsController', function ($scope, $http, $window, userServi
         $scope.trainingsTemplate = false;
         $scope.addTrInstanceVisibility = false;
         $scope.schedule = false;
+        $scope.editingProfile = false;
     };
 
     var loadTrainings = function () {
@@ -85,7 +92,12 @@ app.controller('settingsController', function ($scope, $http, $window, userServi
             if (response.data.responseCode === 1) {
                 for(var i = 0; i < response.data.userTrainings.length; i++) {
                     var uTraining = response.data.userTrainings[i];
-                    $scope.userTrainings.push(uTraining);
+                    if(!uTraining.category.theoretical) {
+                        $scope.userTrainings.push(uTraining);
+                    }
+                }
+                if(!($scope.userTrainings.length === 0)) {
+                    $scope.foundMatchingTrainings = true;
                 }
                 $scope.userTrainingsInstances = [];
             } else {

@@ -1,18 +1,8 @@
 package com.example.backend.controllersEntities.requests;
 
-import com.example.daoLayer.entities.TrainingReservation;
-
 public class BookingRequest extends AuthenticatedRequest {
-  private TrainingReservation trainingReservation;
+  private String customerId;
   private String trainingId;
-
-  public TrainingReservation getTrainingReservation() {
-    return trainingReservation;
-  }
-
-  public void setTrainingReservation(final TrainingReservation trainingReservation) {
-    this.trainingReservation = trainingReservation;
-  }
 
   public String getTrainingId() {
     return trainingId;
@@ -20,5 +10,13 @@ public class BookingRequest extends AuthenticatedRequest {
 
   public void setTrainingId(final String trainingId) {
     this.trainingId = trainingId;
+  }
+
+  public String getCustomerId() {
+    return customerId;
+  }
+
+  public void setCustomerId(final String customerId) {
+    this.customerId = customerId;
   }
 }

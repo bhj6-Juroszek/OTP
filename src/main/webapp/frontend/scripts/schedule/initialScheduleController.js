@@ -10,38 +10,6 @@ app.controller('initialScheduleController', function ($scope, userService, $http
     $scope.scheduleWeekHtml = [];
     $scope.scheduleTrainings = [];
     $scope.owner = false;
-    var initializeModalData = function () {
-        $scope.pickedTraining = null;
-        $scope.mapSource = "";
-        $scope.modalTitle = 'Put here your header';
-        $scope.modalBody = 'Put here your body';
-        $scope.modalFooter = '';
-        $scope.full = false;
-        $scope.taken = false;
-    };
-    initializeModalData();
-
-    $scope.toggleModal = function (training) {
-        $scope.pickedTraining = training;
-        $scope.buttonClicked = training.description;
-        var lat = training.place.lat;
-        var lng = training.place.lng;
-        var bookedBy = training.trainingReservations.length;
-        $scope.modalTitle = training.description;
-        $scope.modalBody = bookedBy + "/" + training.size;
-        if (bookedBy >= training.size) {
-            $scope.modalFooter = "This training is already taken.";
-            $scope.full = true;
-        }
-        if (bookedBy > 0) {
-            $scope.modalFooter = "You can't delete training that was already booked.";
-            $scope.taken = true;
-        }
-        $scope.owner = training.owner.id === userService.getUserContext().user.id;
-        $scope.mapSource = $sce.trustAsResourceUrl("http://maps.google.com/maps?q=" + lat + "," + lng + "&z=15&output=embed");
-        $scope.showModal = true;
-
-    };
     var getParams = function (isInitial) {
         params = {
             "uuid": userService.getUUID(),
@@ -52,14 +20,57 @@ app.controller('initialScheduleController', function ($scope, userService, $http
         if (scheduleInitialData !== null) {
             params.trainerId = scheduleInitialData.owner.id;
             if(isInitial) {
-            if(scheduleInitialData.date !== undefined) {
-                params.date = Date.parse(scheduleInitialData.date.toString());
-            }
-            if(scheduleInitialData.training !== undefined) {
-                $scope.toggleModal(scheduleInitialData.training);
-            }
+                if(scheduleInitialData.date !== undefined) {
+                    params.date = Date.parse(scheduleInitialData.date.toString());
+                }
+                if(scheduleInitialData.training !== undefined) {
+                    $scope.toggleModal(scheduleInitialData.training);
+                }
             }
         }
+    };
+    var initializeModalData = function () {
+        $scope.pickedTraining = null;
+        $scope.mapSource = "";
+        $scope.modalTitle = 'Put here your header';
+        $scope.modalBody = 'Put here your body';
+        $scope.modalFooter = '';
+        $scope.full = false;
+        $scope.taken = false;
+        getParams(false);
+    };
+
+    initializeModalData();
+    $scope.toggleModal = function (training) {
+        $scope.pickedTraining = training;
+        $scope.buttonClicked = training.description;
+        var lat = training.place.lat;
+        var lng = training.place.lng;
+        var bookedBy = training.trainingReservations.length;
+        $scope.alreadyBooked = false;
+        for(var i=0; i<training.trainingReservations.length; i++) {
+            if(training.trainingReservations[i].customer.id === userService.getUserContext().user.id) {
+                $scope.alreadyBooked = true;
+            }
+        }
+        $scope.modalTitle = training.description;
+        $scope.modalBody = bookedBy + "/" + training.size;
+        $scope.owner = training.owner.id === userService.getUserContext().user.id;
+        if(!$scope.owner && $scope.alreadyBooked) {
+            $scope.modalFooter = "You have already booked this training";
+        }
+        else if (bookedBy >= training.size) {
+            $scope.modalFooter = "This training is already taken.";
+            $scope.full = true;
+        }
+        else if (bookedBy > 0 && $scope.owner) {
+            $scope.modalFooter = "You can't delete training that was already booked.";
+            $scope.taken = true;
+        }
+
+        $scope.mapSource = $sce.trustAsResourceUrl("http://maps.google.com/maps?q=" + lat + "," + lng + "&z=15&output=embed");
+        $scope.showModal = true;
+
     };
     getParams(true);
 
@@ -162,6 +173,23 @@ app.controller('initialScheduleController', function ($scope, userService, $http
             $scope.showModal = false;
         } else {
 
+            var requestData = {
+                uuid: userService.getUUID(),
+                customerId: userService.getUserContext().user.id,
+                trainingId: $scope.pickedTraining.id
+            };
+            $http({
+                method: 'POST',
+                url: userService.getHost() + 'schedule/bookTraining',
+                data: requestData,
+                headers: {'Content-Type': 'application/json'}
+            }).then(function successCallback(response) {
+                if (response.data) {
+                    $window.location.href = "schedule.html";
+                    $scope.showModal = false;
+                }
+            }, function errorCallback() {
+            });
         }
     };
     $scope.cancel = function () {

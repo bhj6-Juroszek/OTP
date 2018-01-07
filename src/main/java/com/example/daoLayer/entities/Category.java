@@ -12,15 +12,17 @@ public class Category extends Entity {
 
   private String name;
   private String parent;
+  private boolean theoretical;
 
   public Category() {
-    this("", "0");
+    this("", "0", false);
   }
 
-  public Category(final String name, final String parent) {
+  public Category(final String name, final String parent, boolean theoretical) {
     super();
     this.name = name;
     this.parent = parent;
+   this.theoretical = theoretical;
   }
 
   public String getName() {
@@ -37,6 +39,14 @@ public class Category extends Entity {
 
   public void setParent(final String parent) {
     this.parent = parent;
+  }
+
+  public boolean getTheoretical() {
+    return theoretical;
+  }
+
+  public void setTheoretical(final boolean theoretical) {
+    this.theoretical = theoretical;
   }
 
   @Override

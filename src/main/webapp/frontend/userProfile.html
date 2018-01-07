@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Juroszek Bartłomiej">
+
+    <title>OTP- Online training platform</title>
+
+    <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+    <link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+
+    <!-- Custom styles for our template -->
+    <link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <![endif]-->
+</head>
+
+<body class="home">
+<div ng-app="myApp" ng-controller="userController">
+    <div class="navbar navbar-inverse navbar-fixed-top headroom">
+        <div class="container">
+            <div class="navbar-header">
+                <!-- Button for smallest screens -->
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span
+                        class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button>
+                <a class="navbar-brand" href="index.html"><img src="assets/images/favicon.ico"
+                                                               alt="Logo"></a>
+            </div>
+            <ul class="nav navbar-nav pull-right">
+                <li class="active"><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="settings.html">Left Sidebar</a></li>
+                        <li class="active"><a href="sidebar-right.html">Right Sidebar</a></li>
+                    </ul>
+                </li>
+                <li><a href="contact.html">Contact</a></li>
+                <li>
+                    <a class="btn" ng-hide="authData" href="logIn.html" title="LOG IN">LOG IN</a></li>
+                <li ng-show="authData">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{userInfoText}} </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="settings.html">Account Settings </a></li>
+                                <li><a ng-click="goToScheduleAsOwner()"  href="#">Look at schedule </a></li>
+                                <li><a href="#">Favourites Snippets </a></li>
+                                <li ng-click="logOut()" ng-app="myApp" ng-controller="logOutController">><a href="#">Sign
+                                    Out </a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.navbar -->
+
+    <!-- Header -->
+    <header id="head">
+        <div class="container">
+            <div class="row">
+            </div>
+        </div>
+    </header>
+    <aside class="col-md-4 sidebar sidebar-left container text-center">
+            <div>
+                <ul class="btn-group-vertical">
+                    <li>
+                        <button ng-click="selectMainCategory(null)" class="categoriesb">Schedule
+                        </button>
+                    </li>
+                    <li>
+                        <button ng-click="selectMainCategory(x)" class="categoriesb">Trainings
+                        </button>
+                    </li>
+                    <li>
+                    <li><br><br><br><br>
+                <label>Social Media</label>
+                </li>
+                    <button class="loginBtn loginBtn--facebook">Profile</button>
+                    </li>
+                    <li>
+                    <button class="loginBtn loginBtn--google">Profile</button>
+                    </li>
+                    <li>
+                        <a href ="onet.pl">Links</a>
+                    </li>
+                    <li>
+                        <a href ="onet.pl">Links</a>
+                    </li>
+                    <li>
+                        <a href ="onet.pl">Links</a>
+                    </li>
+
+                </ul>
+        </div></aside>
+    <!-- /Header -->
+    <div class="settingsform ">
+        <div class=" col-md-4 userLabels">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Default_profile_picture_%28male%29_on_Facebook.jpg/600px-Default_profile_picture_%28male%29_on_Facebook.jpg">
+
+        <label style="color:var(--important); font-size: xx-large;)">Bartłomiej Juroszek</label>
+        <br>
+            Mail:
+            <br>
+            <label>Bartłomiej Juroszek</label>
+            <br>
+            Phone number:
+            <br>
+            <label>Bartłomiej Juroszek</label>
+            <br>
+        Info:
+        <br>
+        <label>Pierwszy trener na OTPZDHAFRrhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh</label><br>
+        <br>
+            Rates:<br>
+            <ul>
+            <li>
+                Rated :4/5<br>
+                <label>Cos tam</label>
+            </li>
+
+            <li>
+                Rated :4/5<br>
+                <label>Cos tam</label>
+            </li>
+            <li>
+                Rated :4/5<br>
+                <label>Cos tam</label>
+            </li>
+            <li>
+                Rated :4/5<br>
+                <label>Cos tam</label>
+            </li>
+        </ul>
+        </div>
+    </div>
+</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="assets/js/headroom.min.js"></script>
+    <script src="assets/js/jQuery.headroom.min.js"></script>
+    <script src="assets/js/html5shiv.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <script src="assets/js/notify.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="scripts/service/userService.js"></script>
+    <script src="assets/js/template.js"></script>
+    <script src="scripts/common/userController.js"></script>
+    <script src="scripts/common/logOutScript.js"></script>
+    <script></script>
+</body>
+</html>

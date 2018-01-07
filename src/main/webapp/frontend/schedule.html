@@ -29,18 +29,31 @@
 <body class="scheduleMain">
 <div ng-app="myApp">
     <div ng-controller="userController" ng-init="init()">
+        <!--NAVBAR TOP-->
         <div class="navbar navbar-inverse navbar-fixed-top headroom">
             <div class="container">
-                <div class="navbar-header">
+                <div class="navbar-header pull-right">
                     <!-- Button for smallest screens -->
-                    <button type="button" class="navbar-toggle" data-toggle="collapse"
-                            data-target=".navbar-collapse"><span
-                            class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
-                    </button>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span
+                            class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button>
                     <a class="navbar-brand" href="index.html"><img src="assets/images/favicon.ico"
                                                                    alt="Logo"></a>
                 </div>
-                <ul class="nav navbar-nav pull-right">
+                <ul class="nav navbar-nav pull-left">
+                    <li ng-show="authData">
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{userInfoText}} </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Favourites Snippets </a></li>
+                                    <li ng-click="logOut()" ng-app="myApp" ng-controller="logOutController">><a href="#">Sign
+                                        Out </a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="settings.html">Account Settings </a></li>
+                    <li><a ng-click="goToScheduleAsOwner()"  href="#">Look at schedule </a></li>
                     <li class="active"><a href="index.html">Home</a></li>
                     <li><a href="about.html">About</a></li>
                     <li class="dropdown">
@@ -53,24 +66,10 @@
                     <li><a href="contact.html">Contact</a></li>
                     <li>
                         <a class="btn" ng-hide="authData" href="logIn.html" title="LOG IN">LOG IN</a></li>
-                    <li ng-show="authData">
-                        <ul class="nav navbar-nav">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{userInfoText}} </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="settings.html">Account Settings </a></li>
-                                    <li><a ng-click="goToScheduleAsOwner()"  href="#">Look at schedule </a></li>
-                                    <li><a href="#">Favourites Snippets </a></li>
-                                    <li ng-click="logOut()" ng-app="myApp" ng-controller="logOutController">><a
-                                            href="#">Sign
-                                        Out </a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
                 </ul>
             </div>
         </div>
+        <!--/NAVBAR TOP-->
     </div>
     <br>
     <br>
@@ -137,13 +136,16 @@
         </div> <!-- .cd-schedule -->
         <aside class="col-md-4 sidebar sidebar-left container text-center">
             <div class="sidenav">
-                <label class="text-left" style="font-size: 30px; "><b>Category</b></label><br>
                 <div>
                     <ul class="btn-group-vertical">
                         <li>
                             <br>Select date
                             <input type="date" name="currentDate" ng-model="currentDate" class="form-control"
                                    ng-change="getSchedule()">
+                        </li>
+                        <br><br>
+                        <li>
+                            <button class="categoriesb">Visit profile</button>
                         </li>
                     </ul>
                 </div>
@@ -159,7 +161,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="assets/js/notify.js"></script>
-<script src="scripts/userService.js"></script>
+<script src="scripts/service/userService.js"></script>
 <script src="scripts/schedule/initialScheduleController.js"></script>
 <script src="scripts/common/logOutScript.js"></script>
 <script src="scripts/common/userController.js"></script>

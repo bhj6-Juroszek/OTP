@@ -1,11 +1,9 @@
 package com.example.backend.controllers;
 
 import com.example.backend.controllersEntities.requests.BookingRequest;
-import com.example.backend.controllersEntities.responses.BookingResponse;
 import com.example.backend.controllersEntities.responses.ResponseWithCode;
 import com.example.backend.controllersEntities.responses.ScheduleResponse;
 import com.example.backend.helpers.TrainingManager;
-import com.example.backend.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Nonnull;
 import java.util.Date;
 
-import static com.example.backend.utils.ResponseUtils.*;
+import static com.example.backend.utils.ResponseUtils.prepareNotAuthenticatedResponse;
 import static com.example.utils.ResponseCode.NOT_AUTHENTICATED;
 import static com.example.utils.ResponseCode.SUCCESS;
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @CrossOrigin
 @Controller
@@ -51,7 +48,7 @@ public class ScheduleController extends AuthenticatedController {
     return false;
   }
 
-  @RequestMapping(value = "/bookTraining", method = DELETE)
+  @RequestMapping(value = "/bookTraining", method = POST)
   public @ResponseBody
   ResponseWithCode bookTraining(@RequestBody BookingRequest bookingRequest) {
     if (authenticate(bookingRequest.getUuid())) {

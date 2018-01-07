@@ -11,6 +11,8 @@ var app = angular.module('myApp', []).factory('userService', function () {
         clearImportantData: clearImportantData,
         getScheduleViewData: getScheduleViewData,
         setScheduleViewData: setScheduleViewData,
+        getProfileData: getProfileData,
+        setProfileData: setProfileData,
         goToScheduleAsOwner: goToScheduleAsOwner
     };
 
@@ -84,6 +86,17 @@ var app = angular.module('myApp', []).factory('userService', function () {
             window.location.href = "schedule.html"
         }
     }
+    function getProfileData() {
+        if (!sessionStorage['profileData']) {
+            return null;
+        }
+        return JSON.parse(sessionStorage.getItem("profileData"));
+    }
+
+    function setProfileData(data) {
+        sessionStorage.setItem("profileData", JSON.stringify(data))
+    }
+
 });
 
 

@@ -16,10 +16,12 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import static com.example.daoLayer.DAOHelper.COUNTRIES_TABLE_NAME;
 import static com.example.daoLayer.DAOHelper.PLACES_TABLE_NAME;
@@ -49,6 +51,8 @@ public class PlacesDAO extends DAO {
   @Override
   public void createTable() {
     List<Country> countries = getCountries();
+    CompletableFuture<Void> updatedCountry = new CompletableFuture<>();
+    updatedCountry.complete(null);
     for(Country country: countries) {
       try {
         String SQL = "SELECT * FROM " + PLACES_TABLE_NAME + " WHERE countryCode = \""+country.getCountryId()+"\"";
@@ -60,18 +64,28 @@ public class PlacesDAO extends DAO {
                   "PRIMARY KEY(placeName, placeLat, placeLng));"
               );
         }
+        updatedCountry.get();
+        updatedCountry = new CompletableFuture<>();
         for (Place loadedPlace : loadedPlaces) {
           asyncSaver.execute(() -> {
-            String SQL2 = "insert into " + tableName + " (placeName, placeLat, placeLng) values (?, ?, ?)";
-            template.update(SQL2, loadedPlace.getName(), loadedPlace.getLat(), loadedPlace.getLng());
-            SQL2 = "DELETE FROM " + PLACES_TABLE_NAME + " WHERE placeId = ?";
+            String SQL2 = "DELETE FROM " + PLACES_TABLE_NAME + " WHERE placeId = ?";
             template.update(SQL2, loadedPlace.getId());
-            LOGGER.info("updated");
+            LOGGER.info("deleted");
+            SQL2 = "insert into " + tableName + " (placeName, placeLat, placeLng) values (?, ?, ?)";
+            template.update(SQL2, loadedPlace.getName(), loadedPlace.getLat(), loadedPlace.getLng());
+
+            LOGGER.info("inserted");
           });
         }
+        updatedCountry.complete(null);
         } catch(Exception e){
         if (e instanceof CannotGetJdbcConnectionException) {
-          createTable();
+          try {
+            template.getDataSource().getConnection().close();
+            createTable();
+          } catch (SQLException e1) {
+            e1.printStackTrace();
+          }
         }
           LOGGER.error(e);
         }

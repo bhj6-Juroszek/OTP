@@ -16,9 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.example.utils.DateUtils.*;
-import static com.example.utils.ResponseCode.GENERAL_FAIL;
-import static com.example.utils.ResponseCode.INVALID_DATA;
-import static com.example.utils.ResponseCode.SUCCESS;
+import static com.example.utils.ResponseCode.*;
 
 /**
  * Created by Bartek on 2017-03-25.
@@ -63,11 +61,31 @@ public class TrainingManager {
 
   public synchronized BookingResponse bookTraining(@Nonnull final BookingRequest bookingRequest) {
     final BookingResponse response = new BookingResponse();
+    final TrainingReservation trainingReservation = new TrainingReservation();
+    final User customer = new User();
+    customer.setId(bookingRequest.getCustomerId());
+    trainingReservation.setCustomer(customer);
+    trainingReservation.setTrainingInstance(bookingRequest.getTrainingId());
     response.setResponseCode(GENERAL_FAIL);
-    final boolean success = trainingsDAO
-        .saveTrainingReservation(bookingRequest.getTrainingId(), bookingRequest.getTrainingReservation());
-    if(success) {
+    final Training success = trainingsDAO
+        .saveTrainingReservation(trainingReservation);
+    if (success != null) {
       response.setResponseCode(SUCCESS);
+      response.setReservationId(trainingReservation.getId());
+      final List<TrainingReservation> trainingReservations = success.getInstances().get(0).getTrainingReservations();
+      final TrainingReservation trainingReservationBooked = trainingReservations.get(trainingReservations.size() - 1);
+      final TrainingInstance trainingInstance = success.getInstances().get(0);
+      final String customerMail = trainingReservationBooked.getCustomer().getMail();
+      final String ownerMail = success.getOwner().getMail();
+      final String messageToOwner = String
+          .format("Greetings trainer. User :%s just booked your training %s on %s", customerMail,
+              success.getDescription(), trainingInstance.getDateStart().toString());
+      final String messageToCustomer = String.format(
+          "Greetings user. Yours booking of training %s, on %s has been registered. Contact trainer for more details " +
+              "on mail: %s",
+          success.getDescription(), trainingInstance.getDateStart().toString(), ownerMail);
+      mailManager.sendMailAsynchronously("OTP", ownerMail, "New training booking", messageToOwner);
+      mailManager.sendMailAsynchronously("OTP", customerMail, "You have booked training", messageToCustomer);
     }
     return response;
   }

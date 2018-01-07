@@ -3,7 +3,7 @@ package com.example.daoLayer.daos;
 import com.example.backend.helpers.JsonReader;
 import com.example.daoLayer.AsyncDbSaver;
 import com.example.daoLayer.entities.*;
-import com.example.daoLayer.mappers.TrainingMapper;
+import com.example.daoLayer.mappers.TrainingInstanceMapper;
 import com.example.daoLayer.mappers.TrainingWithInstancesExtractor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -76,7 +76,19 @@ public class TrainingsDAO extends DAO {
     return getTrainings(categoryId, from, to, 0.0);
   }
 
+  public List<Training> getTrainingsWithInstance(@Nonnull final String trainingId) {
+    return getTrainings(trainingId, null, null, null, null, 0, 0, null);
+  }
+
   public List<Training> getTrainings(@Nullable final String categoryId, @Nullable final Date fromDate,
+      @Nullable final Date toDate,
+      @Nullable final String trainerId, final double maxPrice, final int maxDistance,
+      @Nullable final Place placeAround) {
+    return getTrainings(null, categoryId, fromDate, toDate, trainerId, maxPrice, maxDistance, placeAround);
+  }
+
+  private List<Training> getTrainings(@Nullable final String instanceId, @Nullable final String categoryId,
+      @Nullable final Date fromDate,
       @Nullable final Date toDate,
       @Nullable final String trainerId, final double maxPrice, final int maxDistance,
       @Nullable final Place placeAround) {
@@ -86,10 +98,13 @@ public class TrainingsDAO extends DAO {
         "LEFT OUTER JOIN " + TRAININGS_INSTANCES_TABLE_NAME + " trIns ON tr.trainingsId = trIns.idTrainings " +
         "LEFT OUTER JOIN " + TRAININGS_RESERVATIONS_TABLE_NAME + " trRes ON trIns.trainingsInsId = trRes" +
         ".idTrainingsIns " +
-        "INNER JOIN " + CATEGORIES_TABLE_NAME + " cats ON (tr.category = cats.categoryId OR tr.category = cats.categoryParent) " +
+        "INNER JOIN " + CATEGORIES_TABLE_NAME + " cats ON (tr.category = cats.categoryId OR tr.category = cats" +
+        ".categoryParent) " +
         "INNER JOIN " + USERS_TABLE_NAME + " usrs ON tr.owner = usrs.userId " +
-        "LEFT OUTER JOIN " + "(SELECT userId AS c_userId, userName AS c_userName, adress AS c_adress, mail AS c_mail, " +
+        "LEFT OUTER JOIN " + "(SELECT userId AS c_userId, userName AS c_userName, adress AS c_adress, mail AS c_mail," +
+        " " +
         "imageUrl AS c_imageUrl FROM " + USERS_TABLE_NAME + ") usrsRes ON usrsRes.c_userId = trRes.customerId ");
+    applyInstanceIdFilter(SQL, parameterSource, instanceId);
     applyTrainerFilter(SQL, parameterSource, trainerId);
     applyMaxPriceFilter(SQL, parameterSource, maxPrice);
     applyCategoryFilter(SQL, parameterSource, categoryId);
@@ -99,12 +114,21 @@ public class TrainingsDAO extends DAO {
         new TrainingWithInstancesExtractor()), maxDistance, placeAround);
   }
 
+  private void applyInstanceIdFilter(@Nonnull final StringBuilder builder,
+      @Nonnull final MapSqlParameterSource parameterSource, @Nullable final String id) {
+    if (id != null) {
+      resolveWhereOrAndQuery(builder);
+      builder.append(" (trIns.trainingsInsId = :trainingsInsId) ");
+      parameterSource.addValue("trainingsInsId", id, VARCHAR);
+    }
+  }
+
   private void applyDateFilter(@Nonnull final StringBuilder builder,
       @Nonnull final MapSqlParameterSource parameterSource, @Nullable final Date dateFrom,
       @Nullable final Date dateTo) {
     if (dateFrom != null && dateTo != null) {
-      resolveWhenOrAndQuery(builder);
-      builder.append(" (trIns.trainingInsDateStart BETWEEN :fromDate AND :toDate) ");
+      resolveWhereOrAndQuery(builder);
+      builder.append(" ( (trIns.trainingInsDateStart BETWEEN :fromDate AND :toDate) OR cats.isTheoretical = 1) ");
       parameterSource.addValue("fromDate", dateFrom, TIMESTAMP)
           .addValue("toDate", dateTo, TIMESTAMP);
     }
@@ -113,7 +137,7 @@ public class TrainingsDAO extends DAO {
   private void applyCategoryFilter(@Nonnull final StringBuilder builder,
       @Nonnull final MapSqlParameterSource parameterSource, @Nullable final String categoryId) {
     if (categoryId != null) {
-      resolveWhenOrAndQuery(builder);
+      resolveWhereOrAndQuery(builder);
       builder.append(" (cats.categoryId = :categoryId OR cats.categoryParent = :categoryId) ");
       parameterSource.addValue("categoryId", categoryId, VARCHAR);
     }
@@ -122,7 +146,7 @@ public class TrainingsDAO extends DAO {
   private void applyTrainerFilter(@Nonnull final StringBuilder builder,
       @Nonnull final MapSqlParameterSource parameterSource, @Nullable final String trainerId) {
     if (trainerId != null) {
-      resolveWhenOrAndQuery(builder);
+      resolveWhereOrAndQuery(builder);
       builder.append(" usrs.userId = :trainerId ");
       parameterSource.addValue("trainerId", trainerId, VARCHAR);
     }
@@ -131,13 +155,13 @@ public class TrainingsDAO extends DAO {
   private void applyMaxPriceFilter(@Nonnull final StringBuilder builder,
       @Nonnull final MapSqlParameterSource parameterSource, final double maxPrice) {
     if (maxPrice > 0.0) {
-      resolveWhenOrAndQuery(builder);
+      resolveWhereOrAndQuery(builder);
       builder.append(" tr.price <= :maxPrice ");
       parameterSource.addValue("maxPrice", maxPrice, DOUBLE);
     }
   }
 
-  private void resolveWhenOrAndQuery(@Nonnull final StringBuilder builder) {
+  private void resolveWhereOrAndQuery(@Nonnull final StringBuilder builder) {
     final String whereOrAnd = (builder.toString().contains("WHERE")) ? " AND" : " WHERE";
     builder.append(whereOrAnd);
   }
@@ -153,7 +177,9 @@ public class TrainingsDAO extends DAO {
       return trainings;
     }
     final JsonReader reader = new JsonReader();
-    return trainings.stream().filter(training -> reader.distance(place, training.getPlace()) <= maxDistance).collect(
+    return trainings.stream().filter(
+        training -> reader.distance(place, training.getPlace()) <= maxDistance || training.getCategory()
+            .getTheoretical()).collect(
         toList());
   }
 
@@ -214,31 +240,34 @@ public class TrainingsDAO extends DAO {
     });
   }
 
-  public boolean saveTrainingReservation(@Nonnull final String trainingTemplateId, @Nonnull final TrainingReservation trainingReservation) {
-    final Training training = getTrainingById(trainingTemplateId);
-    for (TrainingInstance trainingInstance: training.getInstances()) {
-      if(trainingInstance.getId().equals(trainingReservation.getTrainingInstance())) {
-        if(training.getCapacity() > trainingInstance.getTrainingReservations().size()) {
-          final User customer = trainingReservation.getCustomer();
-          if (customer != null) {
-            final String SQL = "INSERT INTO " + TRAININGS_RESERVATIONS_TABLE_NAME + " (customerId, idTrainingIns) VALUES " +
-                "(?, ?) ";
-            template.update(SQL, customer.getId(), trainingReservation.getTrainingInstance());
-            return true;
-        }
-        }
+  public Training saveTrainingReservation(@Nonnull final TrainingReservation trainingReservation) {
+    final Training training = getTrainingByInstanceId(trainingReservation.getTrainingInstance());
+
+    if (training == null || training.getInstances().size() > 1) {
+      return null;
+    }
+    final TrainingInstance trainingInstanceFound = training.getInstances().get(0);
+    if (training.getCapacity() > trainingInstanceFound.getTrainingReservations().size()) {
+      final User customer = trainingReservation.getCustomer();
+      if (customer != null) {
+        final String SQL = "INSERT INTO " + TRAININGS_RESERVATIONS_TABLE_NAME + " (trainingsResId, customerId, " +
+            "idTrainingsIns) VALUES " +
+            "(?, ?, ?) ";
+        template.update(SQL, trainingReservation.getId(), customer.getId(), trainingReservation.getTrainingInstance());
+        trainingInstanceFound.getTrainingReservations().add(trainingReservation);
+        return training;
       }
     }
-    return false;
+    return null;
   }
 
   public void updateTraining(@Nonnull final Training training) {
     asyncSaver.execute(() -> {
       final Place place = training.getPlace();
       final Category category = training.getCategory();
-      final String SQL = "UPDATE " + TRAININGS_TABLE_NAME + " SET (category = ?, place = ?, price = ?, " +
+      final String SQL = "UPDATE " + TRAININGS_TABLE_NAME + " SET category = ?, place = ?, price = ?, " +
           "lat = ?, lng = ?, " +
-          "description = ?, size = ?, WHERE trainingsId= ?";
+          "description = ?, size = ? WHERE trainingsId= ?";
       template.update(SQL, category.getId(), place.getName(), training.getPrice(), place.getLat(),
           place.getLng(), training.getDescription(), training.getCapacity(), training.getId());
     });
@@ -246,9 +275,8 @@ public class TrainingsDAO extends DAO {
 
   public void updateTrainingInstance(@Nonnull final TrainingInstance trainingInstance) {
     asyncSaver.execute(() -> {
-      final String SQL = "UPDATE " + TRAININGS_INSTANCES_TABLE_NAME + " SET (trainingInsDateStart = ?, idTrainings = " +
-          "?)" +
-          " " +
+      final String SQL = "UPDATE " + TRAININGS_INSTANCES_TABLE_NAME + " SET trainingInsDateStart = ?, idTrainings = " +
+          " ? " +
           "WHERE trainingsInsId = ?";
       template
           .update(SQL, trainingInstance.getDateStart(), trainingInstance.getTrainingParent(), trainingInstance.getId());
@@ -260,9 +288,9 @@ public class TrainingsDAO extends DAO {
     asyncSaver.execute(() -> {
       final User customer = trainingReservation.getCustomer();
       if (customer != null) {
-        final String SQL = "UPDATE " + TRAININGS_RESERVATIONS_TABLE_NAME + " SET (customerId, idTrainingIns) VALUES " +
-            "(?, ?)";
-        template.update(SQL, customer.getId(), trainingReservation.getTrainingInstance());
+        final String SQL = "UPDATE " + TRAININGS_RESERVATIONS_TABLE_NAME + " SET customerId = ?, idTrainingsIns = ? " +
+            "WHERE trainingsResId = ?";
+        template.update(SQL, customer.getId(), trainingReservation.getTrainingInstance(), trainingReservation.getId());
       }
     });
 
@@ -299,14 +327,23 @@ public class TrainingsDAO extends DAO {
   }
 
   @Nullable
-  public Training getTrainingById(@Nonnull final String id) {
+  public TrainingInstance getTrainingInstanceById(@Nonnull final String id) {
     try {
-      final String SQL = "SELECT * FROM " + TRAININGS_TABLE_NAME + " WHERE trainingsId = ?";
+      final String SQL = "SELECT * FROM " + TRAININGS_INSTANCES_TABLE_NAME + " WHERE trainingsInsId = ?";
       return template.queryForObject(SQL,
-          new Object[]{id}, new TrainingMapper());
+          new Object[]{id}, new TrainingInstanceMapper());
     } catch (EmptyResultDataAccessException ex) {
       return null;
     }
+  }
+
+  @Nullable
+  public Training getTrainingByInstanceId(@Nonnull final String id) {
+    List<Training> trainings = getTrainingsWithInstance(id);
+    if (trainings.isEmpty() || trainings.size() > 1) {
+      return null;
+    }
+    return trainings.get(0);
   }
 }
 

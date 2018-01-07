@@ -12,8 +12,10 @@
             <div class="modal-footer">
                 <label style="margin-right: 25px;">{{modalFooter}}</label>
                 <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+                <div ng-hide="alreadyBooked">
                 <button type="button" ng-show="owner" ng-disabled="taken" class="btn modalOk" ng-click="delete()">Delete this training</button>
                 <button type="button" ng-hide="owner" ng-disabled="full" class="btn modalOk" ng-click="reserve()">Sign in this training</button>
+                </div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

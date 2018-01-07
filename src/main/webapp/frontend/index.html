@@ -28,16 +28,32 @@
 
 <body class="home">
 <div ng-app="myApp" ng-controller="userController">
+
+    <!--NAVBAR TOP-->
     <div class="navbar navbar-inverse navbar-fixed-top headroom">
         <div class="container">
-            <div class="navbar-header">
+            <div class="navbar-header pull-right">
                 <!-- Button for smallest screens -->
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span
                         class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button>
                 <a class="navbar-brand" href="index.html"><img src="assets/images/favicon.ico"
                                                                alt="Logo"></a>
             </div>
-            <ul class="nav navbar-nav pull-right">
+            <ul class="nav navbar-nav pull-left">
+                <li ng-show="authData">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{userInfoText}} </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Favourites Snippets </a></li>
+                                <li ng-click="logOut()" ng-app="myApp" ng-controller="logOutController">><a href="#">Sign
+                                    Out </a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="settings.html">Account Settings </a></li>
+                <li><a ng-click="goToScheduleAsOwner()"  href="#">Look at schedule </a></li>
                 <li class="active"><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li class="dropdown">
@@ -50,37 +66,17 @@
                 <li><a href="contact.html">Contact</a></li>
                 <li>
                     <a class="btn" ng-hide="authData" href="logIn.html" title="LOG IN">LOG IN</a></li>
-                <li ng-show="authData">
-                    <ul class="nav navbar-nav">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{userInfoText}} </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="settings.html">Account Settings </a></li>
-                                <li><a ng-click="goToScheduleAsOwner()"  href="#">Look at schedule </a></li>
-                                <li><a href="#">Favourites Snippets </a></li>
-                                <li ng-click="logOut()" ng-app="myApp" ng-controller="logOutController">><a href="#">Sign
-                                    Out </a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
             </ul>
         </div>
     </div>
-    <!-- /.navbar -->
-
-    <!-- Header -->
-    <header id="head">
-        <div class="container">
-            <div class="row">
-            </div>
-        </div>
-    </header>
-    <!-- /Header -->
+    <!--/NAVBAR TOP-->
 
     <!-- Filters -->
-    <div class=" settingsform" ng-controller="searchEngineController" ng-show="authData" ng-app="myApp"
+    <div  ng-controller="searchEngineController" ng-show="authData" ng-app="myApp"
          data-ng-init="initSearcher()">
+
+        <!-- Header -->
+        <header id="head">
         <ul class="nav navbar-nav pull-right searcher ">
             <li style="margin-right:15%;">
                 <div ><label></label></div>
@@ -122,8 +118,11 @@
                 </button>
             </li>
         </ul>
+    </header>
+    <!-- /Header -->
         <!-- Filters end -->
 
+        <div class="settingsform">
         <!-- Categories bar -->
         <aside class="col-md-4 sidebar sidebar-left container text-center">
         <div class="sidenav">
@@ -151,7 +150,7 @@
         <!-- Categories bar end-->
 
         <!-- Trainings -->
-        <ul class="trainingsList col-sl-8" >
+        <ul class="trainingsList col-sl-8" ng-show="trainingsFound.length > 0" >
             <li class="trainingItemMenu">
                 <label>Photo</label>
                 <label>Name</label>
@@ -176,6 +175,7 @@
         <!-- Trainings end-->
 
     </div>
+</div>
 
 
 
@@ -212,13 +212,14 @@
 
             <div class="row">
                 <div class="col-sm-6">
-                    <h3>Question 1</h3>
-                    <p>Answer 1</p>
+                    <h3>What do i need to start?</h3>
+                    <p>All you need is you email adress. Just register, confirm and enjoy.</p>
                 </div>
                 <div class="col-sm-6">
-                    <h3>Question 2</h3>
-                    <p>
-                        Answer 2</p>
+                    <h3>Why do I need training template and instance? What is the difference?</h3>
+                    <p>Training template is overall schema for your trainings. EG: You want to provide lessons for chess begginners every monday.<br>
+                    You just create "Chess for begginners" (or whatever), define all data and after that just create instances for it
+                    on days you like. Simple as that</p>
                 </div>
             </div> <!-- /row -->
 
@@ -263,83 +264,6 @@
 
     </div>
 
-    <footer id="footer" class="top-space">
-
-        <div class="footer1">
-            <div class="container">
-                <div class="row">
-
-                    <div class="col-md-3 widget">
-                        <h3 class="widget-title">Contact</h3>
-                        <div class="widget-body">
-                            <p>+234 23 9873237<br>
-                                <a href="mailto:#">some.email@somewhere.com</a><br>
-                                <br>
-                                234 Hidden Pond Road, Ashland City, TN 37015
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 widget">
-                        <h3 class="widget-title">Follow me</h3>
-                        <div class="widget-body">
-                            <p class="follow-me-icons">
-                                <a href=""><i class="fa fa-twitter fa-2"></i></a>
-                                <a href=""><i class="fa fa-dribbble fa-2"></i></a>
-                                <a href=""><i class="fa fa-github fa-2"></i></a>
-                                <a href=""><i class="fa fa-facebook fa-2"></i></a>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 widget">
-                        <h3 class="widget-title">Text widget</h3>
-                        <div class="widget-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi, dolores,
-                                quibusdam
-                                architecto voluptatem amet fugiat nesciunt placeat provident cumque accusamus itaque
-                                voluptate modi quidem dolore optio velit hic iusto vero praesentium repellat commodi
-                                ad
-                                id expedita cupiditate repellendus possimus unde?</p>
-                            <p>Eius consequatur nihil quibusdam! Laborum, rerum, quis, inventore ipsa autem repellat
-                                provident assumenda labore soluta minima alias temporibus facere distinctio quas
-                                adipisci nam sunt explicabo officia tenetur at ea quos doloribus dolorum voluptate
-                                reprehenderit architecto sint libero illo et hic.</p>
-                        </div>
-                    </div>
-
-                </div> <!-- /row of widgets -->
-            </div>
-        </div>
-        <div class="footer2">
-            <div class="container">
-                <div class="row">
-
-                    <div class="col-md-6 widget">
-                        <div class="widget-body">
-                            <p class="simplenav">
-                                <a href="#">Home</a> |
-                                <a href="about.html">About</a> |
-                                <a href="sidebar-right.html">Sidebar</a> |
-                                <a href="contact.html">Contact</a> |
-                                <b><a href="signup.html">Sign up</a></b>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 widget">
-                        <div class="widget-body">
-                            <p class="text-right">
-                                Copyright &copy; 2014, Your name. Designed by <a href="http://gettemplate.com/"
-                                                                                 rel="designer">gettemplate</a>
-                            </p>
-                        </div>
-                    </div>
-
-                </div> <!-- /row of widgets -->
-            </div>
-        </div>
-    </footer>
 </div>
 
 
@@ -353,10 +277,10 @@
 <script src="assets/js/respond.min.js"></script>
 <script src="assets/js/notify.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-<script src="scripts/userService.js"></script>
+<script src="scripts/service/userService.js"></script>
 <script src="assets/js/template.js"></script>
 <script src="scripts/common/userController.js"></script>
 <script src="scripts/common/logOutScript.js"></script>
-<script src="scripts/searchEngineController.js"></script>
+<script src="scripts/searchEngine/searchEngineController.js"></script>
 </body>
 </html>

@@ -57,7 +57,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{userInfoText}} </a>
                             <ul class="dropdown-menu">
                                 <li><a href="settings.html">Account Settings </a></li>
-                                <li><a ng-click="goToScheduleAsOwner()"  href="#">Look at schedule </a></li>
+                                <li><a ng-click="goToScheduleAsOwner()" href="#">Look at schedule </a></li>
                                 <li><a href="#">Favourites Snippets </a></li>
                                 <li ng-click="logOut()" ng-app="myApp" ng-controller="logOutController">><a href="#">Sign
                                     Out </a></li>
@@ -85,17 +85,33 @@
             <!-- Sidebar -->
             <aside class="col-md-4 sidebar sidebar-left container text-center">
                 <div class="sidenav">
-                <div class="btn-group-vertical">
-                <button ng-click="accountDetails()" class=" categoriesb">Change account detail
-                </button>
-                <button ng-click="trainingTemplate()" class=" categoriesb">Add training template
-                </button>
-                <button ng-click="addTrainings()" class=" categoriesb">Add trainings
-                </button>
-                </div>
+                    <div class="btn-group-vertical">
+                        <button ng-click="profile()" class=" categoriesb">Profile
+                        </button>
+                        <button ng-click="editProfile()" class=" categoriesb">Edit Profile
+                        </button>
+                        <button ng-click="upcomingTrainings()" class=" categoriesb">Upcoming trainings
+                        </button>
+                        <button ng-click="editTrainings()" class=" categoriesb">Edit trainings
+                        </button>
+                        <button ng-click="accountDetails()" class=" categoriesb">Change account detail
+                        </button>
+                        <button ng-click="trainingTemplate()" class=" categoriesb">Add training template
+                        </button>
+                        <button ng-click="addTrainings()" class=" categoriesb">Add trainings
+                        </button>
+                    </div>
                 </div>
             </aside>
             <!-- /Sidebar -->
+
+            <!-- Edit profile -->
+            <div class="col-md-8 maincontent container widget" ng-show="editingProfile">
+                Your profile content
+                <textarea class="form-control" style="min-height: 250px; "  ng-model="xxx"></textarea><br>
+            </div>
+            <!-- /Edit profile -->
+
             <!-- DETAILS -->
             <div class="col-md-8 maincontent container " ng-show="details">
                 First name:<br>
@@ -129,22 +145,30 @@
             <div class="col-md-8 maincontent container" ng-show="trainingsTemplate"
                  ng-controller="trainingTemplateController">
                 Pick category<br>
-                <select class="selectpicker" ng-model="categorySelect"
+                <select class="selectpicker" ng-model="categorySelect" ng-change="setCurrentCategory()"
                         ng-options="category as category.fullName for category in templateCategories">
                 </select>
+                <div ng-show = "notTheoreticalCategory">
                 <br>
                 Training place (leave empty if online)<br>
                 <input type="text" name="Place" class="form-control"
                        ng-model="place" width="50">
+                <br>Group size<br>
+                <input type="number" name="Capacity" class="form-control"
+                       ng-model="capacity" width="2" min="1">
+                </div>
+                <div ng-hide="notTheoreticalCategory">
+                    <br><br><br>
+                    <label>Theoretical categories doesn't have instances</label><br>
+                    <label>Since that they also doesn't have place and date. You can only add materials to it</label>
+                </div>
                 <br>Price [$]<br>
                 <input type="number" name="Price" class="form-control"
                        ng-model="price" width="5" min="0.1">
                 <br>Description<br>
                 <input type="text" name="Description" class="form-control"
-                       ng-model="description" width="50" height="4">
-                <br>Group size<br>
-                <input type="number" name="Capacity" class="form-control"
-                       ng-model="capacity" width="2" min="1">
+                       ng-model="description" width="50" height="4" maxlength="25">
+                <br>
                 <button ng-click="saveTrainingTemplate()" class="btn primKey"
                 >Save
                 </button>
@@ -155,30 +179,35 @@
             <!-- ADD TRAINING INSTANCE -->
             <div class="col-md-8 maincontent container" ng-show="addTrInstanceVisibility"
                  ng-controller="trainingInstanceController">
-                <div class="widget">
-                    <div class="container">
-                        <div class="row">
-                            <br>Select template for this training<br>
-                            <select class="selectpicker" ng-model="userTrainingSelect"
-                                    ng-options="userTraining as userTraining.description for userTraining in userTrainings">
-                            </select>
+                <div ng-hide="foundMatchingTrainings">
+                    <div class="widget">
+                        <div class="container">
+                            <div class="row">
+                                <br>Select template for this training<br>
+                                <select class="selectpicker" ng-model="userTrainingSelect"
+                                        ng-options="userTraining as userTraining.description for userTraining in userTrainings">
+                                </select>
+                            </div>
+                            <div class="row">
+                                <br>Select date of training start<br>
+                                <input type="date" name="trday" ng-model="date" class="form-control">
+                                <br>Select time of training start<br>
+                                <input type="time" name="trtime" ng-model="hours" class="form-control">
+                                <br>Select training duration in hours<br>
+                                <input type="number" name="duration" class="form-control"
+                                       ng-model="duration" width="5" min="0.1">
+                            </div>
+                            <br>
+                            <button ng-click="saveTrainingInstance()" class="btn primKey"
+                            >Save
+                            </button>
                         </div>
-                        <div class="row">
-                            <br>Select date of training start<br>
-                            <input type="date" name="trday" ng-model="date" class="form-control">
-                            <br>Select time of training start<br>
-                            <input type="time" name="trtime" ng-model="hours" class="form-control">
-                            <br>Select training duration in hours<br>
-                            <input type="number" name="duration" class="form-control"
-                                   ng-model="duration" width="5" min="0.1">
-                        </div>
-                        <br>
-                        <button ng-click="saveTrainingInstance()" class="btn primKey"
-                        >Save
-                        </button>
                     </div>
+                    <!-- /ADD TRAINING INSTANCE -->
                 </div>
-                <!-- /ADD TRAINING INSTANCE -->
+                <div ng-show="foundMatchingTrainings">
+                    <label>No trainings viable to add instance found!</label>
+                </div>
             </div>
         </div>
     </div>
@@ -269,12 +298,12 @@
 <script src="assets/js/jQuery.headroom.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 <script src="assets/js/notify.js"></script>
-<script src="scripts/userService.js"></script>
+<script src="scripts/service/userService.js"></script>
 <script src="assets/js/template.js"></script>
 <script src="scripts/common/userController.js"></script>
 <script src="scripts/common/logOutScript.js"></script>
-<script src="scripts/settingsController.js"></script>
-<script src="scripts/trainingTemplateController.js"></script>
-<script src="scripts/trainingInstanceController.js"></script>
+<script src="scripts/settings/settingsController.js"></script>
+<script src="scripts/settings/trainingTemplateController.js"></script>
+<script src="scripts/settings/trainingInstanceController.js"></script>
 </body>
 </html>

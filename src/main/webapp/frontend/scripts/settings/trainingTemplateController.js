@@ -5,8 +5,18 @@ app.controller('trainingTemplateController', function ($scope, $http, $window, u
     $scope.description = "";
     $scope.capacity = 1;
     $scope.categorySelect = $scope.templateCategories[0];
-    $scope.setCurrentCategory = function (category) {
-        $scope.currentCategory = category;
+
+    if($scope.categorySelect.theoretical) {
+        $scope.notTheoreticalCategory = false;
+    } else {
+        $scope.notTheoreticalCategory = true;
+    }
+    $scope.setCurrentCategory = function () {
+        if($scope.categorySelect.theoretical) {
+            $scope.notTheoreticalCategory = false;
+        } else {
+            $scope.notTheoreticalCategory = true;
+        }
     };
     var mainAdress = userService.getMainAdress();
     $scope.saveTrainingTemplate = function () {
@@ -29,7 +39,8 @@ app.controller('trainingTemplateController', function ($scope, $http, $window, u
             }).then(function successCallback(response) {
                 $scope.returnCode = response.data;
                 if ($scope.returnCode === 1) {
-                    alert('Training saved successfully');
+                    $.notify('Training successfully saved', "success");
+                    window.location.href = "settings.html";
                 }
                 else if ($scope.returnCode === 4) {
                     alert('Session expired !');

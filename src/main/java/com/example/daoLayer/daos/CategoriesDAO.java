@@ -31,16 +31,16 @@ public class CategoriesDAO extends DAO {
     }
     template.execute
         ("CREATE TABLE " + CATEGORIES_TABLE_NAME + " (categoryId VARCHAR(50) NOT NULL, categoryName VARCHAR(50), " +
-            "categoryParent VARCHAR(50), " +
+            "categoryParent VARCHAR(50), theoretical INT(2), " +
             "PRIMARY KEY(categoryId));"
         );
   }
 
   private void saveToDB(@Nonnull final Category cat) {
-    final String SQL = "INSERT INTO " + CATEGORIES_TABLE_NAME + " (categoryId, categoryName, categoryParent) VALUES " +
-        "(?, ?, ?)";
+    final String SQL = "INSERT INTO " + CATEGORIES_TABLE_NAME + " (categoryId, categoryName, categoryParent, theoretical) VALUES " +
+        "(?, ?, ?, ?)";
     if (!exists(cat.getName())) {
-      template.update(SQL, cat.getId(), cat.getName(), cat.getParent());
+      template.update(SQL, cat.getId(), cat.getName(), cat.getParent(), cat.getTheoretical());
     }
   }
 
@@ -71,9 +71,9 @@ public class CategoriesDAO extends DAO {
   }
 
   private void updateRecord(@Nonnull final Category cat) {
-    final String SQL = "UPDATE " + CATEGORIES_TABLE_NAME + " SET categoryName = ?, categoryParent = ? WHERE " +
+    final String SQL = "UPDATE " + CATEGORIES_TABLE_NAME + " SET categoryName = ?, categoryParent = ?, theoretical = ? WHERE " +
         "categoryId = ?;";
-    template.update(SQL, cat.getName(), cat.getParent(), cat.getId());
+    template.update(SQL, cat.getName(), cat.getParent(), cat.getId(), cat.getTheoretical());
   }
 
   @Nullable

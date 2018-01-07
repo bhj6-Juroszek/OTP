@@ -2,7 +2,7 @@ app.controller('trainingInstanceController', function ($scope, $http, $window, u
     $scope.date;
     $scope.hours;
     $scope.duration;
-    $scope.userTrainingSelect;
+    $scope.foundMatchingTrainings = false;
 
 
     var prepareDate = function () {
@@ -28,6 +28,7 @@ app.controller('trainingInstanceController', function ($scope, $http, $window, u
             }).then(function successCallback(response) {
                 if(response.data === 1) {
                     $.notify('Training instance successfully saved', "success");
+                    window.location.href = "settings.html";
                 } else {
                     setTimeout(function () {
                         window.location.href = userService.getMainAdress()
