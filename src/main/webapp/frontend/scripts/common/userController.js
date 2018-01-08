@@ -11,4 +11,7 @@ app.controller('userController', function ($scope, $http, userService) {
     };
     start();
     $scope.goToScheduleAsOwner = userService.goToScheduleAsOwner;
+    $scope.profile = function () {
+        window.location.href = "userProfile.html?userId="+userService.getUserContext().user.id;
+    };
 });

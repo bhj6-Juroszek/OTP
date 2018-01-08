@@ -1,14 +1,18 @@
 package com.example.utils;
 
-import com.example.backend.model.Day;
-import com.example.backend.model.Week;
+import com.example.backend.utils.model.Day;
+import com.example.backend.utils.model.Week;
 
 import javax.annotation.Nonnull;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Date;
 
-import static java.time.LocalTime.*;
+import static java.time.LocalTime.MAX;
+import static java.time.LocalTime.MIN;
 import static java.util.Calendar.*;
 
 public class DateUtils {

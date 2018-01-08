@@ -22,6 +22,11 @@ public abstract class Entity {
   }
 
   @Override
+  public String toString() {
+    return String.format("Entity: [id:%s]", id);
+  }
+
+  @Override
   public int hashCode() {
     return this.id.hashCode();
   }

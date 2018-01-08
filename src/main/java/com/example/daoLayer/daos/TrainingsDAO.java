@@ -4,7 +4,7 @@ import com.example.backend.helpers.JsonReader;
 import com.example.daoLayer.AsyncDbSaver;
 import com.example.daoLayer.entities.*;
 import com.example.daoLayer.mappers.TrainingInstanceMapper;
-import com.example.daoLayer.mappers.TrainingWithInstancesExtractor;
+import com.example.daoLayer.mappers.extractors.TrainingWithInstancesExtractor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -164,11 +164,6 @@ public class TrainingsDAO extends DAO {
   private void resolveWhereOrAndQuery(@Nonnull final StringBuilder builder) {
     final String whereOrAnd = (builder.toString().contains("WHERE")) ? " AND" : " WHERE";
     builder.append(whereOrAnd);
-  }
-
-  private List<Training> applyOnlineFilter(@Nonnull final List<Training> trainings) {
-    return trainings.stream().filter(training -> training.getPlace().getName().equals("online")).collect(
-        toList());
   }
 
   private List<Training> applyDistanceFilter(@Nonnull final List<Training> trainings, final int maxDistance,

@@ -9,8 +9,6 @@ import javax.annotation.Nonnull;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 public abstract class DAO {
   protected final JdbcTemplate template;
@@ -26,7 +24,7 @@ public abstract class DAO {
 
   public abstract void createTable();
 
-  protected boolean tableExists(@Nonnull final String tableName) {
+  boolean tableExists(@Nonnull final String tableName) {
     try {
       final DatabaseMetaData meta = template.getDataSource().getConnection().getMetaData();
       final ResultSet res = meta.getTables(null, null, tableName,

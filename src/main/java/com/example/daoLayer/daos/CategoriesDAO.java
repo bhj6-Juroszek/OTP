@@ -36,20 +36,6 @@ public class CategoriesDAO extends DAO {
         );
   }
 
-  private void saveToDB(@Nonnull final Category cat) {
-    final String SQL = "INSERT INTO " + CATEGORIES_TABLE_NAME + " (categoryId, categoryName, categoryParent, theoretical) VALUES " +
-        "(?, ?, ?, ?)";
-    if (!exists(cat.getName())) {
-      template.update(SQL, cat.getId(), cat.getName(), cat.getParent(), cat.getTheoretical());
-    }
-  }
-
-  private boolean exists(@Nonnull final String categoryName) {
-    final Integer cnt = template.queryForObject(
-        "SELECT count(*) FROM " + CATEGORIES_TABLE_NAME + " WHERE categoryName = ?", Integer.class, categoryName);
-    return cnt != null && cnt > 0;
-  }
-
   public Category getCategoryById(final String categoryId) {
     try {
       String SQL = "SELECT * FROM " + CATEGORIES_TABLE_NAME + " WHERE categoryId = ?";
@@ -58,22 +44,6 @@ public class CategoriesDAO extends DAO {
     } catch (EmptyResultDataAccessException ex) {
       return null;
     }
-  }
-
-  public Category getCategoryByName(@Nonnull final String categoryName) {
-    try {
-      final String SQL = "SELECT * FROM " + CATEGORIES_TABLE_NAME + " WHERE categoryName = ?";
-      return template.queryForObject(SQL,
-          new Object[]{categoryName}, new CategoryMapper());
-    } catch (EmptyResultDataAccessException ex) {
-      return null;
-    }
-  }
-
-  private void updateRecord(@Nonnull final Category cat) {
-    final String SQL = "UPDATE " + CATEGORIES_TABLE_NAME + " SET categoryName = ?, categoryParent = ?, theoretical = ? WHERE " +
-        "categoryId = ?;";
-    template.update(SQL, cat.getName(), cat.getParent(), cat.getId(), cat.getTheoretical());
   }
 
   @Nullable

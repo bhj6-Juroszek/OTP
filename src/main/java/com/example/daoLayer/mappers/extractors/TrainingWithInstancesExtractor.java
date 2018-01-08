@@ -1,9 +1,10 @@
-package com.example.daoLayer.mappers;
+package com.example.daoLayer.mappers.extractors;
 
 import com.example.daoLayer.entities.Training;
 import com.example.daoLayer.entities.TrainingInstance;
 import com.example.daoLayer.entities.TrainingReservation;
 import com.example.daoLayer.entities.User;
+import com.example.daoLayer.mappers.TrainingMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 

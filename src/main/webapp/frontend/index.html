@@ -40,21 +40,11 @@
                                                                alt="Logo"></a>
             </div>
             <ul class="nav navbar-nav pull-left">
-                <li ng-show="authData">
-                    <ul class="nav navbar-nav">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{userInfoText}} </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">Favourites Snippets </a></li>
-                                <li ng-click="logOut()" ng-app="myApp" ng-controller="logOutController">><a href="#">Sign
-                                    Out </a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li><a href="settings.html">Account Settings </a></li>
-                <li><a ng-click="goToScheduleAsOwner()"  href="#">Look at schedule </a></li>
                 <li class="active"><a href="index.html">Home</a></li>
+                <li ng-show="authData">
+                <li><a href="settings.html">Account Settings </a></li>
+                <li><a href="#" ng-click="profile()">Profile</a></li>
+                <li><a ng-click="goToScheduleAsOwner()"  href="#">Your schedule</a></li>
                 <li><a href="about.html">About</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
@@ -66,6 +56,7 @@
                 <li><a href="contact.html">Contact</a></li>
                 <li>
                     <a class="btn" ng-hide="authData" href="logIn.html" title="LOG IN">LOG IN</a></li>
+                <li ng-show="authData" ng-click="logOut()"  ng-controller="logOutController"><a href="#">Sign Out </a></li>
             </ul>
         </div>
     </div>

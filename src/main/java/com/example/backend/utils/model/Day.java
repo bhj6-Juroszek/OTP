@@ -1,4 +1,4 @@
-package com.example.backend.model;
+package com.example.backend.utils.model;
 
 public class Day {
   private String name;

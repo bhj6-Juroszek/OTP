@@ -1,7 +1,9 @@
-package com.example.daoLayer.mappers;
+package com.example.daoLayer.mappers.extractors;
 
 import com.example.daoLayer.entities.Profile;
 import com.example.daoLayer.entities.Rate;
+import com.example.daoLayer.mappers.ProfileMapper;
+import com.example.daoLayer.mappers.RateMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 

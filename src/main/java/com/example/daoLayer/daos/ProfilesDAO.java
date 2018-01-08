@@ -2,7 +2,7 @@ package com.example.daoLayer.daos;
 
 import com.example.daoLayer.AsyncDbSaver;
 import com.example.daoLayer.entities.Profile;
-import com.example.daoLayer.mappers.ProfilesExtractor;
+import com.example.daoLayer.mappers.extractors.ProfilesExtractor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -31,6 +31,7 @@ public class ProfilesDAO extends DAO {
 
   @Override
   public void createTable() {
+    //Todo update
 //    if (tableExists(PROFILES_TABLE_NAME)) {
 //      return;
 //    }
@@ -55,10 +56,6 @@ public class ProfilesDAO extends DAO {
     });
   }
 
-  public void delete(@Nonnull final Profile profile) {
-    final String SQL = "DELETE FROM " + PROFILES_TABLE_NAME + " WHERE profileId = ?";
-    template.update(SQL, profile.getId());
-  }
 
   @Nullable
   public Profile getProfileByUser(@Nonnull final String ownerId) {

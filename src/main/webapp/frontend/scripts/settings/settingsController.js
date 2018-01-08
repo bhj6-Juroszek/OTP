@@ -73,10 +73,6 @@ app.controller('settingsController', function ($scope, $http, $window, userServi
         }
     };
 
-    $scope.profile = function () {
-      window.location.href = "userProfile.html?userId="+userService.getUserContext().user.id;
-    };
-
     $scope.confirm = function () {
         return $window.confirm('Are you sure ?');
     };

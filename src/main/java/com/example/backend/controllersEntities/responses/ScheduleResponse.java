@@ -1,6 +1,6 @@
 package com.example.backend.controllersEntities.responses;
 
-import com.example.backend.model.Week;
+import com.example.backend.utils.model.Week;
 import com.example.daoLayer.entities.Training;
 
 import java.util.ArrayList;
