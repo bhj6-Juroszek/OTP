@@ -166,12 +166,10 @@
                 <label>{{trainingFound.price}}</label>
                 <label>5 stars</label>
             </a> </li>
-            <nav class="container">
-                <ul class="pagination">
-                    <li class="page-item"><a class="page-link" ng-repeat="page in pages" ng-click="selectPage(page.value)">{{page.name}}</a></li>
-                </ul>
-            </nav>
         </ul>
+            <ul ng-show="pages.length > 0" class="pagination">
+                <li ng-repeat="page in pages" ng-click="selectPage(page.value)" ><button style="border:none;background: var(--dark); color:var(--cream)">{{page.name}}</button></li>
+            </ul>
         <!-- Trainings end-->
 
     </div>

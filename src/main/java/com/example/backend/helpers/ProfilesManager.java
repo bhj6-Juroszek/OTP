@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * Created by Bartek on 2017-03-10.
@@ -19,7 +20,7 @@ public class ProfilesManager {
 //  public void changeProfileText(@Nonnull final User user, @Nonnull final  String text) {
 //    Profile profile = getUserProfile(user.getId());
 //    profile.setContent(text);
-//    profilesDAO.updateRecord(profile);
+//    profilesDAO.updateProfile(profile);
 //  }
 
   @Nullable
@@ -31,6 +32,15 @@ public class ProfilesManager {
       return createProfile(userId);
     }
     return profile;
+  }
+
+  public boolean updateProfile(@Nonnull final Profile profile) {
+    final Profile profileDao = profilesDAO.getProfileByUser(profile.getOwnerId());
+    if(profileDao != null && Objects.equals(profile, profileDao)) {
+      profilesDAO.updateProfile(profile);
+      return true;
+    }
+    return false;
   }
 
   public Profile createProfile(@Nonnull final String userId) {

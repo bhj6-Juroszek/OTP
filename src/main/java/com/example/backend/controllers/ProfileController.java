@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 @CrossOrigin
 @Controller
 @RequestMapping("/profile/")
-public class ProfileController {
+public class ProfileController extends AuthenticatedController {
 
   private ProfilesManager profilesManager;
   private UserManager userManager;
@@ -33,6 +33,16 @@ public class ProfileController {
     final Profile profile = profilesManager.getUserProfile(userId);
     response.setProfile(profile);
     return response;
+  }
+
+  @RequestMapping(value = "/{userId}", method = RequestMethod.POST)
+  @ResponseBody public boolean updateUserProfile(@RequestBody Profile profile, @RequestParam String uuid) {
+    // Just sanity checks, but if it returns false somebody manipulated request data
+    final User loggedUser = manager.getLoggedUsers().get(uuid).getUser();
+    if(loggedUser != null && loggedUser.getId().equals(profile.getOwnerId())) {
+      return profilesManager.updateProfile(profile);
+    }
+    return false;
   }
 
   @Autowired

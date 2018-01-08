@@ -92,10 +92,10 @@
                     <li><br><br><br><br>
                         <label>Social Media</label>
                     </li>
-                    <button ng-show="profile.facebookLink !== null" class="loginBtn loginBtn--facebook" href="profile.facebookLink"></button>
+                    <a ng-show="profile.facebookLink !== ''" href="{{profile.facebookLink}}" class="loginBtn loginBtn--facebook"> </a>
                     </li>
                     <li>
-                        <button ng-show="profile.linkedInLink !== null" class="loginBtn loginBtn--google" href="profile.linkedInLink"></button>
+                        <button ng-show="profile.linkedInLink !== null" class="loginBtn loginBtn--google" href="profile.linkedInLink"> </button>
                     </li>
                     <li ng-repeat="link in profile.socialMediaLinks">
                         <a href="link">{{link}}</a>
@@ -112,14 +112,19 @@
 
                 <label style="color:var(--important); font-size: xx-large;)">{{user.name}}</label>
                 <br>
-                Mail:
                 <br>
-                <label>{{user.mail}}</label>
+                <label ng-show="profile.showMail">{{user.mail}}</label>
                 <br>
-                Info:
                 <br>
-                <label>{{profile.content}}
+                <label ng-show="profile.showAddress">{{user.adress}}</label>
+                <br>
+                <br>
+                <label ng-show="profile.phoneNumber !== ''">{{profile.phoneNumber}}</label>
+                <br>
+                <br>
+                <label ng-show="profile.content.length != ''">{{profile.content}}
                   </label><br>
+                <label>General rate:   {{generalRate}}</label>
                 <br>
                 <div ng-show="profile.rates != null && profile.rates.length > 0">
                 Rates:<br>

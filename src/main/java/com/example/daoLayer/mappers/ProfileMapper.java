@@ -18,7 +18,8 @@ public class ProfileMapper implements RowMapper<Profile> {
         profile.setShowMail(rs.getBoolean("showMail"));
         profile.setShowAddress(rs.getBoolean("showAddress"));
         profile.setFacebookLink(rs.getString("facebookLink"));
-        profile.setLinkedInLink("linkedinLink");
+        profile.setLinkedInLink(rs.getString("linkedinLink"));
+        profile.setPhoneNumber(rs.getString("phoneNumber"));
         return profile;
     }
 }

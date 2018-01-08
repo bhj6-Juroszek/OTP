@@ -22,7 +22,8 @@ import static java.sql.Types.VARCHAR;
  */
 @Repository
 public class ProfilesDAO extends DAO {
-private static final Logger LOGGER = LogManager.getLogger(ProfilesDAO.class);
+
+  private static final Logger LOGGER = LogManager.getLogger(ProfilesDAO.class);
 
   ProfilesDAO(@Nonnull final JdbcTemplate template, @Nonnull final AsyncDbSaver asyncDbSaver) {
     super(template, asyncDbSaver);
@@ -30,23 +31,24 @@ private static final Logger LOGGER = LogManager.getLogger(ProfilesDAO.class);
 
   @Override
   public void createTable() {
-    if (tableExists(PROFILES_TABLE_NAME)) {
-      return;
-    }
-    template.execute
-        ("CREATE TABLE " + PROFILES_TABLE_NAME + " (profileId VARCHAR(50) NOT NULL, profileOwnerId VARCHAR(50), " +
-            "profileContent VARCHAR(1500), " +
-            "PRIMARY KEY(profileId));"
-        );
+//    if (tableExists(PROFILES_TABLE_NAME)) {
+//      return;
+//    }
+//    template.execute
+//        ("CREATE TABLE " + PROFILES_TABLE_NAME + " (profileId VARCHAR(50) NOT NULL, profileOwnerId VARCHAR(50), " +
+//            "profileContent VARCHAR(1500), " +
+//            "PRIMARY KEY(profileId));"
+//        );
   }
 
   public void saveToDB(@Nonnull final Profile profile) {
     asyncSaver.execute(() -> {
       try {
-        final String SQL = "INSERT INTO " + PROFILES_TABLE_NAME + " (profileId, profileOwnerId, profileContent, showMail," +
-            " showAddress, facebookLink, linkedInLink ) VALUES (?,?,?,?,?,?,?)";
+        final String SQL = "INSERT INTO " + PROFILES_TABLE_NAME + " (profileId, profileOwnerId, profileContent, " +
+            "showMail," +
+            " showAddress, facebookLink, linkedInLink, phoneNumber ) VALUES (?,?,?,?,?,?,?,?)";
         template.update(SQL, profile.getId(), profile.getOwnerId(), profile.getContent(), profile.isShowMail(),
-            profile.isShowAddress(), profile.getFacebookLink(), profile.getLinkedInLink());
+            profile.isShowAddress(), profile.getFacebookLink(), profile.getLinkedInLink(), profile.getPhoneNumber());
       } catch (Exception e) {
         LOGGER.error(e);
       }
@@ -77,9 +79,25 @@ private static final Logger LOGGER = LogManager.getLogger(ProfilesDAO.class);
     }
   }
 
-  public void updateRecord(@Nonnull final Profile profile) {
-      final String SQL = "UPDATE " + PROFILES_TABLE_NAME + " SET profileOwnerId = ?, profileContent = ? WHERE " +
-          "profileId= ?;";
-      template.update(SQL, profile.getOwnerId(), profile.getContent(), profile.getId());
+  public void updateProfile(@Nonnull final Profile profile) {
+    asyncSaver.execute(() -> {
+      try {
+        String SQL = "UPDATE " + PROFILES_TABLE_NAME + " SET profileContent = ?, showMail = ?," +
+            "showAddress = ?, facebookLink = ?, linkedInLink = ?, phoneNumber = ?  WHERE " +
+            "profileId= ?";
+        template
+            .update(SQL, profile.getContent(), profile.isShowMail(), profile.isShowAddress(), profile.getFacebookLink(),
+                profile.getLinkedInLink(), profile.getPhoneNumber(), profile.getId());
+        SQL = "DELETE  FROM social_links  WHERE userId = ?";
+        template.update(SQL, profile.getOwnerId());
+        for (String socialLink : profile.getSocialMediaLinks()) {
+          SQL = "INSERT INTO  social_links (userId, value) VALUES (?,?)";
+          template.update(SQL, profile.getOwnerId(), socialLink);
+        }
+      } catch (Exception ex) {
+        LOGGER.error(ex);
+      }
+    });
+
   }
 }

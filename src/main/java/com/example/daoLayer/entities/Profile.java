@@ -17,8 +17,38 @@ public class Profile extends Entity {
   private boolean showAddress;
   private String facebookLink;
   private String linkedInLink;
+  private String phoneNumber;
   private List<String> socialMediaLinks;
   private List<Rate> rates;
+
+  public Profile() {
+    showMail = false;
+    showAddress = false;
+    socialMediaLinks = new ArrayList<>();
+    rates = new ArrayList<>();
+  }
+
+
+
+  public Profile(final String ownerId, final String content, final boolean showMail, final boolean showAddress,
+      final String facebookLink,
+      final String linkedInLink, final List<String> socialMediaLinks) {
+    this.ownerId = ownerId;
+    this.content = content;
+    this.showMail = showMail;
+    this.showAddress = showAddress;
+    this.facebookLink = facebookLink;
+    this.linkedInLink = linkedInLink;
+    this.socialMediaLinks = socialMediaLinks;
+  }
+
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
+
+  public void setPhoneNumber(final String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
 
   public List<Rate> getRates() {
     return rates;
@@ -65,27 +95,6 @@ public class Profile extends Entity {
   }
 
   public void setSocialMediaLinks(final List<String> socialMediaLinks) {
-    this.socialMediaLinks = socialMediaLinks;
-  }
-
-  public Profile() {
-    showMail = false;
-    showAddress = false;
-    socialMediaLinks = new ArrayList<>();
-    rates = new ArrayList<>();
-  }
-
-
-
-  public Profile(final String ownerId, final String content, final boolean showMail, final boolean showAddress,
-      final String facebookLink,
-      final String linkedInLink, final List<String> socialMediaLinks) {
-    this.ownerId = ownerId;
-    this.content = content;
-    this.showMail = showMail;
-    this.showAddress = showAddress;
-    this.facebookLink = facebookLink;
-    this.linkedInLink = linkedInLink;
     this.socialMediaLinks = socialMediaLinks;
   }
 

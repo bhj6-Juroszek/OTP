@@ -106,18 +106,36 @@
             <!-- /Sidebar -->
 
             <!-- Edit profile -->
-            <div class="col-md-8 maincontent container widget" ng-show="editingProfile">
+            <div class="col-md-8 maincontent container widget" ng-show="editingProfile" ng-controller="userProfileController">
                 Your profile content
-                <textarea class="form-control" style="min-height: 250px; "  ng-model="xxxx"></textarea><br>
+                <textarea class="form-control" style="min-height: 250px; "  ng-model="profile.content"></textarea><br>
                 Show email
-                <input class="form-control " type="checkbox" ng-model="xxx">
-                Show adress
-                <input class="form-control " type="checkbox" ng-model="xxx">
+                <input class="form-control " type="checkbox" ng-model="profile.showMail">
+                Show address
+                <input class="form-control " type="checkbox" ng-model="profile.showAddress">
                 Facebook fanpage:
-                <input type="text" name="Login" class="form-control"
-                       ng-model="loginChange" width="50">
-                Website links:
-                <input type="text" class="form-control" id="tokenfield" value="red,green,blue" />
+                <input type="text" name="Facebook" class="form-control"
+                       ng-model="profile.facebookLink" width="50">
+                Linkedin profile:
+                <input type="text" name="LinkedIn" class="form-control"
+                       ng-model="profile.linkedInLink" width="50"><br>
+                Phone number:
+                <input type="text" class="form-control" ng-change="test()"
+                       ng-model="profile.phoneNumber" maxlength="9" minlength="9">
+                <br>
+                New link:
+                <input type="text"  class="form-control"
+                       ng-model="newLink" width="50">
+                <br>
+                <button ng-click="pushNewSocialMediaLink(newLink)" class="btn primKey">Add website link</button>
+                <ul ng-show="profile.socialMediaLinks.length > 0">
+                    <li>Your links:</li>
+                    <li ng-repeat="link in profile.socialMediaLinks">{{link}} <button ng-click="removeLink(link)">X</button></li>
+                </ul>
+                <br>
+                <button ng-click="updateProfile()" class="btn primKey"
+                >Save changes
+                </button>
             </div>
             <!-- /Edit profile -->
 
@@ -154,7 +172,7 @@
             <div class="col-md-8 maincontent container" ng-show="trainingsTemplate"
                  ng-controller="trainingTemplateController">
                 Pick category<br>
-                <select class="selectpicker" ng-model="categorySelect" ng-change="setCurrentCategory()"
+                <select class="selectpicker form-control" ng-model="categorySelect" ng-change="setCurrentCategory()"
                         ng-options="category as category.fullName for category in templateCategories">
                 </select>
                 <div ng-show = "notTheoreticalCategory">
@@ -193,7 +211,7 @@
                         <div class="container">
                             <div class="row">
                                 <br>Select template for this training<br>
-                                <select class="selectpicker" ng-model="userTrainingSelect"
+                                <select class="selectpicker form-control" ng-model="userTrainingSelect"
                                         ng-options="userTraining as userTraining.description for userTraining in userTrainings">
                                 </select>
                             </div>
@@ -315,5 +333,6 @@
 <script src="scripts/settings/settingsController.js"></script>
 <script src="scripts/settings/trainingTemplateController.js"></script>
 <script src="scripts/settings/trainingInstanceController.js"></script>
+<script src="scripts/userProfile/userProfileScript.js"></script>
 </body>
 </html>
