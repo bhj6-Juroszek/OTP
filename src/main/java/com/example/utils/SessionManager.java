@@ -10,8 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-import static java.lang.System.*;
-import static java.util.concurrent.TimeUnit.*;
+import static java.lang.System.currentTimeMillis;
+import static java.util.concurrent.TimeUnit.MINUTES;
 
 @Component
 public class SessionManager {
@@ -19,12 +19,11 @@ public class SessionManager {
   public static final String DOMAIN_NAME = "localhost:8181/executable/frontend/";
   public static final String HOST_NAME = "localhost:8181/";
 
-  Map<String, UserContext> loggedUsers;
-  ScheduledExecutorService scheduler;
+  private Map<String, UserContext> loggedUsers;
 
   public SessionManager() {
     loggedUsers = new ConcurrentHashMap<>();
-    scheduler = new ScheduledThreadPoolExecutor(1);
+    final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
     scheduler.scheduleAtFixedRate(this::removeUnactiveSessions, 15, 15, MINUTES);
   }
 

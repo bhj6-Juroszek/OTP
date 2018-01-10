@@ -21,10 +21,10 @@ public class Reminder implements Runnable {
 
   @Override
   public void run() {
-//    Calendar c = Calendar.getInstance();
-//    c.setTime(new Date());
-//    c.add(Calendar.DATE, 1);
-//    java.sql.Date sqlDate = new java.sql.Date(c.getTime().getTime());
+//    final Calendar calendar = Calendar.getTrainingWithInstance();
+//    calendar.setTime(new Date());
+//    calendar.add(Calendar.DATE, 1);
+//    java.sql.Date sqlDate = new java.sql.Date(calendar.getTime().getTime());
 //    ArrayList<Training> trainings = DAOHandler.trainingsDAO.getTrainingsFromDate(sqlDate);
 //    for (Training t : trainings) {
 //      if (t.getTakenById() != -1) {
@@ -41,6 +41,7 @@ public class Reminder implements Runnable {
 //            String.format("Trainer data: %s. Contact: %s", t.getOwner().getName(), t.getOwner().getMail()));
 //      }
 //    }
-
+//
+//  }
   }
 }

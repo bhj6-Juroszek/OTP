@@ -38,9 +38,15 @@ public class TrainingManager {
     this.sessionManager = sessionManager;
   }
 
-  public ScheduleResponse resolveScheduleResponse(@Nonnull final ScheduleResponse scheduleResponse,
+  public ScheduleResponse resolveScheduleResponse(@Nonnull final String uuid, @Nonnull final ScheduleResponse scheduleResponse,
       @Nonnull final String trainerId, @Nonnull final Date date) {
-    scheduleResponse.setTrainings(getTrainerSchedule(trainerId, date));
+    final User loggedInUser = sessionManager.getLoggedUsers().get(uuid).getUser();
+    // If user asks for his own schedule we should show him all instances he owns and he reserved
+    if(loggedInUser.getId().equals(trainerId)) {
+      scheduleResponse.setTrainings(getFullUserSchedule(trainerId, date));
+    } else {
+      scheduleResponse.setTrainings(getTrainerSchedule(trainerId, date));
+    }
     scheduleResponse.setScheduleWeek(DateUtils.getWeekFromDate(date));
     return scheduleResponse;
   }
@@ -91,7 +97,7 @@ public class TrainingManager {
   }
 
   public boolean removeTrainingInstance(@Nonnull final User user, @Nonnull final String instanceId) {
-    List<Training> userTrainings = trainingsDAO.getTrainings(null, null, null, user.getId(), 0, 0, null);
+    List<Training> userTrainings = trainingsDAO.getTrainings(null, null, null, user.getId(), 0, 0, null, null);
     for (Training tr : userTrainings) {
       for (TrainingInstance trainingInstance : tr.getInstances()) {
         if (trainingInstance.getId().equals(instanceId)) {
@@ -113,16 +119,22 @@ public class TrainingManager {
     trainingsDAO.saveTrainingInstance(trainingInstance);
   }
 
-  public List<Training> getUserTrainings(@Nonnull final String uuid) {
+  public List<Training> getUserOwnedTrainings(@Nonnull final String uuid) {
     final User loggedUser = sessionManager.getLoggedUsers().get(uuid).getUser();
     return trainingsDAO.getTrainings(null, null, null,
-        loggedUser.getId(), 0, 0, null);
+        loggedUser.getId(), 0, 0, null, null);
+  }
+
+  public List<Training> getFullUserSchedule(@Nonnull final String userId, @Nonnull final Date date) {
+    final Date[] weekBoundaries = DateUtils.getWeekBoundariesFromDate(date);
+    return trainingsDAO.getTrainings(null, weekBoundaries[0], weekBoundaries[1],
+        userId, 0, 0, null, userId);
   }
 
   private List<Training> getTrainerSchedule(@Nonnull final String trainerId, @Nonnull final Date date) {
     final Date[] weekBoundaries = DateUtils.getWeekBoundariesFromDate(date);
     return trainingsDAO.getTrainings(null, weekBoundaries[0], weekBoundaries[1],
-        trainerId, 0, 0, null);
+        trainerId, 0, 0, null, null);
   }
 
   //  public boolean saveTraining(@Nonnull final Training training,@Nonnull final  Date date) {
@@ -163,7 +175,7 @@ public class TrainingManager {
     java.sql.Date sqlDateFirst = getSQLDate(getStartOfDay(dateFirst));
     java.sql.Date sqlDateLast = getSQLDate(getEndOfDay(dateLast));
     return trainingsDAO
-        .getTrainings(categoryId, null, null, null, maxPrice, range, city);
+        .getTrainings(categoryId, null, null, null, maxPrice, range, city, null);
   }
 
 }

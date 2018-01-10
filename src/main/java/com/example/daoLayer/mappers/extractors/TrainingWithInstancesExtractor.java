@@ -38,11 +38,12 @@ public class TrainingWithInstancesExtractor implements ResultSetExtractor<List<T
         return PLACEHOLDER;
       }));
     }
-    for (Map.Entry<TrainingInstance, Training> e : trainingInstancesMap.entrySet()) {
-      resultMap.computeIfPresent(e.getValue(), (key, value) -> {
-        key.getInstances().add(e.getKey());
-        return value;
-      });
+    for(Training training:resultMap.keySet()) {
+      for (Map.Entry<TrainingInstance, Training> entry : trainingInstancesMap.entrySet()) {
+        if(entry.getValue().equals(training)) {
+          training.getInstances().add(entry.getKey());
+        }
+      }
     }
     return new ArrayList<>(resultMap.keySet());
   }

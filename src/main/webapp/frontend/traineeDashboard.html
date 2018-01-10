@@ -71,77 +71,86 @@
             <aside class="col-md-4 sidebar sidebar-left container text-center">
                 <div class="sidenav">
                     <div class="btn-group-vertical">
-                        <button ng-click="editProfile()" class=" categoriesb">Edit Profile
+                        <button ng-click="upcomingTrainings()" class=" categoriesb">Upcoming trainings
                         </button>
-                        <button ng-click="accountDetails()" class=" categoriesb">Change account details
+                        <button ng-click="rateYourTrainer()" class=" categoriesb">Rate trainer
+                        </button>
+                        <button ng-click="materials()" class=" categoriesb">Materials
                         </button>
                     </div>
                 </div>
             </aside>
             <!-- /Sidebar -->
 
-            <!-- Edit profile -->
-            <div class="col-md-8 maincontent container widget" ng-show="editingProfile" ng-controller="userProfileController">
-                Your profile content
-                <textarea class="form-control" style="min-height: 250px; "  ng-model="profile.content"></textarea><br>
-                Show email
-                <input class="form-control " type="checkbox" ng-model="profile.showMail">
-                Show address
-                <input class="form-control " type="checkbox" ng-model="profile.showAddress">
-                Facebook fanpage:
-                <input type="text" name="Facebook" class="form-control"
-                       ng-model="profile.facebookLink" width="50">
-                Linkedin profile:
-                <input type="text" name="LinkedIn" class="form-control"
-                       ng-model="profile.linkedInLink" width="50"><br>
-                Phone number:
-                <input type="text" class="form-control" ng-change="test()"
-                       ng-model="profile.phoneNumber" maxlength="9" minlength="9">
-                <br>
-                New link:
-                <input type="text"  class="form-control"
-                       ng-model="newLink" width="50">
-                <br>
-                <button ng-click="pushNewSocialMediaLink(newLink)" class="btn primKey">Add website link</button>
-                <ul ng-show="profile.socialMediaLinks.length > 0">
-                    <li>Your links:</li>
-                    <li ng-repeat="link in profile.socialMediaLinks">{{link}} <button ng-click="removeLink(link)">X</button></li>
-                </ul>
-                <br>
-                <button ng-click="updateProfile()" class="btn primKey"
-                >Save changes
-                </button>
-            </div>
-            <!-- /Edit profile -->
 
-            <!-- DETAILS -->
-            <div class="col-md-8 maincontent container " ng-show="details">
-                First name:<br>
-                <div class="widget">
-                    <input type="text" name="Name" class="form-control"
-                           ng-model="userNameChange" width="50">
+            <!-- ADD TRAINING TEMPLATE -->
+            <div class="col-md-8 maincontent container" ng-show="trainingsTemplate"
+                 ng-controller="trainingTemplateController">
+                Pick category<br>
+                <select class="selectpicker form-control" ng-model="categorySelect" ng-change="setCurrentCategory()"
+                        ng-options="category as category.fullName for category in templateCategories">
+                </select>
+                <div ng-show = "notTheoreticalCategory">
+                    <br>
+                    Training place (leave empty if online)<br>
+                    <input type="text" name="Place" class="form-control"
+                           ng-model="place" width="50">
+                    <br>Group size<br>
+                    <input type="number" name="Capacity" class="form-control"
+                           ng-model="capacity" width="2" min="1">
                 </div>
-                Login:<br>
-                <div class="widget">
-                    <input type="text" name="Login" class="form-control"
-                           ng-model="loginChange" width="50">
+                <div ng-hide="notTheoreticalCategory">
+                    <br><br><br>
+                    <label>Theoretical categories doesn't have instances</label><br>
+                    <label>Since that they also doesn't have place and date. You can only add materials to it</label>
                 </div>
-                Password:<br>
-                <div class="widget">
-                    <input type="password" name="Password" class="form-control"
-                           ng-model="passwordChange" width="50">
-                </div>
-                Adress:<br>
-                <div class="widget">
-                    <input type="text" name="adressChange" class="form-control"
-                           ng-model="adressChange" width="50">
-                </div>
+                <br>Price [$]<br>
+                <input type="number" name="Price" class="form-control"
+                       ng-model="price" width="5" min="0.1">
+                <br>Description<br>
+                <input type="text" name="Description" class="form-control"
+                       ng-model="description" width="50" height="4" maxlength="25">
                 <br>
-                <button ng-click="changeDetailsSubmit()" class="btn primKey"
-                >Save changes
+                <button ng-click="saveTrainingTemplate()" class="btn primKey"
+                >Save
                 </button>
             </div>
-            <!-- /DETAILS -->
+
+            <!-- /ADD TRAINING TEMPLATE -->
+
+            <!-- ADD TRAINING INSTANCE -->
+            <div class="col-md-8 maincontent container" ng-show="addTrInstanceVisibility"
+                 ng-controller="trainingInstanceController">
+                <div ng-show="userTrainings.length > 0">
+                    <div class="widget">
+                        <div class="container">
+                            <div class="row">
+                                <br>Select template for this training<br>
+                                <select class="selectpicker form-control" ng-model="userTrainingSelect"
+                                        ng-options="userTraining as userTraining.description for userTraining in userTrainings">
+                                </select>
+                            </div>
+                            <div class="row">
+                                <br>Select date of training start<br>
+                                <input type="date" name="trday" ng-model="date" class="form-control">
+                                <br>Select time of training start<br>
+                                <input type="time" name="trtime" ng-model="hours" class="form-control">
+                                <br>Select training duration in hours<br>
+                                <input type="number" name="duration" class="form-control"
+                                       ng-model="duration" width="5" min="0.1">
+                            </div>
+                            <br>
+                            <button ng-click="saveTrainingInstance()" class="btn primKey"
+                            >Save
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /ADD TRAINING INSTANCE -->
+                </div>
+                <div ng-show="userTrainings.length === 0">
+                    <label>No trainings viable to add instance has been found!</label>
+                </div>
+            </div>
 
         </div>
     </div>
@@ -162,6 +171,8 @@
 <script src="scripts/common/userController.js"></script>
 <script src="scripts/common/logOutScript.js"></script>
 <script src="scripts/settings/settingsController.js"></script>
+<script src="scripts/settings/trainerDashboard/trainingTemplateController.js"></script>
+<script src="scripts/settings/trainerDashboard/trainingInstanceController.js"></script>
 <script src="scripts/userProfile/userProfileScript.js"></script>
 </body>
 </html>

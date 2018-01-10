@@ -10,17 +10,17 @@ import javax.annotation.Nonnull;
  * Created by Bartek on 2017-05-08.
  */
 @Component
-public class ClearTrainingsData implements Runnable {
+public class MoveTrainingsDataToHistoricalTable implements Runnable {
 
   private final TrainingsDAO trainingsDAO;
 
   @Autowired
-  public ClearTrainingsData(@Nonnull final TrainingsDAO trainingsDAO) {
+  public MoveTrainingsDataToHistoricalTable(@Nonnull final TrainingsDAO trainingsDAO) {
     this.trainingsDAO = trainingsDAO;
   }
 
   @Override
   public void run() {
-        trainingsDAO.clear(5);
+        trainingsDAO.moveToHistorical(1);
   }
 }

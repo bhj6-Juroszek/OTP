@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nonnull;
-
 import java.util.Date;
 
 import static com.example.utils.ResponseCode.NOT_AUTHENTICATED;
@@ -41,7 +40,7 @@ public class UserAccountController extends AuthenticatedController {
     final UserTrainingsResponse response = new UserTrainingsResponse();
     if (authenticate(uuid)) {
       response.setResponseCode(SUCCESS);
-      response.setUserTrainings(trainingManager.getUserTrainings(uuid));
+      response.setUserTrainings(trainingManager.getUserOwnedTrainings(uuid));
     } else {
       response.setResponseCode(NOT_AUTHENTICATED);
     }

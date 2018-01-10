@@ -40,32 +40,17 @@
                                                                    alt="Logo"></a>
                 </div>
                 <ul class="nav navbar-nav pull-left">
-                    <li ng-show="authData">
-                        <ul class="nav navbar-nav">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{userInfoText}} </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Favourites Snippets </a></li>
-                                    <li ng-click="logOut()" ng-app="myApp" ng-controller="logOutController">><a href="#">Sign
-                                        Out </a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><a href="settings.html">Account Settings </a></li>
-                    <li><a ng-click="goToScheduleAsOwner()"  href="#">Look at schedule </a></li>
                     <li class="active"><a href="index.html">Home</a></li>
+                    <li ng-show="authData"><a href="settings.html">Account Settings </a></li>
+                    <li ng-show="authData"><a href="#" ng-click="profile()">Profile</a></li>
+                    <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Your schedule</a></li>
+                    <li ng-show="authData"><a href="trainerDashboard.html"  href="#">Trainer Dashboard</a></li>
+                    <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Trainee Dashboard</a></li>
                     <li><a href="about.html">About</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="settings.html">Left Sidebar</a></li>
-                            <li class="active"><a href="sidebar-right.html">Right Sidebar</a></li>
-                        </ul>
-                    </li>
                     <li><a href="contact.html">Contact</a></li>
                     <li>
                         <a class="btn" ng-hide="authData" href="logIn.html" title="LOG IN">LOG IN</a></li>
+                    <li ng-show="authData" ng-click="logOut()"  ng-controller="logOutController"><a href="#">Sign Out </a></li>
                 </ul>
             </div>
         </div>
@@ -146,6 +131,14 @@
                         <br><br>
                         <li>
                             <button class="categoriesb">Visit profile</button>
+                        </li>
+                        <li ng-show="isOwnerOfView">
+                            Show trainings you own
+                            <input class="form-control " type="checkbox" ng-model="showOwned" ng-click = "visibilityChange()">
+                        </li>
+                        <li ng-show="isOwnerOfView">
+                            Show trainings you reserved
+                            <input class="form-control " type="checkbox" ng-model="showReserved" ng-click = "visibilityChange()">
                         </li>
                     </ul>
                 </div>

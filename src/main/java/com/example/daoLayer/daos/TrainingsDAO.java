@@ -55,6 +55,15 @@ public class TrainingsDAO extends DAO {
               " KEY(trainingsInsId));"
           );
     }
+    if (!tableExists(TRAININGS_INSTANCES_TABLE_NAME + "_historical")) {
+      template.execute
+          ("CREATE TABLE " + TRAININGS_INSTANCES_TABLE_NAME + "_historical" + " (trainingsInsId VARCHAR (50) NOT " +
+              "NULL, " +
+              "trainingInsDateStart DATETIME, trainingInsDateEnd DATETIME," +
+              " idTrainings VARCHAR (50), PRIMARY" +
+              " KEY(trainingsInsId));"
+          );
+    }
     if (tableExists(TRAININGS_RESERVATIONS_TABLE_NAME)) {
       return;
     }
@@ -68,7 +77,7 @@ public class TrainingsDAO extends DAO {
   }
 
   public List<Training> getTrainings(@Nullable String categoryId, @Nonnull final Date from, @Nonnull final Date to) {
-    return getTrainings(categoryId, from, to, null, 0.0, 0, null);
+    return getTrainings(categoryId, from, to, null, 0.0, 0, null, null);
   }
 
   public List<Training> getTrainings(final long categoryId, @Nonnull final Date from, @Nonnull final Date to,
@@ -76,22 +85,22 @@ public class TrainingsDAO extends DAO {
     return getTrainings(categoryId, from, to, 0.0);
   }
 
-  public List<Training> getTrainingsWithInstance(@Nonnull final String trainingId) {
-    return getTrainings(trainingId, null, null, null, null, 0, 0, null);
+  public List<Training> getTrainingWithInstance(@Nonnull final String instanceId) {
+    return getTrainings(instanceId, null, null, null, null, 0, 0, null, null);
   }
 
   public List<Training> getTrainings(@Nullable final String categoryId, @Nullable final Date fromDate,
       @Nullable final Date toDate,
       @Nullable final String trainerId, final double maxPrice, final int maxDistance,
-      @Nullable final Place placeAround) {
-    return getTrainings(null, categoryId, fromDate, toDate, trainerId, maxPrice, maxDistance, placeAround);
+      @Nullable final Place placeAround, @Nullable String traineeId) {
+    return getTrainings(null, categoryId, fromDate, toDate, trainerId, maxPrice, maxDistance, placeAround, traineeId);
   }
 
   private List<Training> getTrainings(@Nullable final String instanceId, @Nullable final String categoryId,
       @Nullable final Date fromDate,
       @Nullable final Date toDate,
       @Nullable final String trainerId, final double maxPrice, final int maxDistance,
-      @Nullable final Place placeAround) {
+      @Nullable final Place placeAround, @Nullable String traineeId) {
     final StringBuilder SQL = new StringBuilder();
     final MapSqlParameterSource parameterSource = new MapSqlParameterSource();
     SQL.append("SELECT * FROM " + TRAININGS_TABLE_NAME + " tr " +
@@ -105,7 +114,7 @@ public class TrainingsDAO extends DAO {
         " " +
         "imageUrl AS c_imageUrl FROM " + USERS_TABLE_NAME + ") usrsRes ON usrsRes.c_userId = trRes.customerId ");
     applyInstanceIdFilter(SQL, parameterSource, instanceId);
-    applyTrainerFilter(SQL, parameterSource, trainerId);
+    applyTrainerAndTraineeFilters(SQL, parameterSource, traineeId, trainerId);
     applyMaxPriceFilter(SQL, parameterSource, maxPrice);
     applyCategoryFilter(SQL, parameterSource, categoryId);
     applyDateFilter(SQL, parameterSource, fromDate, toDate);
@@ -123,14 +132,51 @@ public class TrainingsDAO extends DAO {
     }
   }
 
+  private void applyTrainerAndTraineeFilters(@Nonnull final StringBuilder builder,
+      @Nonnull final MapSqlParameterSource parameterSource, @Nullable final String traineeId, @Nullable final String trainerId) {
+    if(trainerId != null) {
+        resolveWhereOrAndQuery(builder);
+        if(traineeId != null) {
+          builder.append(" ( ");
+          applyTrainerFilter(builder, parameterSource, trainerId);
+          builder.append(" OR ");
+          applyTraineeFilter(builder, parameterSource, traineeId);
+          builder.append(" ) ");
+        } else {
+          applyTrainerFilter(builder, parameterSource, trainerId);
+        }
+    } else if( traineeId != null) {
+      resolveWhereOrAndQuery(builder);
+      applyTraineeFilter(builder, parameterSource, traineeId);
+    }
+  }
+
+  private void applyTraineeFilter(@Nonnull final StringBuilder builder,
+      @Nonnull final MapSqlParameterSource parameterSource, @Nullable final String traineeId) {
+    if(!(traineeId == null)) {
+      builder.append(" trRes.customerId = :traineeId ");
+      parameterSource.addValue("traineeId", traineeId, VARCHAR);
+    }
+  }
+
   private void applyDateFilter(@Nonnull final StringBuilder builder,
       @Nonnull final MapSqlParameterSource parameterSource, @Nullable final Date dateFrom,
       @Nullable final Date dateTo) {
-    if (dateFrom != null && dateTo != null) {
+    Date dateFromAndBeforeNow = dateFrom;
+    // id dateBefore is invalid, all old instances records should be moved to historical table
+    if (dateFrom != null && new Date().after(dateFrom)) {
+      dateFromAndBeforeNow = new Date();
+
       resolveWhereOrAndQuery(builder);
-      builder.append(" ( (trIns.trainingInsDateStart BETWEEN :fromDate AND :toDate) OR cats.theoretical = 1) ");
-      parameterSource.addValue("fromDate", dateFrom, TIMESTAMP)
-          .addValue("toDate", dateTo, TIMESTAMP);
+      builder.append(" ( (trIns.trainingInsDateStart >= :fromDate ");
+      parameterSource.addValue("fromDate", dateFromAndBeforeNow, TIMESTAMP);
+
+      if (dateTo != null) {
+        builder.append(" AND trIns.trainingInsDateStart <= :toDate) OR cats.theoretical = 1) ");
+        parameterSource.addValue("toDate", dateTo, TIMESTAMP);
+      } else {
+        builder.append(") OR cats.theoretical = 1) ");
+      }
     }
   }
 
@@ -146,7 +192,6 @@ public class TrainingsDAO extends DAO {
   private void applyTrainerFilter(@Nonnull final StringBuilder builder,
       @Nonnull final MapSqlParameterSource parameterSource, @Nullable final String trainerId) {
     if (trainerId != null) {
-      resolveWhereOrAndQuery(builder);
       builder.append(" usrs.userId = :trainerId ");
       parameterSource.addValue("trainerId", trainerId, VARCHAR);
     }
@@ -312,11 +357,14 @@ public class TrainingsDAO extends DAO {
     });
   }
 
-  public void clear(final int daysBefore) {
+  public void moveToHistorical(final int daysBefore) {
     asyncSaver.execute(() -> {
       final Date date = new Date();
       final java.sql.Date sqlDate = new java.sql.Date(date.getTime() - DAYS.toMillis(daysBefore));
-      final String SQL = "DELETE FROM " + TRAININGS_INSTANCES_TABLE_NAME + " WHERE trainingInsDateStart < ?";
+      String SQL = "INSERT INTO " + TRAININGS_INSTANCES_TABLE_NAME + "_historical" + " SELECT * FROM " +
+          TRAININGS_INSTANCES_TABLE_NAME + " WHERE trainingInsDateStart < ?";
+      template.update(SQL, sqlDate);
+      SQL = "DELETE FROM " + TRAININGS_INSTANCES_TABLE_NAME + " WHERE trainingInsDateStart < ?";
       template.update(SQL, sqlDate);
     });
   }
@@ -334,7 +382,7 @@ public class TrainingsDAO extends DAO {
 
   @Nullable
   public Training getTrainingByInstanceId(@Nonnull final String id) {
-    List<Training> trainings = getTrainingsWithInstance(id);
+    List<Training> trainings = getTrainingWithInstance(id);
     if (trainings.isEmpty() || trainings.size() > 1) {
       return null;
     }

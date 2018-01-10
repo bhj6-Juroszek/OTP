@@ -9,7 +9,12 @@ app.controller('initialScheduleController', function ($scope, userService, $http
     $scope.scheduleWeek = [];
     $scope.scheduleWeekHtml = [];
     $scope.scheduleTrainings = [];
+    $scope.scheduleTrainingsToShow = [];
     $scope.owner = false;
+    $scope.showOwned = true;
+    $scope.showReserved = false;
+
+    $scope.isOwnerOfView = userService.getScheduleViewData().owner.id === userService.getUserContext().user.id;
     var getParams = function (isInitial) {
         params = {
             "uuid": userService.getUUID(),
@@ -25,6 +30,8 @@ app.controller('initialScheduleController', function ($scope, userService, $http
                 }
                 if(scheduleInitialData.training !== undefined) {
                     $scope.toggleModal(scheduleInitialData.training);
+                    scheduleInitialData.training = undefined;
+                    userService.setScheduleViewData(scheduleInitialData);
                 }
             }
         }
@@ -41,9 +48,11 @@ app.controller('initialScheduleController', function ($scope, userService, $http
     };
 
     initializeModalData();
+    // Opens training window with correct parameters
     $scope.toggleModal = function (training) {
         $scope.pickedTraining = training;
         $scope.buttonClicked = training.description;
+        $scope.isOnline = training.place.name === 'online';
         var lat = training.place.lat;
         var lng = training.place.lng;
         var bookedBy = training.trainingReservations.length;
@@ -59,7 +68,7 @@ app.controller('initialScheduleController', function ($scope, userService, $http
         if(!$scope.owner && $scope.alreadyBooked) {
             $scope.modalFooter = "You have already booked this training";
         }
-        else if (bookedBy >= training.size) {
+        else if (!$scope.owner && bookedBy >= training.size) {
             $scope.modalFooter = "This training is already taken.";
             $scope.full = true;
         }
@@ -73,7 +82,7 @@ app.controller('initialScheduleController', function ($scope, userService, $http
 
     };
     getParams(true);
-
+// Request for all available trainings
     $scope.getSchedule = function () {
         getParams(false);
         $http({
@@ -117,35 +126,43 @@ app.controller('initialScheduleController', function ($scope, userService, $http
                     $scope.scheduleTrainings.push(trainingInstance);
                 }
             }
+            $scope.visibilityChange();
         }, function errorCallback() {
         });
 
     };
     $scope.getSchedule();
-
+// Sorts out training out of week range on schedule view
     $scope.getTrainingsFromDate = function (day) {
         var result = [];
-        for (var i = 0; i < $scope.scheduleTrainings.length; i++) {
-            var scheduleTraining = $scope.scheduleTrainings[i];
-            if (scheduleTraining.dateStart.getUTCDate() == day.day && (scheduleTraining.dateStart.getMonth() + 1) == day.month) {
+        for (var i = 0; i < $scope.scheduleTrainingsToShow.length; i++) {
+            var scheduleTraining = $scope.scheduleTrainingsToShow[i];
+            if (scheduleTraining.dateStart.getUTCDate() === day.day && (scheduleTraining.dateStart.getMonth() + 1) === day.month) {
                 result.push(scheduleTraining);
             }
         }
         return result;
     };
+    // Gives style to training button (placement, color)
     $scope.getTrainingStyle = function (training) {
         var topPercentage = (((training.dateStart.getHours() - 6) * 3600 + training.dateStart.getMinutes() * 60) * secondBasic) + halfHourBasic;
         var height = training.length * secondBasic;
         var topString = Math.round(topPercentage * 100) / 100 + "%";
         var heightString = Math.round(height * 100) / 100 + "%";
         var widthString = dayWidth + "%";
-        return {
+        var params =  {
             "position": 'absolute',
             "top": topString,
             "height": heightString,
             "width": widthString
         };
+        if(training.owner.id === userService.getUserContext().user.id) {
+            params.background = "var(--blues)";
+        }
+        return params;
+
     };
+    // Allows owner to delete his own training (instead of reserve button on training window)
     $scope.delete = function () {
         if ($scope.pickedTraining.trainingReservations.length !== 0) {
 
@@ -167,7 +184,33 @@ app.controller('initialScheduleController', function ($scope, userService, $http
             });
         }
     };
-
+// Checks if user already reserved training
+    var checkIfReserved = function (training) {
+        var loggedUser = userService.getUserContext().user;
+        for(var i = 0; i < training.trainingReservations.length; i++) {
+            var reservationToCheck = training.trainingReservations[i];
+            if(reservationToCheck.customer.id === loggedUser.id) {
+                return true
+            }
+        }
+        return false;
+    };
+// Checks for visibility flags
+    $scope.visibilityChange = function () {
+        var loggedUser = userService.getUserContext().user;
+        $scope.scheduleTrainingsToShow = [];
+        for (var i = 0; i < $scope.scheduleTrainings.length; i++) {
+            var scheduleTraining = $scope.scheduleTrainings[i];
+            if ($scope.showOwned && scheduleTraining.owner.id === loggedUser.id) {
+                $scope.scheduleTrainingsToShow.push(scheduleTraining);
+            } else if ($scope.showReserved && checkIfReserved(scheduleTraining)) {
+                $scope.scheduleTrainingsToShow.push(scheduleTraining);
+            } else if (!$scope.isOwnerOfView) {
+                $scope.scheduleTrainingsToShow.push(scheduleTraining);
+            }
+        }
+    };
+// Allows trainee to sign up for picked training (on training window)
     $scope.reserve = function () {
         if ($scope.pickedTraining.trainingReservations.length > $scope.pickedTraining.size) {
             $scope.showModal = false;
@@ -192,6 +235,7 @@ app.controller('initialScheduleController', function ($scope, userService, $http
             });
         }
     };
+    // Close Training window
     $scope.cancel = function () {
         $scope.showModal = false;
         initializeModalData();

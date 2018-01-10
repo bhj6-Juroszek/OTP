@@ -41,18 +41,12 @@
             </div>
             <ul class="nav navbar-nav pull-left">
                 <li class="active"><a href="index.html">Home</a></li>
-                <li ng-show="authData">
-                <li><a href="settings.html">Account Settings </a></li>
-                <li><a href="#" ng-click="profile()">Profile</a></li>
-                <li><a ng-click="goToScheduleAsOwner()"  href="#">Your schedule</a></li>
+                <li ng-show="authData"><a href="settings.html">Account Settings </a></li>
+                <li ng-show="authData"><a href="#" ng-click="profile()">Profile</a></li>
+                <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Your schedule</a></li>
+                <li ng-show="authData"><a href="trainerDashboard.html"  href="#">Trainer Dashboard</a></li>
+                <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Trainee Dashboard</a></li>
                 <li><a href="about.html">About</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="settings.html">Left Sidebar</a></li>
-                        <li class="active"><a href="sidebar-right.html">Right Sidebar</a></li>
-                    </ul>
-                </li>
                 <li><a href="contact.html">Contact</a></li>
                 <li>
                     <a class="btn" ng-hide="authData" href="logIn.html" title="LOG IN">LOG IN</a></li>
@@ -144,6 +138,7 @@
         <ul class="trainingsList col-sl-8" ng-show="trainingsFound.length > 0" >
             <li class="trainingItemMenu">
                 <label>Photo</label>
+                <label>Training</label>
                 <label>Name</label>
                 <label>Place</label>
                 <label>Price</label>
@@ -152,6 +147,7 @@
             <li class="trainingItem" ng-repeat="trainingFound in trainingsFoundOnPage" ng-click="goToSchedule(trainingFound)"><a>
                 <img src={{trainingFound.owner.imageUrl}}
                      alt="User image">
+                <label>{{trainingFound.description}}</label>
                 <label>{{trainingFound.owner.name}}</label>
                 <label>{{trainingFound.place.name}}</label>
                 <label>{{trainingFound.price}}</label>

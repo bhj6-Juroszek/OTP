@@ -28,46 +28,32 @@
 
 <body class="home">
 <div ng-app="myApp" ng-controller="userController">
+    <!--NAVBAR TOP-->
     <div class="navbar navbar-inverse navbar-fixed-top headroom">
         <div class="container">
-            <div class="navbar-header">
+            <div class="navbar-header pull-right">
                 <!-- Button for smallest screens -->
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span
                         class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button>
                 <a class="navbar-brand" href="index.html"><img src="assets/images/favicon.ico"
                                                                alt="Logo"></a>
             </div>
-            <ul class="nav navbar-nav pull-right">
+            <ul class="nav navbar-nav pull-left">
                 <li class="active"><a href="index.html">Home</a></li>
+                <li ng-show="authData"><a href="settings.html">Account Settings </a></li>
+                <li ng-show="authData"><a href="#" ng-click="profile()">Profile</a></li>
+                <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Your schedule</a></li>
+                <li ng-show="authData"><a href="trainerDashboard.html"  href="#">Trainer Dashboard</a></li>
+                <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Trainee Dashboard</a></li>
                 <li><a href="about.html">About</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">More Pages <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="settings.html">Left Sidebar</a></li>
-                        <li class="active"><a href="sidebar-right.html">Right Sidebar</a></li>
-                    </ul>
-                </li>
                 <li><a href="contact.html">Contact</a></li>
                 <li>
                     <a class="btn" ng-hide="authData" href="logIn.html" title="LOG IN">LOG IN</a></li>
-                <li ng-show="authData">
-                    <ul class="nav navbar-nav">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{userInfoText}} </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="settings.html">Account Settings </a></li>
-                                <li><a ng-click="goToScheduleAsOwner()" href="#">Look at schedule </a></li>
-                                <li><a href="#">Favourites Snippets </a></li>
-                                <li ng-click="logOut()" ng-app="myApp" ng-controller="logOutController">><a href="#">Sign
-                                    Out </a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
+                <li ng-show="authData" ng-click="logOut()"  ng-controller="logOutController"><a href="#">Sign Out </a></li>
             </ul>
         </div>
     </div>
-    <!-- /.navbar -->
+    <!--/NAVBAR TOP-->
 
     <!-- Header -->
     <header id="head">

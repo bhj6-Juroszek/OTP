@@ -14,7 +14,7 @@ html, body {
     height: 100%;
 }
 
-/* Removes the clear button from date inputs */
+/* Removes the moveToHistorical button from date inputs */
 input[type="date"]::-webkit-clear-button {
     display: none;
 }
@@ -647,6 +647,9 @@ select {
 }
 
 .trainingScheduleButton {
+    min-width: 50px;
+    max-width: 350px;
+    word-wrap: break-word;
     border-radius: 12%;
     border: solid #91c7a9 2px;
     color: var(--important);
@@ -740,6 +743,10 @@ select {
 }
 .headroom {
     background-color: var(--dark);
+}
+.btn{
+    white-space:normal !important;
+    word-wrap: break-word;
 }
 
 

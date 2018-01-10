@@ -31,7 +31,7 @@ public class ScheduleController extends AuthenticatedController {
     if (authenticate(uuid)) {
       response.setResponseCode(SUCCESS);
       final Date scheduleWeekDate = new Date(date);
-      return trainingManager.resolveScheduleResponse(response, trainerId, scheduleWeekDate);
+      return trainingManager.resolveScheduleResponse(uuid, response, trainerId, scheduleWeekDate);
     } else {
       response.setResponseCode(NOT_AUTHENTICATED);
     }

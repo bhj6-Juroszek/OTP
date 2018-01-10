@@ -18,12 +18,12 @@ import java.util.concurrent.TimeUnit;
 @WebListener
 public class BackgroundJobManager implements ServletContextListener {
 
-  private final ClearTrainingsData clearTrainingsData;
+  private final MoveTrainingsDataToHistoricalTable moveTrainingsDataToHistoricalTable;
   private final Reminder reminder;
 
   @Autowired
-  public BackgroundJobManager(@Nonnull final ClearTrainingsData clearTrainingsData, @Nonnull final Reminder reminder) {
-    this.clearTrainingsData = clearTrainingsData;
+  public BackgroundJobManager(@Nonnull final MoveTrainingsDataToHistoricalTable moveTrainingsDataToHistoricalTable, @Nonnull final Reminder reminder) {
+    this.moveTrainingsDataToHistoricalTable = moveTrainingsDataToHistoricalTable;
     this.reminder = reminder;
   }
 
@@ -32,7 +32,7 @@ public class BackgroundJobManager implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent event) {
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(clearTrainingsData, 0, 5, TimeUnit.DAYS);
+        scheduler.scheduleAtFixedRate(moveTrainingsDataToHistoricalTable, 0, 5, TimeUnit.DAYS);
         scheduler.scheduleAtFixedRate(reminder, 0, 1, TimeUnit.HOURS);
 
     }
