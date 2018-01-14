@@ -16,7 +16,7 @@ app.controller('editTrainingsController', function ($scope, $http, $window, user
     $scope.updateTemplate = function (trainingTemplate) {
         $http({
             method: 'POST',
-            url: userService.getHost() + '/updateTrainingTemplate',
+            url: userService.getHost() + 'updateTrainingTemplate',
             params: {"uuid": userService.getUUID(),
             priceForHour: trainingTemplate.price,
             description: trainingTemplate.description,

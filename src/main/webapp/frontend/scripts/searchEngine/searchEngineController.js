@@ -206,6 +206,7 @@ app.controller('searchEngineController', function ($scope, $http, $window, userS
                     trainingInstance.dateStartHumanForm = new Date(trainingInstance.dateStart);
                     trainingInstance.dateStartHumanForm = trainingInstance.dateStartHumanForm.toISOString().substring(0, 10) + " " + trainingInstance.dateStartHumanForm.toISOString().substring(11, 19);
                     trainingInstance.place = training.place;
+                    trainingInstance.category = training.category;
                     trainingInstance.owner = training.owner;
                     trainingInstance.price = training.price;
                     trainingInstance.size = training.capacity;

@@ -81,6 +81,16 @@ public class TrainingsService {
       trainingsDAO.updateTraining(loggedUser.getId(), price, description, details, trainingId);
   }
 
+  public List<Training> getUnconfirmedReservations(@Nonnull final String uuid) {
+    final User loggedUser = sessionManager.getLoggedUsers().get(uuid).getUser();
+    return trainingsDAO.getUnconfirmedReservations(loggedUser.getId());
+  }
+
+  public void confirmReservation(@Nonnull final String uuid, @Nonnull final String reservationId) {
+    final User loggedUser = sessionManager.getLoggedUsers().get(uuid).getUser();
+    trainingsDAO.confirmReservation(reservationId, loggedUser.getId());
+  }
+
   public int saveTrainingTemplate(@Nonnull final Training training, @Nonnull final String placeName,
       @Nonnull final String categoryId) {
     final Place place = jsonReader.getPlace(placeName);

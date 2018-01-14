@@ -63,7 +63,7 @@ app.controller('initialScheduleController', function ($scope, userService, $http
             }
         }
         $scope.modalTitle = training.description;
-        $scope.modalBody = bookedBy + "/" + training.size;
+        $scope.modalBody = "Already registered: "+bookedBy + "/" + training.size;
         $scope.trainingDetails = training.details;
         $scope.owner = training.owner.id === userService.getUserContext().user.id;
         if(!$scope.owner && $scope.alreadyBooked) {
@@ -80,6 +80,11 @@ app.controller('initialScheduleController', function ($scope, userService, $http
 
         $scope.mapSource = $sce.trustAsResourceUrl("http://maps.google.com/maps?q=" + lat + "," + lng + "&z=15&output=embed");
         $scope.showModal = true;
+
+        if(training.category.theoretical) {
+            $scope.mapSource = "";
+            $scope.modalBody = "This training is theoretical. It contains only raw materials for you to download";
+        }
 
     };
     getParams(true);
@@ -100,6 +105,7 @@ app.controller('initialScheduleController', function ($scope, userService, $http
                 for (var y = 0; y < trainingInstances.length; y++) {
                     var trainingInstance = trainingInstances[y];
                     trainingInstance.description = responseTraining.description;
+                    trainingInstance.category = responseTraining.category;
                     trainingInstance.details = responseTraining.details;
                     trainingInstance.capacity = responseTraining.capacity;
                     trainingInstance.place = responseTraining.place;
@@ -145,6 +151,11 @@ app.controller('initialScheduleController', function ($scope, userService, $http
         }
         return result;
     };
+
+    $scope.goToProfile = function () {
+        window.location.href = "userProfile.html?userId="+userService.getScheduleViewData().owner.id;
+    };
+
     // Gives style to training button (placement, color)
     $scope.getTrainingStyle = function (training) {
         var topPercentage = (((training.dateStart.getHours() - 6) * 3600 + training.dateStart.getMinutes() * 60) * secondBasic) + halfHourBasic;

@@ -1,9 +1,6 @@
 package com.example.daoLayer.mappers;
 
-import com.example.daoLayer.entities.Category;
-import com.example.daoLayer.entities.Place;
-import com.example.daoLayer.entities.Training;
-import com.example.daoLayer.entities.User;
+import com.example.daoLayer.entities.*;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -31,6 +28,11 @@ public class TrainingMapper implements RowMapper<Training> {
     result.setPlace(place);
     final Category category = categoryMapper.mapRow(rs, rowNum);
     result.setCategory(category);
+    if(category.getTheoretical()) {
+      final TrainingInstance trainingInstanceGeneric = new TrainingInstance();
+      trainingInstanceGeneric.setId(result.getId());
+      result.getInstances().add(trainingInstanceGeneric);
+    }
     final User owner = userMapper.mapRow(rs, rowNum);
     owner.setPassword(null).setLogin(null).setConfirmation(null);
     result.setOwner(owner);

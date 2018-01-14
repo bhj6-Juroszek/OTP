@@ -37,6 +37,9 @@ public class TrainingWithInstancesExtractor implements ResultSetExtractor<List<T
         });
         return PLACEHOLDER;
       }));
+      if(!trainingInstance.isPresent() && trainingReservation.isPresent()) {
+        training.getInstances().get(0).getTrainingReservations().add(trainingReservation.get());
+      }
     }
     for(Training training:resultMap.keySet()) {
       for (Map.Entry<TrainingInstance, Training> entry : trainingInstancesMap.entrySet()) {

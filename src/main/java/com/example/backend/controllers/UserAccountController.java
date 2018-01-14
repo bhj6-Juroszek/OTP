@@ -28,6 +28,7 @@ public class UserAccountController extends AuthenticatedController {
   private static final Logger LOGGER = LogManager.getLogger(UserAccountController.class);
   private UsersService usersService;
   private TrainingsService trainingsService;
+
   @RequestMapping(value = "/changeDetails", method = POST, consumes = "application/json")
   public @ResponseBody
   int changeDetails(@RequestParam("uuid") final String uuid, @RequestBody final User user) {
@@ -94,10 +95,35 @@ public class UserAccountController extends AuthenticatedController {
   }
 
   @RequestMapping(value = "/fileUpload", method = POST)
-  @ResponseBody public int continueFileUpload(final MultipartHttpServletRequest mRequest) {
+  @ResponseBody
+  public int fileUpload(final MultipartHttpServletRequest mRequest) {
     final String uuid = mRequest.getParameter("uuid");
     if (authenticate(uuid)) {
       return trainingsService.addMaterials(mRequest, uuid);
+    }
+    return NOT_AUTHENTICATED;
+  }
+
+  @RequestMapping(value = "/getUnconfirmedReservations", method = POST)
+  @ResponseBody
+  public TrainingsResponse getUnconfirmedReservatios(@RequestParam("uuid") @Nonnull final String uuid) {
+
+    final TrainingsResponse response = new TrainingsResponse();
+    response.setResponseCode(NOT_AUTHENTICATED);
+    if (authenticate(uuid)) {
+      response.setResponseCode(SUCCESS);
+      response.setUserTrainings(trainingsService.getUnconfirmedReservations(uuid));
+    }
+    return response;
+  }
+
+  @RequestMapping(value = "/confirmReservation", method = POST)
+  @ResponseBody
+  public int getUnconfirmedReservatios(@RequestParam("uuid") @Nonnull final String uuid,
+      @RequestParam("reservationId") @Nonnull final String reservationId) {
+    if (authenticate(uuid)) {
+     trainingsService.confirmReservation(uuid, reservationId);
+     return SUCCESS;
     }
     return NOT_AUTHENTICATED;
   }
