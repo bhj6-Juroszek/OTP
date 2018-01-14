@@ -322,37 +322,37 @@ img.pull-left {
 
 @media (min-width: 768px) {
     .trainingItem {
-        width: 550px
+        width: 750px
     }
 }
 
 @media (min-width: 992px) {
     .trainingItem {
-        width: 770px
+        width: 970px
     }
 }
 
 @media (min-width: 1200px) {
     .trainingItem {
-        width: 970px
+        width: 1170px
     }
 }
 
 @media (min-width: 768px) {
     .trainingItemMenu {
-        width: 550px
+        width: 750px
     }
 }
 
 @media (min-width: 992px) {
     .trainingItemMenu {
-        width: 770px
+        width: 970px
     }
 }
 
 @media (min-width: 1200px) {
     .trainingItemMenu {
-        width: 970px
+        width: 1170px
     }
 }
 
@@ -361,7 +361,7 @@ img.pull-left {
 }
 
 :root {
-    --important: #A92F41;
+    --important: gold;
     --dark: #252120;
     --blues: #91C7a9;
     --brownie: #848375;
@@ -461,6 +461,7 @@ ul {
     width: 100%;
     height: inherit 100%;
     background-color: var(--dark);
+    right: 99%;
 }
 
 .navbar-brand {
@@ -522,7 +523,7 @@ ul {
 .trainingsList img {
     width: 8%;
     height: 8%;
-    margin-right: 5%;
+    margin-right: 3%;
 }
 
 .trainingItemMenu {
@@ -536,7 +537,7 @@ ul {
 .trainingItemMenu label {
     margin-top: 50px;
     margin-bottom: 15px;
-    font-size: 25px;
+    font-size: 23px;
     color: #91c7a9;
 }
 
@@ -544,6 +545,10 @@ ul {
     margin-right: auto;
     margin-left: auto;
     margin-bottom: 5px;
+}
+.trainingItem label {
+    border-right: 1px var(--blues);
+    border-left: 1px var(--blues);
 }
 
 .trainingItem:hover {
@@ -652,7 +657,7 @@ select {
     word-wrap: break-word;
     border-radius: 12%;
     border: solid #91c7a9 2px;
-    color: var(--important);
+    color: var(--dark);
     background: var(--cream);
 }
 

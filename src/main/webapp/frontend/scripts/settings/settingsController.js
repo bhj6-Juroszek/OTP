@@ -16,11 +16,22 @@ app.controller('settingsController', function ($scope, $http, $window, userServi
     $scope.userTrainings = [];
     $scope.userTrainingsInstances = [];
     $scope.foundMatchingTrainings = false;
+    $scope.editingTrainings = false;
+    $scope.managingReservations = false;
+    $scope.managingMaterials = false;
 
 
     $scope.accountDetails = function () {
         hideEverything();
         $scope.details = true;
+    };
+    $scope.manageReservations = function () {
+        hideEverything();
+        $scope.managingReservations = true;
+    };
+    $scope.manageMaterials = function () {
+        hideEverything();
+        $scope.managingMaterials = true;
     };
     $scope.editProfile = function () {
         hideEverything();
@@ -33,6 +44,11 @@ app.controller('settingsController', function ($scope, $http, $window, userServi
     $scope.addTrainings = function () {
         hideEverything();
         $scope.addTrInstanceVisibility = true;
+    };
+
+    $scope.editTrainings = function () {
+        hideEverything();
+        $scope.editingTrainings = true;
     };
 
     $scope.changeDetailsSubmit = function () {
@@ -83,6 +99,10 @@ app.controller('settingsController', function ($scope, $http, $window, userServi
         $scope.addTrInstanceVisibility = false;
         $scope.schedule = false;
         $scope.editingProfile = false;
+        $scope.editingTrainings = false;
+        $scope.managingReservations = false;
+        $scope.managingMaterials = false;
+
     };
 
     var loadTrainings = function () {

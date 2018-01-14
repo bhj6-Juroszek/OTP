@@ -45,9 +45,9 @@
                 <li ng-show="authData"><a href="#" ng-click="profile()">Profile</a></li>
                 <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Your schedule</a></li>
                 <li ng-show="authData"><a href="trainerDashboard.html"  href="#">Trainer Dashboard</a></li>
-                <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Trainee Dashboard</a></li>
+                <li ng-show="authData"><a href="traineeDashboard.html"  href="#">Trainee Dashboard</a></li>
                 <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
+
                 <li>
                     <a class="btn" ng-hide="authData" href="logIn.html" title="LOG IN">LOG IN</a></li>
                 <li ng-show="authData" ng-click="logOut()"  ng-controller="logOutController"><a href="#">Sign Out </a></li>
@@ -62,7 +62,7 @@
 
         <!-- Header -->
         <header id="head">
-        <ul class="nav navbar-nav pull-right searcher ">
+        <ul class="nav navbar-nav searcher ">
             <li style="margin-right:15%;">
                 <div ><label></label></div>
             </li>
@@ -83,13 +83,11 @@
             <datalist id="countries">
                 <option data-ng-repeat="country in countriesList" value="{{country.countryName}}" ></option>
             </datalist></li>
-            </li>
             <li>Select city
                 <input type=text list=cities class="form-control" ng-model="selectedCity" ng-change="getCities()">
                 <datalist id="cities">
                     <option ng-repeat="city in citiesList" >{{city.name}}</option>
                 </datalist></li>
-            </li>
             <li>Distance from city
                 <select class="form-control" ng-model="distance">
                     <option ng-repeat="distance in distancesList" >{{distance.name}}</option>
@@ -135,22 +133,22 @@
         <!-- Categories bar end-->
 
         <!-- Trainings -->
-        <ul class="trainingsList col-sl-8" ng-show="trainingsFound.length > 0" >
+        <ul class="trainingsList" ng-show="trainingsFound.length > 0" >
             <li class="trainingItemMenu">
                 <label>Photo</label>
                 <label>Training</label>
-                <label>Name</label>
                 <label>Place</label>
-                <label>Price</label>
+                <label>Price for hour</label>
+                <label>Date</label>
                 <label>Rate</label>
             </li>
             <li class="trainingItem" ng-repeat="trainingFound in trainingsFoundOnPage" ng-click="goToSchedule(trainingFound)"><a>
                 <img src={{trainingFound.owner.imageUrl}}
                      alt="User image">
                 <label>{{trainingFound.description}}</label>
-                <label>{{trainingFound.owner.name}}</label>
                 <label>{{trainingFound.place.name}}</label>
                 <label>{{trainingFound.price}}</label>
+                <label>{{trainingFound.dateStartHumanForm}}</label><br>
                 <label>5 stars</label>
             </a> </li>
         </ul>

@@ -45,9 +45,9 @@
                     <li ng-show="authData"><a href="#" ng-click="profile()">Profile</a></li>
                     <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Your schedule</a></li>
                     <li ng-show="authData"><a href="trainerDashboard.html"  href="#">Trainer Dashboard</a></li>
-                    <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Trainee Dashboard</a></li>
+                    <li ng-show="authData"><a href="traineeDashboard.html"  href="#">Trainee Dashboard</a></li>
                     <li><a href="about.html">About</a></li>
-                    <li><a href="contact.html">Contact</a></li>
+
                     <li>
                         <a class="btn" ng-hide="authData" href="logIn.html" title="LOG IN">LOG IN</a></li>
                     <li ng-show="authData" ng-click="logOut()"  ng-controller="logOutController"><a href="#">Sign Out </a></li>
@@ -62,7 +62,7 @@
     <br>
     <br>
     <div ng-controller="initialScheduleController">
-        <modal visible="showModal"></modal>
+        <modal visible="showModal" style="min-width: 1000px; min-height: 1000px"></modal>
         <div class="cd-schedule loading" style="margin-left: 15%;">
             <div class="timeline settingsform" style="height: auto;">
 
@@ -110,7 +110,7 @@
                                 ng-repeat="training in getTrainingsFromDate(day)" ng-click="toggleModal(training)"
                                 ng-style="getTrainingStyle(training)">{{training.description}}<br>{{training.hoursStart}}:{{training.minutesStart}}-
                             {{training.hoursEnd}}:{{training.minutesEnd}}<br>
-                            Price: {{training.price}}
+                            Price for hour: {{training.price}}
                         </button>
                     </li>
 

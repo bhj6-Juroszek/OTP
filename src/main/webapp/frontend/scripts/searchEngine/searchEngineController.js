@@ -63,20 +63,20 @@ app.controller('searchEngineController', function ($scope, $http, $window, userS
 
     $scope.getPages = function () {
         var maxPages = Math.ceil($scope.trainingsFound.length / pagesOnView);
-        if(maxPages < 2) {
+        if (maxPages < 2) {
             $scope.pages = [];
             return;
         }
         var result = [];
         if ($scope.trainingsFound.length !== 0) {
-            if(maxPages > 3) {
+            if (maxPages > 3) {
                 result.push({
                     name: 'First',
                     value: 1
                 });
             }
             var i = $scope.currentPage;
-             if (i === maxPages) {
+            if (i === maxPages) {
                 i -= 2;
                 if (i < 1) {
                     i = 1;
@@ -85,13 +85,13 @@ app.controller('searchEngineController', function ($scope, $http, $window, userS
                 i -= 1;
             }
             var max = i + 3;
-            for (; i < max && i < maxPages +1; i++) {
+            for (; i < max && i < maxPages + 1; i++) {
                 result.push({
-                    name:  i,
+                    name: i,
                     value: i
                 });
             }
-            if(maxPages > 3) {
+            if (maxPages > 3) {
                 result.push({
                     name: 'Last',
                     value: maxPages
@@ -108,7 +108,7 @@ app.controller('searchEngineController', function ($scope, $http, $window, userS
     };
 
     var setTrainingsOnPage = function () {
-        var x = ($scope.currentPage-1) * pagesOnView;
+        var x = ($scope.currentPage - 1) * pagesOnView;
         var delimiter = x + pagesOnView;
         $scope.trainingsFoundOnPage = [];
         for (; x < delimiter && x < $scope.trainingsFound.length; x++) {
@@ -140,6 +140,9 @@ app.controller('searchEngineController', function ($scope, $http, $window, userS
         getCountries();
     };
     $scope.validateDate = function () {
+        if ($scope.dateFrom < new Date()) {
+            $scope.dateFrom = new Date();
+        }
         if ($scope.dateFrom > $scope.dateTo) {
             $scope.dateTo = $scope.dateFrom;
         }
@@ -173,7 +176,7 @@ app.controller('searchEngineController', function ($scope, $http, $window, userS
             }
         }
         var dist = 0;
-        for (var i = 0; i < $scope.distancesList.length; i++) {
+        for (i = 0; i < $scope.distancesList.length; i++) {
             if ($scope.distancesList[i].name === $scope.distance) {
                 dist = $scope.distancesList[i].value;
             }
@@ -199,6 +202,9 @@ app.controller('searchEngineController', function ($scope, $http, $window, userS
                 var trainingInstances = training.instances;
                 for (var y = 0; y < trainingInstances.length; y++) {
                     var trainingInstance = trainingInstances[y];
+
+                    trainingInstance.dateStartHumanForm = new Date(trainingInstance.dateStart);
+                    trainingInstance.dateStartHumanForm = trainingInstance.dateStartHumanForm.toISOString().substring(0, 10) + " " + trainingInstance.dateStartHumanForm.toISOString().substring(11, 19);
                     trainingInstance.place = training.place;
                     trainingInstance.owner = training.owner;
                     trainingInstance.price = training.price;
@@ -236,7 +242,7 @@ app.controller('searchEngineController', function ($scope, $http, $window, userS
     var initializeDistances = function () {
         var result = [];
         var zero = {
-            "name": "0",
+            "name": "Doesn't matter",
             "value": 0
         };
         var lessThan2 = {
@@ -255,6 +261,10 @@ app.controller('searchEngineController', function ($scope, $http, $window, userS
             "name": "<25 km",
             "value": 25
         };
+        var lessThan50 = {
+            "name": "<50 km",
+            "value": 50
+        };
         var lessThan100 = {
             "name": "<100 km",
             "value": 100
@@ -264,6 +274,7 @@ app.controller('searchEngineController', function ($scope, $http, $window, userS
         result.push(lessThan5);
         result.push(lessThan10);
         result.push(lessThan25);
+        result.push(lessThan50);
         result.push(lessThan100);
         return result;
     };

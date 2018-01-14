@@ -2,6 +2,8 @@ package com.example.daoLayer.daos;
 
 import com.example.daoLayer.AsyncDbSaver;
 import com.example.daoLayer.entities.Rate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +16,8 @@ import static com.example.daoLayer.DAOHelper.RATES_TABLE_NAME;
  */
 @Repository
 public class RatesDAO extends DAO {
+
+  private static final Logger LOGGER = LogManager.getLogger(RatesDAO.class);
 
   RatesDAO(@Nonnull final JdbcTemplate template, @Nonnull final AsyncDbSaver asyncDbSaver) {
     super(template, asyncDbSaver);
@@ -31,20 +35,21 @@ public class RatesDAO extends DAO {
         );
   }
 
-  public boolean saveToDB(@Nonnull final Rate rate) {
-    final String SQL = "INSERT INTO " + RATES_TABLE_NAME + " (rateId, rateComment, rateValue, ratedUserId, " +
-        "ratingUserId, rateDate) VALUES (?, ?, ?, ?," +
-        " ?)";
-    if (!exists(rate)) {
-      template.update(SQL, rate.getId(), rate.getComment(), rate.getValue(), rate.getToId(), rate.getFromId(),
-          rate.getDate());
-    } else {
-      return false;
+  public void saveToDB(@Nonnull final Rate rate) {
+    try {
+      asyncSaver.execute(() -> {
+        final String SQL = "INSERT INTO " + RATES_TABLE_NAME + " (rateId, rateComment, rateValue, ratedUserId, " +
+            "ratingUserId, rateDate) VALUES (?, ?, ?, ?," +
+            " ?, ?)";
+        template.update(SQL, rate.getId(), rate.getComment(), rate.getValue(), rate.getToId(), rate.getFromId(),
+            rate.getDate());
+      });
+    } catch (Exception e) {
+      LOGGER.error(e);
     }
-    return true;
   }
 
-  private boolean exists(@Nonnull final Rate rate) {
+  public boolean exists(@Nonnull final Rate rate) {
     final Integer cnt = template.queryForObject(
         "SELECT count(*) FROM " + RATES_TABLE_NAME + " WHERE ratedUserId = ? AND ratingUserId = ? ", Integer.class,
         rate.getToId(), rate.getFromId());

@@ -1,4 +1,4 @@
-package com.example.backend.helpers;
+package com.example.backend.services;
 
 import com.example.backend.contexts.UserContext;
 import com.example.backend.controllersEntities.responses.LoginResponse;
@@ -26,9 +26,9 @@ import static com.example.utils.SessionManager.HOST_NAME;
  * Created by Bartek on 2017-04-29.
  */
 @Service
-public class UserManager {
+public class UsersService {
 
-  private static final Logger LOGGER = LogManager.getLogger(UserManager.class);
+  private static final Logger LOGGER = LogManager.getLogger(UsersService.class);
   private final static String FROM = "OTP";
   private final static String SUBJECT = "Yor account registration";
   private final static String CONTENT_TEMPLATE = "Your account has been created. Click http://%sconfirm.html?id=%s to" +
@@ -39,7 +39,7 @@ public class UserManager {
   private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserManager(@Nonnull final UsersDAO usersDAO, @Nonnull final MailManager mailManager) {
+  public UsersService(@Nonnull final UsersDAO usersDAO, @Nonnull final MailManager mailManager) {
     this.usersDAO = usersDAO;
     this.mailManager = mailManager;
     this.passwordEncoder = new BCryptPasswordEncoder(12);

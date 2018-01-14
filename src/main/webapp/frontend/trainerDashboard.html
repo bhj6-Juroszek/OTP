@@ -44,9 +44,9 @@
                 <li ng-show="authData"><a href="#" ng-click="profile()">Profile</a></li>
                 <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Your schedule</a></li>
                 <li ng-show="authData"><a href="trainerDashboard.html"  href="#">Trainer Dashboard</a></li>
-                <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Trainee Dashboard</a></li>
+                <li ng-show="authData"><a href="traineeDashboard.html"  href="#">Trainee Dashboard</a></li>
                 <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
+
                 <li>
                     <a class="btn" ng-hide="authData" href="logIn.html" title="LOG IN">LOG IN</a></li>
                 <li ng-show="authData" ng-click="logOut()"  ng-controller="logOutController"><a href="#">Sign Out </a></li>
@@ -77,6 +77,10 @@
                         </button>
                         <button ng-click="addTrainings()" class=" categoriesb">Add trainings
                         </button>
+                        <button ng-click="manageReservations()" class=" categoriesb">Manage reservations
+                        </button>
+                        <button ng-click="manageMaterials()" class=" categoriesb">Manage materials
+                        </button>
                     </div>
                 </div>
             </aside>
@@ -104,12 +108,16 @@
                     <label>Theoretical categories doesn't have instances</label><br>
                     <label>Since that they also doesn't have place and date. You can only add materials to it</label>
                 </div>
-                <br>Price [$]<br>
+                <br>Price for hour<br>
                 <input type="number" name="Price" class="form-control"
                        ng-model="price" width="5" min="0.1">
                 <br>Description<br>
                 <input type="text" name="Description" class="form-control"
                        ng-model="description" width="50" height="4" maxlength="25">
+                <br>
+                <br>Details<br>
+                <input style="min-height: 250px;" type="text" name="Details" class="form-control"
+                       ng-model="details" width="50" height="4" maxlength="500">
                 <br>
                 <button ng-click="saveTrainingTemplate()" class="btn primKey"
                 >Save
@@ -117,6 +125,70 @@
             </div>
 
             <!-- /ADD TRAINING TEMPLATE -->
+
+
+
+            <!-- Edit Trainings -->
+            <div class="col-md-8 maincontent container" ng-show="editingTrainings"
+                 ng-controller="editTrainingsController">
+                <ul  ng-show="userTrainings.length > 0">
+                    <li ng-repeat="trainingFound in userTrainings">
+                        <div class="trainingItem" ng-click="setVisibleDetailsChange(trainingFound)">
+                            <label style="margin-right: 25px;">{{trainingFound.category.name}}</label>
+                            <label>{{trainingFound.description}}</label>
+                        </div>
+                        <div ng-show="trainingFound.visibility" style="min-width: 1000px;">
+                        <br>Price for hour<br>
+                        <input type="number" name="Price" class="form-control"
+                               ng-model="trainingFound.price" width="5" min="0.1">
+                        <br>Description<br>
+                        <input type="text" name="Description" class="form-control"
+                               ng-model="trainingFound.description" width="50" height="4" maxlength="25">
+                        <br>
+                        <br>Details<br>
+                        <textarea style="min-height: 250px;"  name="Details" class="form-control"
+                                  ng-model="trainingFound.details" width="50" height="4" maxlength="500"></textarea>
+                        <br>
+                        <button ng-show="trainingFound.visibility" ng-click="updateTemplate(trainingFound)"
+                                class="btn primKey"
+                        >Update training template
+                        </button>
+                        </div>
+                    </li>
+                </ul>
+                <label ng-show="userTrainings.length === 0">No trainings found</label>
+            </div>
+
+            <!-- /EDIT TRAININGS -->
+
+
+
+            <!-- Manage Materials -->
+            <div ng-show="managingMaterials" ng-controller="manageMaterialsController">
+                <div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-primary btn-file">
+                        Browse&hellip; <input type="file" id="file" single>
+                    </span>
+                </span>
+                    <ul ng-show="userTrainings.length > 0">
+                        <li><label style="color:var(--important)">Pick trainings to add materials to them</label></li>
+                        <li ng-repeat="trainingFound in userTrainings">
+                            <input style="max-width: 30px;" class="form-control " type="checkbox" ng-model="trainingFound.addFile">
+                            <label style="margin-right: 25px;">{{trainingFound.category.name}}</label>
+                            <label>{{trainingFound.description}}</label>
+                        </li>
+                    </ul>
+                    <br>
+                    <button ng-click="uploadMaterial()"
+                            class="btn primKey"
+                    >Add material to trainings
+                    </button>
+                </div>
+
+            </div>
+            <!-- /Manage Materials -->
+
 
             <!-- ADD TRAINING INSTANCE -->
             <div class="col-md-8 maincontent container" ng-show="addTrInstanceVisibility"
@@ -145,12 +217,13 @@
                             </button>
                         </div>
                     </div>
-                    <!-- /ADD TRAINING INSTANCE -->
+
                 </div>
                 <div ng-show="userTrainings.length === 0">
                     <label>No trainings viable to add instance has been found!</label>
                 </div>
             </div>
+            <!-- /ADD TRAINING INSTANCE -->
 
         </div>
     </div>
@@ -173,6 +246,10 @@
 <script src="scripts/settings/settingsController.js"></script>
 <script src="scripts/settings/trainerDashboard/trainingTemplateController.js"></script>
 <script src="scripts/settings/trainerDashboard/trainingInstanceController.js"></script>
+<script src="scripts/settings/trainerDashboard/editTrainingsController.js"></script>
 <script src="scripts/userProfile/userProfileScript.js"></script>
+<script src="scripts/settings/trainerDashboard/manageMaterialsController.js"></script>
+
 </body>
 </html>
+

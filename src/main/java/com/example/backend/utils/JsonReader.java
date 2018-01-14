@@ -1,4 +1,4 @@
-package com.example.backend.helpers;
+package com.example.backend.utils;
 
 import com.example.daoLayer.entities.Place;
 import org.apache.commons.lang3.StringUtils;
@@ -48,7 +48,7 @@ public class JsonReader {
     return x * PI / 180;
   }
 
-  Place getPlace(@Nonnull final String placeName) throws JSONException {
+  public Place getPlace(@Nonnull final String placeName) throws JSONException {
     final Place result = new Place();
     if (placeName.equals("") || placeName.equalsIgnoreCase("online")) {
       result.setName("online");

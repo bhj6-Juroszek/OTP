@@ -45,7 +45,7 @@ app.controller("userProfileController", function ($scope, $http, userService) {
             if ($scope.rates.length > 0) {
                 var sum = 0;
                 for (var i = 0; i < $scope.rates.length; i++) {
-                    sum += $scope.rates.rateValue;
+                    sum += $scope.rates[i].value;
                 }
                 $scope.generalRate = Math.round(sum / $scope.rates.length);
             }

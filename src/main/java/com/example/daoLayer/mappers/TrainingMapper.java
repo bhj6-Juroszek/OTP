@@ -22,6 +22,7 @@ public class TrainingMapper implements RowMapper<Training> {
     result.setDescription(rs.getString("description"));
     result.setPrice(rs.getDouble("price"));
     result.setCapacity(rs.getInt("capacity"));
+    result.setDetails(rs.getString("details"));
 
     final Place place = new Place();
     place.setName(rs.getString("place"));

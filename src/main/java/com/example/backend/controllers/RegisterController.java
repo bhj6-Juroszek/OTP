@@ -1,31 +1,33 @@
 package com.example.backend.controllers;
 
 import com.example.backend.controllersEntities.requests.RegisterRequest;
-import com.example.backend.helpers.UserManager;
+import com.example.backend.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @CrossOrigin
 @Controller
 @RequestMapping("/")
 public class RegisterController {
 
-  private UserManager userManager;
+  private UsersService usersService;
 
   @RequestMapping(value = "/register", method = POST, consumes = "application/json")
   public @ResponseBody
   int register(@RequestBody RegisterRequest request) {
-    final String mail = request.getEmail();
-    final String password = request.getPassword();
-    return userManager.register(mail, password);
+
+    return usersService.register(request.getEmail(), request.getPassword());
   }
 
   @Autowired
-  public void setUserManager(final UserManager userManager) {
-    this.userManager = userManager;
+  public void setUsersService(final UsersService usersService) {
+    this.usersService = usersService;
   }
 
 }

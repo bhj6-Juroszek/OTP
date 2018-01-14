@@ -1,6 +1,6 @@
 package com.example.backend.controllers;
 
-import com.example.backend.helpers.PasswordReminder;
+import com.example.backend.services.PasswordReminderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,18 +19,18 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping("/")
 public class RemindPasswordController {
 
-  private final PasswordReminder passwordReminder;
+  private final PasswordReminderService passwordReminderService;
 
   @RequestMapping(value = "/resetPassword", method = GET)
   public ResponseEntity<String> remindPassword(@RequestParam("mail") final String mail) {
-    if (passwordReminder.changePassword(mail)) {
+    if (passwordReminderService.changePassword(mail)) {
       return new ResponseEntity<>(OK);
     }
     return new ResponseEntity<>(UNAUTHORIZED);
   }
 
   @Autowired
-  public RemindPasswordController(@Nonnull final PasswordReminder passwordReminder) {
-    this.passwordReminder = passwordReminder;
+  public RemindPasswordController(@Nonnull final PasswordReminderService passwordReminderService) {
+    this.passwordReminderService = passwordReminderService;
   }
 }

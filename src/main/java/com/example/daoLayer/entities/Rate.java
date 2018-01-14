@@ -2,7 +2,7 @@ package com.example.daoLayer.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Created by Bartek on 2017-03-10.

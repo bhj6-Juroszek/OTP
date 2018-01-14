@@ -1,9 +1,9 @@
 package com.example.backend.controllers;
 
 import com.example.backend.controllersEntities.requests.BookingRequest;
-import com.example.backend.controllersEntities.responses.ResponseWithCode;
+import com.example.backend.controllersEntities.responses.BookingResponse;
 import com.example.backend.controllersEntities.responses.ScheduleResponse;
-import com.example.backend.helpers.TrainingManager;
+import com.example.backend.services.TrainingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Nonnull;
 import java.util.Date;
 
-import static com.example.backend.utils.ResponseUtils.prepareNotAuthenticatedResponse;
 import static com.example.utils.ResponseCode.NOT_AUTHENTICATED;
 import static com.example.utils.ResponseCode.SUCCESS;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -21,7 +20,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping("/schedule")
 public class ScheduleController extends AuthenticatedController {
 
-  private TrainingManager trainingManager;
+  private TrainingsService trainingsService;
 
   @RequestMapping(value = "/getUserSchedule", method = GET)
   public @ResponseBody
@@ -31,7 +30,7 @@ public class ScheduleController extends AuthenticatedController {
     if (authenticate(uuid)) {
       response.setResponseCode(SUCCESS);
       final Date scheduleWeekDate = new Date(date);
-      return trainingManager.resolveScheduleResponse(uuid, response, trainerId, scheduleWeekDate);
+      return trainingsService.resolveScheduleResponse(uuid, response, trainerId, scheduleWeekDate);
     } else {
       response.setResponseCode(NOT_AUTHENTICATED);
     }
@@ -43,22 +42,24 @@ public class ScheduleController extends AuthenticatedController {
   boolean removeTrainingInstance(@RequestParam("uuid") final String uuid,
       @RequestParam("instanceId") final String instanceId) {
     if (authenticate(uuid)) {
-      return trainingManager.removeTrainingInstance(manager.getLoggedUsers().get(uuid).getUser(), instanceId);
+      return trainingsService.removeTrainingInstance(manager.getLoggedUsers().get(uuid).getUser(), instanceId);
     }
     return false;
   }
 
   @RequestMapping(value = "/bookTraining", method = POST)
   public @ResponseBody
-  ResponseWithCode bookTraining(@RequestBody BookingRequest bookingRequest) {
+  BookingResponse bookTraining(@RequestBody BookingRequest bookingRequest) {
     if (authenticate(bookingRequest.getUuid())) {
-      return trainingManager.bookTraining(bookingRequest);
+      return trainingsService.bookTraining(bookingRequest);
     }
-    return prepareNotAuthenticatedResponse();
+    final BookingResponse response = new BookingResponse();
+    response.setResponseCode(NOT_AUTHENTICATED);
+    return response;
   }
 
   @Autowired
-  public void setTrainingManager(@Nonnull final TrainingManager trainingManager) {
-    this.trainingManager = trainingManager;
+  public void setTrainingsService(@Nonnull final TrainingsService trainingsService) {
+    this.trainingsService = trainingsService;
   }
 }

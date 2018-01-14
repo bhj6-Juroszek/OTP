@@ -1,7 +1,7 @@
 package com.example.backend.controllers;
 
+import com.example.backend.services.CategoriesService;
 import com.example.daoLayer.entities.Category;
-import com.example.backend.helpers.CategoriesManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,16 +18,16 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RequestMapping("/")
 public class CategoriesController {
 
-  private CategoriesManager categoriesManager;
+  private CategoriesService categoriesService;
 
   @RequestMapping(value = "/categoryList", method = GET)
   public @ResponseBody
   List<Category> getCategories() {
-    return categoriesManager.getCategories();
+    return categoriesService.getCategories();
   }
 
   @Autowired
-  public void setCategoriesManager(@Nonnull final CategoriesManager categoriesManager) {
-    this.categoriesManager = categoriesManager;
+  public void setCategoriesService(@Nonnull final CategoriesService categoriesService) {
+    this.categoriesService = categoriesService;
   }
 }

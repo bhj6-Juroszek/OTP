@@ -1,4 +1,4 @@
-package com.example.backend.helpers;
+package com.example.backend.services;
 
 import com.example.daoLayer.daos.UsersDAO;
 import com.example.daoLayer.entities.User;
@@ -15,14 +15,14 @@ import java.util.Random;
  * Created by Bartek on 2017-03-09.
  */
 @Service
-public class PasswordReminder {
+public class PasswordReminderService {
 
   private static final int NUMBER_OF_LETTERS = 15;
   private final MailManager sender;
   private final UsersDAO customersRep;
 
   @Autowired
-  public PasswordReminder(@Nonnull final MailManager sender, @Nonnull final UsersDAO customersRep) {
+  public PasswordReminderService(@Nonnull final MailManager sender, @Nonnull final UsersDAO customersRep) {
     this.sender = sender;
     this.customersRep = customersRep;
   }

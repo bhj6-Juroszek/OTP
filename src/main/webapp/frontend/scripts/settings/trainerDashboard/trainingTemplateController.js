@@ -3,6 +3,7 @@ app.controller('trainingTemplateController', function ($scope, $http, $window, u
     $scope.place = "";
     $scope.price = 0.0;
     $scope.description = "";
+    $scope.trainingDetails = "";
     $scope.capacity = 1;
     $scope.categorySelect = $scope.templateCategories[0];
 
@@ -33,6 +34,7 @@ app.controller('trainingTemplateController', function ($scope, $http, $window, u
                     "categoryId": $scope.categorySelect.id,
                     "price": $scope.price,
                     "description": $scope.description,
+                    "details": $scope.trainingDetails,
                     "capacity": $scope.capacity
                 },
                 headers: {'Content-Type': 'application/json'}

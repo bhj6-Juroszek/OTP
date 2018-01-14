@@ -1,9 +1,9 @@
-package com.example.backend.helpers;
+package com.example.backend.services;
 
 import com.example.daoLayer.daos.ProfilesDAO;
 import com.example.daoLayer.entities.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -12,8 +12,8 @@ import java.util.Objects;
 /**
  * Created by Bartek on 2017-03-10.
  */
-@Component
-public class ProfilesManager {
+@Service
+public class ProfilesService {
 
   private ProfilesDAO profilesDAO;
 

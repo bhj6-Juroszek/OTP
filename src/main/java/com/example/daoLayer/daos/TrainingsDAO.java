@@ -1,6 +1,6 @@
 package com.example.daoLayer.daos;
 
-import com.example.backend.helpers.JsonReader;
+import com.example.backend.utils.JsonReader;
 import com.example.daoLayer.AsyncDbSaver;
 import com.example.daoLayer.entities.*;
 import com.example.daoLayer.mappers.TrainingInstanceMapper;
@@ -42,7 +42,7 @@ public class TrainingsDAO extends DAO {
           ("CREATE TABLE " + TRAININGS_TABLE_NAME + " (trainingsId VARCHAR (50) NOT NULL, category VARCHAR (50), " +
               "place " +
 
-              "VARCHAR(250), price DOUBLE, lat DOUBLE, lng DOUBLE, description VARCHAR(500), capacity INT, owner " +
+              "VARCHAR(250), price DOUBLE, lat DOUBLE, lng DOUBLE, description VARCHAR(100), details VARCHAR(500), capacity INT, owner " +
               "VARCHAR (50), PRIMARY" +
               " KEY(trainingsId)) COLLATE utf8_general_ci;"
           );
@@ -55,9 +55,9 @@ public class TrainingsDAO extends DAO {
               " KEY(trainingsInsId));"
           );
     }
-    if (!tableExists(TRAININGS_INSTANCES_TABLE_NAME + "_historical")) {
+    if (!tableExists(TRAININGS_INSTANCES_TABLE_NAME_HISTORICAL)) {
       template.execute
-          ("CREATE TABLE " + TRAININGS_INSTANCES_TABLE_NAME + "_historical" + " (trainingsInsId VARCHAR (50) NOT " +
+          ("CREATE TABLE " + TRAININGS_INSTANCES_TABLE_NAME_HISTORICAL + " (trainingsInsId VARCHAR (50) NOT " +
               "NULL, " +
               "trainingInsDateStart DATETIME, trainingInsDateEnd DATETIME," +
               " idTrainings VARCHAR (50), PRIMARY" +
@@ -94,6 +94,49 @@ public class TrainingsDAO extends DAO {
       @Nullable final String trainerId, final double maxPrice, final int maxDistance,
       @Nullable final Place placeAround, @Nullable String traineeId) {
     return getTrainings(null, categoryId, fromDate, toDate, trainerId, maxPrice, maxDistance, placeAround, traineeId);
+  }
+
+  public void addMaterialToTraining(@Nonnull final String trainingId, @Nonnull final String path, @Nonnull final String ownerId) {
+    asyncSaver.execute(() -> {
+      final String SQL = "INSERT INTO " + "materials" + " (path, ownerId, " +
+          "trainingId) VALUES " +
+          "(?, ?, ?) ";
+      template.update(SQL, path, ownerId, trainingId);
+    });
+  }
+
+  public List<Training> getUpcomingTrainings(@Nonnull final User user, @Nonnull final Date dateTo) {
+    final String SQL = "SELECT * FROM " + TRAININGS_TABLE_NAME + " tr " +
+        "INNER JOIN " + TRAININGS_INSTANCES_TABLE_NAME + " trIns ON tr.trainingsId = trIns.idTrainings " +
+        "INNER JOIN " + TRAININGS_RESERVATIONS_TABLE_NAME + " trRes ON trIns.trainingsInsId = trRes" +
+        ".idTrainingsIns " +
+        "INNER JOIN " + CATEGORIES_TABLE_NAME + " cats ON (tr.category = cats.categoryId OR tr.category = cats" +
+        ".categoryParent) " +
+
+        "INNER JOIN " + USERS_TABLE_NAME + " usrs ON tr.owner = usrs.userId " +
+        "INNER JOIN " + "(SELECT userId AS c_userId, userName AS c_userName, adress AS c_adress, mail AS c_mail, " +
+        "imageUrl AS c_imageUrl FROM " + USERS_TABLE_NAME + ") usrsRes ON usrsRes.c_userId = trRes.customerId WHERE " +
+        "c_userId = :userId " +
+        "AND trIns.trainingInsDateStart < :dateTo";
+    return parameterJdbcTemplate.query(SQL,
+        new MapSqlParameterSource().addValue("userId", user.getId(), VARCHAR).addValue("dateTo", dateTo, TIMESTAMP),
+        new TrainingWithInstancesExtractor());
+  }
+
+  public List<Training> getTrainingsToRate(@Nonnull final String userId) {
+    final String SQL = "SELECT * FROM " + TRAININGS_TABLE_NAME + " tr " +
+        "INNER JOIN " + TRAININGS_INSTANCES_TABLE_NAME_HISTORICAL + " trIns ON tr.trainingsId = trIns.idTrainings " +
+        "INNER JOIN " + TRAININGS_RESERVATIONS_TABLE_NAME + " trRes ON trIns.trainingsInsId = trRes" +
+        ".idTrainingsIns " +
+        "INNER JOIN " + CATEGORIES_TABLE_NAME + " cats ON (tr.category = cats.categoryId OR tr.category = cats" +
+        ".categoryParent) " +
+        "INNER JOIN " + USERS_TABLE_NAME + " usrs ON tr.owner = usrs.userId " +
+        "INNER JOIN " + "(SELECT userId AS c_userId, userName AS c_userName, adress AS c_adress, mail AS c_mail, " +
+        "imageUrl AS c_imageUrl FROM " + USERS_TABLE_NAME + ") usrsRes ON usrsRes.c_userId = trRes.customerId WHERE " +
+        "c_userId = :userId AND NOT EXISTS " +
+        "(SELECT * FROM " + RATES_TABLE_NAME + " WHERE ratedUserId = tr.owner AND ratingUserId = :userId )";
+    return parameterJdbcTemplate.query(SQL, new MapSqlParameterSource().addValue("userId", userId, VARCHAR),
+        new TrainingWithInstancesExtractor());
   }
 
   private List<Training> getTrainings(@Nullable final String instanceId, @Nullable final String categoryId,
@@ -133,19 +176,20 @@ public class TrainingsDAO extends DAO {
   }
 
   private void applyTrainerAndTraineeFilters(@Nonnull final StringBuilder builder,
-      @Nonnull final MapSqlParameterSource parameterSource, @Nullable final String traineeId, @Nullable final String trainerId) {
-    if(trainerId != null) {
-        resolveWhereOrAndQuery(builder);
-        if(traineeId != null) {
-          builder.append(" ( ");
-          applyTrainerFilter(builder, parameterSource, trainerId);
-          builder.append(" OR ");
-          applyTraineeFilter(builder, parameterSource, traineeId);
-          builder.append(" ) ");
-        } else {
-          applyTrainerFilter(builder, parameterSource, trainerId);
-        }
-    } else if( traineeId != null) {
+      @Nonnull final MapSqlParameterSource parameterSource, @Nullable final String traineeId,
+      @Nullable final String trainerId) {
+    if (trainerId != null) {
+      resolveWhereOrAndQuery(builder);
+      if (traineeId != null) {
+        builder.append(" ( ");
+        applyTrainerFilter(builder, parameterSource, trainerId);
+        builder.append(" OR ");
+        applyTraineeFilter(builder, parameterSource, traineeId);
+        builder.append(" ) ");
+      } else {
+        applyTrainerFilter(builder, parameterSource, trainerId);
+      }
+    } else if (traineeId != null) {
       resolveWhereOrAndQuery(builder);
       applyTraineeFilter(builder, parameterSource, traineeId);
     }
@@ -153,7 +197,7 @@ public class TrainingsDAO extends DAO {
 
   private void applyTraineeFilter(@Nonnull final StringBuilder builder,
       @Nonnull final MapSqlParameterSource parameterSource, @Nullable final String traineeId) {
-    if(!(traineeId == null)) {
+    if (!(traineeId == null)) {
       builder.append(" trRes.customerId = :traineeId ");
       parameterSource.addValue("traineeId", traineeId, VARCHAR);
     }
@@ -231,7 +275,7 @@ public class TrainingsDAO extends DAO {
       if (place != null && category != null && owner != null) {
         final String SQL = "INSERT INTO " + TRAININGS_TABLE_NAME + " (trainingsId, category, place, price, " +
             "lat, lng, " +
-            "description, capacity, owner) VALUES (:trainingsId, :category, :place, :price, :lat, :lng, :description," +
+            "description, details, capacity, owner) VALUES (:trainingsId, :category, :place, :price, :lat, :lng, :description, :details," +
             " " +
             ":capacity, :owner) ";
         try {
@@ -242,6 +286,7 @@ public class TrainingsDAO extends DAO {
                   .addValue("lat", place.getLat(), DOUBLE)
                   .addValue("lng", place.getLng(), DOUBLE)
                   .addValue("description", training.getDescription(), VARCHAR)
+                  .addValue("details", training.getDetails(), VARCHAR)
                   .addValue("capacity", training.getCapacity(), NUMERIC)
                   .addValue("owner", owner.getId(), VARCHAR)
                   .addValue("category", category.getId(), VARCHAR));
@@ -299,6 +344,13 @@ public class TrainingsDAO extends DAO {
       }
     }
     return null;
+  }
+
+  public void updateTraining(@Nonnull final String ownerId, final double price, @Nonnull final String description,
+      @Nonnull final String details, @Nonnull final String trainingId) {
+    final String SQL = "UPDATE " + TRAININGS_TABLE_NAME + " SET   price = ?, " +
+        "description = ?, details = ? WHERE trainingsId= ? AND owner = ?";
+    template.update(SQL, price, description, details, trainingId, ownerId );
   }
 
   public void updateTraining(@Nonnull final Training training) {
@@ -361,7 +413,7 @@ public class TrainingsDAO extends DAO {
     asyncSaver.execute(() -> {
       final Date date = new Date();
       final java.sql.Date sqlDate = new java.sql.Date(date.getTime() - DAYS.toMillis(daysBefore));
-      String SQL = "INSERT INTO " + TRAININGS_INSTANCES_TABLE_NAME + "_historical" + " SELECT * FROM " +
+      String SQL = "INSERT INTO " + TRAININGS_INSTANCES_TABLE_NAME_HISTORICAL + " SELECT * FROM " +
           TRAININGS_INSTANCES_TABLE_NAME + " WHERE trainingInsDateStart < ?";
       template.update(SQL, sqlDate);
       SQL = "DELETE FROM " + TRAININGS_INSTANCES_TABLE_NAME + " WHERE trainingInsDateStart < ?";

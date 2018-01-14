@@ -64,6 +64,7 @@ app.controller('initialScheduleController', function ($scope, userService, $http
         }
         $scope.modalTitle = training.description;
         $scope.modalBody = bookedBy + "/" + training.size;
+        $scope.trainingDetails = training.details;
         $scope.owner = training.owner.id === userService.getUserContext().user.id;
         if(!$scope.owner && $scope.alreadyBooked) {
             $scope.modalFooter = "You have already booked this training";
@@ -99,6 +100,7 @@ app.controller('initialScheduleController', function ($scope, userService, $http
                 for (var y = 0; y < trainingInstances.length; y++) {
                     var trainingInstance = trainingInstances[y];
                     trainingInstance.description = responseTraining.description;
+                    trainingInstance.details = responseTraining.details;
                     trainingInstance.capacity = responseTraining.capacity;
                     trainingInstance.place = responseTraining.place;
                     trainingInstance.price = responseTraining.price;

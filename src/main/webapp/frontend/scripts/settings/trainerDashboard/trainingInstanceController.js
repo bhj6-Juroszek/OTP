@@ -31,6 +31,7 @@ app.controller('trainingInstanceController', function ($scope, $http, $window, u
                     window.location.href = "settings.html";
                 } else {
                     setTimeout(function () {
+                        $.notify('Session expired', "warn");
                         window.location.href = userService.getMainAdress()
                     },1000);
                 }
@@ -38,6 +39,11 @@ app.controller('trainingInstanceController', function ($scope, $http, $window, u
             }, function errorCallback(response) {
                 $.notify('Could not connect to server. Please try again later', "error");
             });
+        } else {
+            setTimeout(function () {
+                $.notify('Session expired', "warn");
+                window.location.href = userService.getMainAdress()
+            },1000);
         }
     }
 });

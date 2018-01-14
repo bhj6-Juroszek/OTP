@@ -1,13 +1,16 @@
 package com.example.backend.controllers;
 
-import com.example.backend.controllersEntities.responses.UserTrainingsResponse;
-import com.example.backend.helpers.TrainingManager;
-import com.example.backend.helpers.UserManager;
+import com.example.backend.controllersEntities.responses.TrainingsResponse;
+import com.example.backend.services.TrainingsService;
+import com.example.backend.services.UsersService;
 import com.example.daoLayer.entities.Training;
 import com.example.daoLayer.entities.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Nonnull;
 import java.util.Date;
@@ -22,44 +25,58 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping("/")
 public class UserAccountController extends AuthenticatedController {
 
-  private UserManager userManager;
-  private TrainingManager trainingManager;
-
+  private static final Logger LOGGER = LogManager.getLogger(UserAccountController.class);
+  private UsersService usersService;
+  private TrainingsService trainingsService;
   @RequestMapping(value = "/changeDetails", method = POST, consumes = "application/json")
   public @ResponseBody
   int changeDetails(@RequestParam("uuid") final String uuid, @RequestBody final User user) {
     if (authenticate(uuid)) {
-      return userManager.updateDetails(user);
+      return usersService.updateDetails(user);
     }
     return NOT_AUTHENTICATED;
   }
 
   @RequestMapping(value = "/getUserTrainings", method = GET)
   public @ResponseBody
-  UserTrainingsResponse getUserTrainings(@RequestParam("uuid") final String uuid) {
-    final UserTrainingsResponse response = new UserTrainingsResponse();
+  TrainingsResponse getUserTrainings(@RequestParam("uuid") final String uuid) {
+    final TrainingsResponse response = new TrainingsResponse();
     if (authenticate(uuid)) {
       response.setResponseCode(SUCCESS);
-      response.setUserTrainings(trainingManager.getUserOwnedTrainings(uuid));
+      response.setUserTrainings(trainingsService.getUserOwnedTrainings(uuid));
     } else {
       response.setResponseCode(NOT_AUTHENTICATED);
     }
     return response;
   }
 
+  @RequestMapping(value = "/updateTrainingTemplate", method = POST)
+  public @ResponseBody
+  int updateTrainingTemplate(@RequestParam("uuid") final String uuid, @RequestParam("priceForHour") final double price,
+      @RequestParam("description") final String description, @RequestParam("details") final String details,
+      @RequestParam("trainingId") final String trainingId) {
+    if (authenticate(uuid)) {
+      trainingsService.updateTrainingTemplate(uuid, price, description, details, trainingId);
+      return SUCCESS;
+    }
+    return NOT_AUTHENTICATED;
+  }
+
   @RequestMapping(value = "/saveTrainingTemplate", method = POST)
   public @ResponseBody
   int saveTrainingTemplate(@RequestParam("uuid") final String uuid, @RequestParam("placeName") final String place,
       @RequestParam("categoryId") final String categoryId, @RequestParam("price") final Double price,
-      @RequestParam("description") final String description, @RequestParam("capacity") final int capacity) {
+      @RequestParam("description") final String description, @RequestParam("details") final String details,
+      @RequestParam("capacity") final int capacity) {
     if (authenticate(uuid)) {
       final User user = manager.getLoggedUsers().get(uuid).getUser();
       final Training training = new Training();
       training.setOwner(user);
+      training.setDetails(details);
       training.setPrice(price);
       training.setCapacity(capacity);
       training.setDescription(description);
-      return trainingManager.saveTrainingTemplate(training, place, categoryId);
+      return trainingsService.saveTrainingTemplate(training, place, categoryId);
     }
     return NOT_AUTHENTICATED;
   }
@@ -70,19 +87,28 @@ public class UserAccountController extends AuthenticatedController {
       @RequestParam("trainingTemplate") final String templateId, @RequestParam("duration") final double duration) {
     if (authenticate(uuid)) {
       final Date startDate = new Date(date);
-      trainingManager.saveTrainingInstance(templateId, startDate, duration);
+      trainingsService.saveTrainingInstance(templateId, startDate, duration);
       return SUCCESS;
     }
     return NOT_AUTHENTICATED;
   }
 
-  @Autowired
-  public void setUserManager(@Nonnull final UserManager userManager) {
-    this.userManager = userManager;
+  @RequestMapping(value = "/fileUpload", method = POST)
+  @ResponseBody public int continueFileUpload(final MultipartHttpServletRequest mRequest) {
+    final String uuid = mRequest.getParameter("uuid");
+    if (authenticate(uuid)) {
+      return trainingsService.addMaterials(mRequest, uuid);
+    }
+    return NOT_AUTHENTICATED;
   }
 
   @Autowired
-  public void setTrainingManager(@Nonnull final TrainingManager trainingManager) {
-    this.trainingManager = trainingManager;
+  public void setUsersService(@Nonnull final UsersService usersService) {
+    this.usersService = usersService;
+  }
+
+  @Autowired
+  public void setTrainingsService(@Nonnull final TrainingsService trainingsService) {
+    this.trainingsService = trainingsService;
   }
 }

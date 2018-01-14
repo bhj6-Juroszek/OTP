@@ -17,6 +17,7 @@ public class DAOHelper {
 
   public static final String TRAININGS_TABLE_NAME = "trainings";
   public static final String TRAININGS_INSTANCES_TABLE_NAME = "trainings_ins";
+  public static final String TRAININGS_INSTANCES_TABLE_NAME_HISTORICAL = "trainings_ins_historical";
   public static final String TRAININGS_RESERVATIONS_TABLE_NAME = "trainings_rev";
   public static final String CATEGORIES_TABLE_NAME = "categories";
   public static final String RATES_TABLE_NAME = "rates";

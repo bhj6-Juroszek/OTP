@@ -29,135 +29,119 @@
 <body>
 <div ng-app="myApp" ng-controller="userController" ng-init="init()" ng-show="authData">
     <!--NAVBAR TOP-->
-    <div class="navbar navbar-inverse navbar-fixed-top headroom">
-        <div class="container">
-            <div class="navbar-header pull-right">
-                <!-- Button for smallest screens -->
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span
-                        class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button>
-                <a class="navbar-brand" href="index.html"><img src="assets/images/favicon.ico"
-                                                               alt="Logo"></a>
+    <div ng-controller="traineeDashboardController">
+        <div class="navbar navbar-inverse navbar-fixed-top headroom">
+            <div class="container">
+                <div class="navbar-header pull-right">
+                    <!-- Button for smallest screens -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse"
+                            data-target=".navbar-collapse"><span
+                            class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="index.html"><img src="assets/images/favicon.ico"
+                                                                   alt="Logo"></a>
+                </div>
+                <ul class="nav navbar-nav pull-left">
+                    <li class="active"><a href="index.html">Home</a></li>
+                    <li ng-show="authData"><a href="settings.html">Account Settings </a></li>
+                    <li ng-show="authData"><a href="#" ng-click="profile()">Profile</a></li>
+                    <li ng-show="authData"><a ng-click="goToScheduleAsOwner()" href="#">Your schedule</a></li>
+                    <li ng-show="authData"><a href="trainerDashboard.html" href="#">Trainer Dashboard</a></li>
+                    <li ng-show="authData"><a href="traineeDashboard.html" href="#">Trainee Dashboard</a></li>
+                    <li><a href="about.html">About</a></li>
+
+                    <li>
+                        <a class="btn" ng-hide="authData" href="logIn.html" title="LOG IN">LOG IN</a></li>
+                    <li ng-show="authData" ng-click="logOut()" ng-controller="logOutController"><a href="#">Sign
+                        Out </a></li>
+                </ul>
             </div>
-            <ul class="nav navbar-nav pull-left">
-                <li class="active"><a href="index.html">Home</a></li>
-                <li ng-show="authData"><a href="settings.html">Account Settings </a></li>
-                <li ng-show="authData"><a href="#" ng-click="profile()">Profile</a></li>
-                <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Your schedule</a></li>
-                <li ng-show="authData"><a href="trainerDashboard.html"  href="#">Trainer Dashboard</a></li>
-                <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Trainee Dashboard</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li>
-                    <a class="btn" ng-hide="authData" href="logIn.html" title="LOG IN">LOG IN</a></li>
-                <li ng-show="authData" ng-click="logOut()"  ng-controller="logOutController"><a href="#">Sign Out </a></li>
-            </ul>
         </div>
-    </div>
-    <!--/NAVBAR TOP-->
+        <!--/NAVBAR TOP-->
 
-    <header id="head" class="secondary"></header>
+        <header id="head" class="secondary"></header>
 
-    <!-- container -->
-    <div class="container settingsform">
+        <!-- container -->
+        <div class="container settingsform">
 
-        <ol class="breadcrumb">
-            <li><a href="index.html">Home</a></li>
-            <li class="active">Settings</li>
-        </ol>
-
-
-        <div class="row" ng-controller="settingsController">
-            <!-- Sidebar -->
-            <aside class="col-md-4 sidebar sidebar-left container text-center">
-                <div class="sidenav">
-                    <div class="btn-group-vertical">
-                        <button ng-click="upcomingTrainings()" class=" categoriesb">Upcoming trainings
-                        </button>
-                        <button ng-click="rateYourTrainer()" class=" categoriesb">Rate trainer
-                        </button>
-                        <button ng-click="materials()" class=" categoriesb">Materials
-                        </button>
-                    </div>
-                </div>
-            </aside>
-            <!-- /Sidebar -->
+            <ol class="breadcrumb">
+                <li><a href="index.html">Home</a></li>
+                <li class="active">Settings</li>
+            </ol>
 
 
-            <!-- ADD TRAINING TEMPLATE -->
-            <div class="col-md-8 maincontent container" ng-show="trainingsTemplate"
-                 ng-controller="trainingTemplateController">
-                Pick category<br>
-                <select class="selectpicker form-control" ng-model="categorySelect" ng-change="setCurrentCategory()"
-                        ng-options="category as category.fullName for category in templateCategories">
-                </select>
-                <div ng-show = "notTheoreticalCategory">
-                    <br>
-                    Training place (leave empty if online)<br>
-                    <input type="text" name="Place" class="form-control"
-                           ng-model="place" width="50">
-                    <br>Group size<br>
-                    <input type="number" name="Capacity" class="form-control"
-                           ng-model="capacity" width="2" min="1">
-                </div>
-                <div ng-hide="notTheoreticalCategory">
-                    <br><br><br>
-                    <label>Theoretical categories doesn't have instances</label><br>
-                    <label>Since that they also doesn't have place and date. You can only add materials to it</label>
-                </div>
-                <br>Price [$]<br>
-                <input type="number" name="Price" class="form-control"
-                       ng-model="price" width="5" min="0.1">
-                <br>Description<br>
-                <input type="text" name="Description" class="form-control"
-                       ng-model="description" width="50" height="4" maxlength="25">
-                <br>
-                <button ng-click="saveTrainingTemplate()" class="btn primKey"
-                >Save
-                </button>
-            </div>
-
-            <!-- /ADD TRAINING TEMPLATE -->
-
-            <!-- ADD TRAINING INSTANCE -->
-            <div class="col-md-8 maincontent container" ng-show="addTrInstanceVisibility"
-                 ng-controller="trainingInstanceController">
-                <div ng-show="userTrainings.length > 0">
-                    <div class="widget">
-                        <div class="container">
-                            <div class="row">
-                                <br>Select template for this training<br>
-                                <select class="selectpicker form-control" ng-model="userTrainingSelect"
-                                        ng-options="userTraining as userTraining.description for userTraining in userTrainings">
-                                </select>
-                            </div>
-                            <div class="row">
-                                <br>Select date of training start<br>
-                                <input type="date" name="trday" ng-model="date" class="form-control">
-                                <br>Select time of training start<br>
-                                <input type="time" name="trtime" ng-model="hours" class="form-control">
-                                <br>Select training duration in hours<br>
-                                <input type="number" name="duration" class="form-control"
-                                       ng-model="duration" width="5" min="0.1">
-                            </div>
-                            <br>
-                            <button ng-click="saveTrainingInstance()" class="btn primKey"
-                            >Save
+            <div class="row">
+                <!-- Sidebar -->
+                <aside class="col-md-4 sidebar sidebar-left container text-center">
+                    <div class="sidenav">
+                        <div class="btn-group-vertical">
+                            <button ng-click="upcomingTrainings()" class=" categoriesb">Upcoming trainings
+                            </button>
+                            <button ng-click="rates()" class=" categoriesb">Rate trainer
+                            </button>
+                            <button ng-click="materials()" class=" categoriesb">Materials
                             </button>
                         </div>
                     </div>
-                    <!-- /ADD TRAINING INSTANCE -->
+                </aside>
+                <!-- /Sidebar -->
+
+
+                <!-- RATES -->
+                <div class="col-md-8 maincontent container" ng-show="ratesDashboardShow"
+                     ng-controller="ratesController as ratesCtrl">
+                    <ul class="trainingsList" ng-show="trainingsToRate.length > 0">
+                        <li ng-repeat="trainingFound in trainingsToRate">
+                            <div class="trainingItem" ng-click="setVisibleRateField(trainingFound)">
+                                <label>{{trainingFound.category.name}}</label>
+                                <label>{{trainingFound.description}}</label>
+                                <label>Trainer: {{trainingFound.owner.name}}</label>
+                            </div>
+                            <br><label ng-show="trainingFound.visibility">Rate (1-5)</label>
+                            <select ng-change ="setRate(selectedRate)" ng-show="trainingFound.visibility" class="form-control"
+                                    ng-model="selectedRate">
+                                <option ng-repeat="selectedRate in allowedRates">{{selectedRate.name}}</option>
+                            </select>
+                            <label ng-show="trainingFound.visibility">Comment:</label>
+                            <textarea ng-show="trainingFound.visibility" class="form-control"
+                                      style="min-height: 150px;min-width: 600px; "
+                                      ng-model="ratesCtrl.rateComment"></textarea><br>
+                            <button ng-show="trainingFound.visibility" ng-click="rate(trainingFound)"
+                                    class="btn primKey"
+                            >Send rate
+                            </button>
+                        </li>
+                    </ul>
+                    <label ng-show="trainingsToRate.length === 0">No trainings to rate</label>
                 </div>
-                <div ng-show="userTrainings.length === 0">
-                    <label>No trainings viable to add instance has been found!</label>
+
+                <!-- /RATES -->
+
+
+                <!-- UPCOMING TRAININGS -->
+                <div class="col-md-8 maincontent container" ng-show="upcomingTrainingsShow"
+                     ng-controller="upcomingTrainingsController">
+                    <ul class="trainingsList" ng-show="upcomingTrainings.length > 0">
+                        <li ng-repeat="trainingFound in upcomingTrainings">
+                            <div class="trainingItem" ng-click="setVisibleRateField(trainingFound)" ng-click="goToSchedule(trainingFound)">
+                                <label>{{trainingFound.category.name}}</label>
+                                <label>{{trainingFound.description}}</label>
+                                <label>Trainer: {{trainingFound.owner.name}}</label>
+                                <label>Start: {{trainingFound.dateStartHumanForm}}</label>
+                            </div>
+                        </li>
+                    </ul>
+                    <label ng-show="upcomingTrainings.length === 0">No trainings in this week</label>
                 </div>
+
+                <!-- /UPCOMING TRAININGS -->
+
+
             </div>
-
         </div>
+
     </div>
-
-
 </div>
-
 
 <!-- JavaScript libs are placed at the end of the document so the pages load faster -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -170,9 +154,9 @@
 <script src="assets/js/template.js"></script>
 <script src="scripts/common/userController.js"></script>
 <script src="scripts/common/logOutScript.js"></script>
-<script src="scripts/settings/settingsController.js"></script>
-<script src="scripts/settings/trainerDashboard/trainingTemplateController.js"></script>
-<script src="scripts/settings/trainerDashboard/trainingInstanceController.js"></script>
-<script src="scripts/userProfile/userProfileScript.js"></script>
+<script src="scripts/traineeDashboard/traineeDashboardController.js"></script>
+<script src="scripts/traineeDashboard/ratesController.js"></script>
+<script src="scripts/traineeDashboard/materialsController.js"></script>
+<script src="scripts/traineeDashboard/upcomingTrainingsController.js"></script>
 </body>
 </html>
