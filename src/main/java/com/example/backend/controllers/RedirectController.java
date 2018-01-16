@@ -22,7 +22,7 @@ import static com.example.utils.SessionManager.DOMAIN_NAME;
 public class RedirectController {
 
   private UsersService usersService;
-  private static final String REDIRECT = String.format("://%sindex.html", DOMAIN_NAME);
+  private static final String REDIRECT = String.format("://%sOTP.html", DOMAIN_NAME);
 
   @RequestMapping(value = "/confirm", method = RequestMethod.GET)
   public String processForm(@RequestParam("id") String token, HttpServletRequest request) {

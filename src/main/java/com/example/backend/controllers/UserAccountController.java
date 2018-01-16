@@ -94,6 +94,7 @@ public class UserAccountController extends AuthenticatedController {
     return NOT_AUTHENTICATED;
   }
 
+  @CrossOrigin
   @RequestMapping(value = "/fileUpload", method = POST)
   @ResponseBody
   public int fileUpload(final MultipartHttpServletRequest mRequest) {
@@ -104,9 +105,9 @@ public class UserAccountController extends AuthenticatedController {
     return NOT_AUTHENTICATED;
   }
 
-  @RequestMapping(value = "/getUnconfirmedReservations", method = POST)
+  @RequestMapping(value = "/getUnconfirmedReservations", method = GET)
   @ResponseBody
-  public TrainingsResponse getUnconfirmedReservatios(@RequestParam("uuid") @Nonnull final String uuid) {
+  public TrainingsResponse getUnconfirmedReservations(@RequestParam("uuid") @Nonnull final String uuid) {
 
     final TrainingsResponse response = new TrainingsResponse();
     response.setResponseCode(NOT_AUTHENTICATED);

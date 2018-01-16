@@ -4,6 +4,7 @@ import com.example.backend.utils.JsonReader;
 import com.example.daoLayer.AsyncDbSaver;
 import com.example.daoLayer.entities.*;
 import com.example.daoLayer.mappers.TrainingInstanceMapper;
+import com.example.daoLayer.mappers.extractors.MaterialsPathsExtractor;
 import com.example.daoLayer.mappers.extractors.TrainingWithInstancesExtractor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -89,6 +91,33 @@ public class TrainingsDAO extends DAO {
     return getTrainings(instanceId, null, null, null, null, 0, 0, null, null);
   }
 
+  public List<String> getMaterials(@Nonnull final String userId) {
+
+    final String SQL = "SELECT * FROM " + TRAININGS_TABLE_NAME + " tr " +
+        "LEFT OUTER JOIN " + TRAININGS_INSTANCES_TABLE_NAME + " trIns ON tr.trainingsId = trIns.idTrainings " +
+        "INNER JOIN " + TRAININGS_RESERVATIONS_TABLE_NAME + " trRes ON (trIns.trainingsInsId = trRes" +
+        ".idTrainingsIns  OR trIns.trainingsInsId = trRes.idTrainingsIns) " +
+        "INNER JOIN " + CATEGORIES_TABLE_NAME + " cats ON (tr.category = cats.categoryId OR tr.category = cats" +
+        ".categoryParent) " +
+
+        "INNER JOIN " + USERS_TABLE_NAME + " usrs ON tr.owner = usrs.userId " +
+        "INNER JOIN " + "(SELECT userId AS c_userId, userName AS c_userName, adress AS c_adress, mail AS c_mail, " +
+        "imageUrl AS c_imageUrl FROM " + USERS_TABLE_NAME + ") usrsRes ON usrsRes.c_userId = trRes.customerId WHERE " +
+        "c_userId = :userId AND EXISTS(SELECT * FROM reservationconfirmation WHERE reservationId = trRes.trainingsResId)";
+    final List<Training> trainingsReservedByUser = parameterJdbcTemplate.query(SQL,
+        new MapSqlParameterSource().addValue("userId", userId, VARCHAR),
+        new TrainingWithInstancesExtractor());
+    final List<String> materialsPaths = new ArrayList<>();
+    for(Training trainingReserved:trainingsReservedByUser) {
+      final String materialsSQL = "SELECT path FROM materials WHERE trainingId = :trainingId";
+      materialsPaths.addAll(parameterJdbcTemplate.query(materialsSQL,
+          new MapSqlParameterSource().addValue("trainingId", trainingReserved.getId(), VARCHAR),
+          new MaterialsPathsExtractor()));
+    }
+    return materialsPaths;
+
+  }
+
   public void confirmReservation(@Nonnull final String reservationId, @Nonnull final String trainerId) {
     asyncSaver.execute(() -> {
       final List<Training> ownerTrainings = getUnconfirmedReservations(trainerId);
@@ -96,7 +125,7 @@ public class TrainingsDAO extends DAO {
       for(Training training : ownerTrainings) {
         for(TrainingInstance trainingInstance:training.getInstances()) {
           for(TrainingReservation trainingReservation: trainingInstance.getTrainingReservations()) {
-            if(trainingReservation.equals(reservationId)) {
+            if(trainingReservation.getId().equals(reservationId)) {
               found = true;
               break;
             }
@@ -112,7 +141,7 @@ public class TrainingsDAO extends DAO {
 
   public List<Training> getUnconfirmedReservations(@Nonnull final String trainerId) {
     final String SQL = "SELECT * FROM " + TRAININGS_TABLE_NAME + " tr " +
-        "INNER JOIN " + TRAININGS_INSTANCES_TABLE_NAME + " trIns ON tr.trainingsId = trIns.idTrainings " +
+        "LEFT OUTER JOIN " + TRAININGS_INSTANCES_TABLE_NAME + " trIns ON tr.trainingsId = trIns.idTrainings " +
         "INNER JOIN " + TRAININGS_RESERVATIONS_TABLE_NAME + " trRes ON (trIns.trainingsInsId = trRes" +
         ".idTrainingsIns  OR trIns.trainingsInsId = trRes.idTrainingsIns) " +
         "INNER JOIN " + CATEGORIES_TABLE_NAME + " cats ON (tr.category = cats.categoryId OR tr.category = cats" +
@@ -145,7 +174,7 @@ public class TrainingsDAO extends DAO {
 
   public List<Training> getUpcomingTrainings(@Nonnull final User user, @Nonnull final Date dateTo) {
     final String SQL = "SELECT * FROM " + TRAININGS_TABLE_NAME + " tr " +
-        "INNER JOIN " + TRAININGS_INSTANCES_TABLE_NAME + " trIns ON tr.trainingsId = trIns.idTrainings " +
+        "LEFT OUTER JOIN " + TRAININGS_INSTANCES_TABLE_NAME + " trIns ON tr.trainingsId = trIns.idTrainings " +
         "INNER JOIN " + TRAININGS_RESERVATIONS_TABLE_NAME + " trRes ON (trIns.trainingsInsId = trRes" +
         ".idTrainingsIns  OR trIns.trainingsInsId = trRes.idTrainingsIns) " +
         "INNER JOIN " + CATEGORIES_TABLE_NAME + " cats ON (tr.category = cats.categoryId OR tr.category = cats" +
@@ -162,7 +191,7 @@ public class TrainingsDAO extends DAO {
 
   public List<Training> getTrainingsToRate(@Nonnull final String userId) {
     final String SQL = "SELECT * FROM " + TRAININGS_TABLE_NAME + " tr " +
-        "INNER JOIN " + TRAININGS_INSTANCES_TABLE_NAME_HISTORICAL + " trIns ON tr.trainingsId = trIns.idTrainings " +
+        "LEFT OUTER JOIN " + TRAININGS_INSTANCES_TABLE_NAME_HISTORICAL + " trIns ON tr.trainingsId = trIns.idTrainings " +
         "INNER JOIN " + TRAININGS_RESERVATIONS_TABLE_NAME + " trRes ON (trIns.trainingsInsId = trRes" +
         ".idTrainingsIns  OR trIns.trainingsInsId = trRes.idTrainingsIns) " +
         "INNER JOIN " + CATEGORIES_TABLE_NAME + " cats ON (tr.category = cats.categoryId OR tr.category = cats" +

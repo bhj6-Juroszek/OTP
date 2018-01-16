@@ -20,7 +20,9 @@ app.controller('upcomingTrainingsController', function ($scope, $http, $window, 
                     responseTrainingInstance.dateStartHumanForm = responseTrainingInstance.dateStart.toISOString().substring(0, 10) + " " + responseTrainingInstance.dateStart.toISOString().substring(11, 19);
                     responseTrainingInstance.dateEnd = new Date(responseTrainingInstance.dateEnd);
                     responseTrainingInstance.place = responseTraining.place;
-                    $scope.upcomingTrainings.push(responseTrainingInstance);
+                    if(!responseTrainingInstance.category.theoretical) {
+                        $scope.upcomingTrainings.push(responseTrainingInstance);
+                    }
                 }
             }
         } else {

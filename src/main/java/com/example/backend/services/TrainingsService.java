@@ -91,6 +91,11 @@ public class TrainingsService {
     trainingsDAO.confirmReservation(reservationId, loggedUser.getId());
   }
 
+  public List<String> getMaterials(@Nonnull final String uuid) {
+    final User loggedUser = sessionManager.getLoggedUsers().get(uuid).getUser();
+    return trainingsDAO.getMaterials(loggedUser.getId());
+  }
+
   public int saveTrainingTemplate(@Nonnull final Training training, @Nonnull final String placeName,
       @Nonnull final String categoryId) {
     final Place place = jsonReader.getPlace(placeName);

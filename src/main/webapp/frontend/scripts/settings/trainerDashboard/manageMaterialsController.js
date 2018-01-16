@@ -35,7 +35,7 @@ app.controller('manageMaterialsController', function ($scope, $http, $window, us
                 method: 'POST',
                 data: fd,
                 processData: false,
-                url: userService.getHost() + '/fileUpload',
+                url: userService.getHost() + 'fileUpload',
                 headers: {
                     'Content-Type': undefined
                 },

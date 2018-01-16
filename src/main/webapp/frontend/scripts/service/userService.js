@@ -45,7 +45,7 @@ var app = angular.module('myApp', []).factory('userService', function () {
     }
 
     function getMainAdress() {
-        return 'index.html';
+        return 'OTP.html';
     }
 
     function getPickableCategories() {

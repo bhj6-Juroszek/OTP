@@ -35,11 +35,11 @@
                 <!-- Button for smallest screens -->
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span
                         class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button>
-                <a class="navbar-brand" href="index.html"><img src="assets/images/favicon.ico"
-                                                               alt="Logo"></a>
+                <a class="navbar-brand" href="OTP.html"><img src="assets/images/favicon.ico"
+                                                             alt="Logo"></a>
             </div>
             <ul class="nav navbar-nav pull-left">
-                <li class="active"><a href="index.html">Home</a></li>
+                <li class="active"><a href="OTP.html">Home</a></li>
                 <li ng-show="authData"><a href="settings.html">Account Settings </a></li>
                 <li ng-show="authData"><a href="#" ng-click="profile()">Profile</a></li>
                 <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Your schedule</a></li>
@@ -61,7 +61,7 @@
     <div class="container settingsform">
 
         <ol class="breadcrumb">
-            <li><a href="index.html">Home</a></li>
+            <li><a href="OTP.html">Home</a></li>
             <li class="active">Settings</li>
         </ol>
 
@@ -226,6 +226,22 @@
             </div>
             <!-- /ADD TRAINING INSTANCE -->
 
+            <!-- Manage Reservations -->
+            <div class="col-md-8 maincontent container" ng-show="managingReservations"
+                 ng-controller="manageReservationsController">
+
+                <ul ng-show="reservationsUnconfirmed.length > 0" style="margin-left: 35px;">
+                    <li><label style="color:var(--important)">Confirm reservations :</label><br><br></li>
+                    <li class="trainingItem" ng-repeat="reservation in reservationsUnconfirmed" ng-click="confirmReservation(reservation)">
+                        <label >{{reservation.id}}</label>
+                        <label >{{reservation.category.name}}</label>
+                        <label>{{reservation.dateStart}}</label>
+                        <label>{{reservation.customer.mail}}</label>
+                    </li>
+                </ul>
+            </div>
+            <!-- Manage Reservations -->
+
         </div>
     </div>
 
@@ -250,6 +266,7 @@
 <script src="scripts/settings/trainerDashboard/editTrainingsController.js"></script>
 <script src="scripts/userProfile/userProfileScript.js"></script>
 <script src="scripts/settings/trainerDashboard/manageMaterialsController.js"></script>
+<script src="scripts/settings/trainerDashboard/manageReservationsController.js"></script>
 
 </body>
 </html>
