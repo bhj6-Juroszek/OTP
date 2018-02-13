@@ -22,7 +22,7 @@ public class ScheduleController extends AuthenticatedController {
 
   private TrainingsService trainingsService;
 
-  @RequestMapping(value = "/getUserSchedule", method = GET)
+  @RequestMapping(value = "/userSchedule", method = GET)
   public @ResponseBody
   ScheduleResponse getUserTrainings(@RequestParam("uuid") final String uuid,
       @RequestParam("trainerId") final String trainerId, @RequestParam("date") final long date) {
@@ -37,7 +37,7 @@ public class ScheduleController extends AuthenticatedController {
     return response;
   }
 
-  @RequestMapping(value = "/removeInstance", method = DELETE)
+  @RequestMapping(value = "trainingInstance", method = DELETE)
   public @ResponseBody
   boolean removeTrainingInstance(@RequestParam("uuid") final String uuid,
       @RequestParam("instanceId") final String instanceId) {
@@ -47,7 +47,7 @@ public class ScheduleController extends AuthenticatedController {
     return false;
   }
 
-  @RequestMapping(value = "/bookTraining", method = POST)
+  @RequestMapping(value = "/trainings", method = POST)
   public @ResponseBody
   BookingResponse bookTraining(@RequestBody BookingRequest bookingRequest) {
     if (authenticate(bookingRequest.getUuid())) {

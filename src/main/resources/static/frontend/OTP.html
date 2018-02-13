@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="theme-color" content="#317EFB"/>
+    <meta name="author" content="Juroszek Bartłomiej">
+
+    <title>OTP- Online training platform</title>
+
+    <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+    <link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+
+    <!-- Custom styles for our template -->
+    <link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <![endif]-->
+</head>
+
+<body class="home">
+<div ng-app="myApp" ng-controller="userController">
+
+    <!--NAVBAR TOP-->
+    <div class="navbar navbar-inverse navbar-fixed-top headroom">
+        <div class="container">
+            <div class="navbar-header pull-right">
+                <!-- Button for smallest screens -->
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span
+                        class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button>
+                <a class="navbar-brand" href="OTP.html"><img src="assets/images/favicon.ico"
+                                                             alt="Logo"></a>
+            </div>
+            <ul class="nav navbar-nav pull-left">
+                <li class="active"><a href="OTP.html">Home</a></li>
+                <li ng-show="authData"><a href="settings.html">Account Settings </a></li>
+                <li ng-show="authData"><a href="#" ng-click="profile()">Profile</a></li>
+                <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Your schedule</a></li>
+                <li ng-show="authData"><a href="trainerDashboard.html" href="#">Trainer Dashboard</a></li>
+                <li ng-show="authData"><a href="traineeDashboard.html" href="#">Trainee Dashboard</a></li>
+                <li><a href="about.html">About</a></li>
+
+                <li>
+                    <a class="btn" ng-hide="authData" href="logIn.html" title="LOG IN">LOG IN</a></li>
+                <li ng-show="authData" ng-click="logOut()"  ng-controller="logOutController"><a href="#">Sign Out </a></li>
+            </ul>
+        </div>
+    </div>
+    <!--/NAVBAR TOP-->
+
+    <!-- Filters -->
+    <div  ng-controller="searchEngineController" ng-show="authData" ng-app="myApp"
+         data-ng-init="initSearcher()">
+
+        <!-- Header -->
+        <header id="head">
+        <ul class="nav navbar-nav searcher ">
+            <li style="margin-right:15%;">
+                <div ><label></label></div>
+            </li>
+            <li style="margin-right: 2%;">
+
+            </li>
+            <li>
+                Date from
+                <input type="date" name="currentDate" ng-model="dateFrom" class="form-control" ng-change="validateDate()">
+            </li>
+            <li>
+                Date to
+                <input type="date" name="currentDate" ng-model="dateTo" class="form-control" ng-change="validateDate()">
+            </li>
+            <li>
+            <li>Select country
+            <input type=text list=countries class="form-control" ng-model="selectedCountry" ng-change="getCities()">
+            <datalist id="countries">
+                <option data-ng-repeat="country in countriesList" value="{{country.countryName}}" ></option>
+            </datalist></li>
+            <li>Select city
+                <input type=text list=cities class="form-control" ng-model="selectedCity" ng-change="getCities()">
+                <datalist id="cities">
+                    <option ng-repeat="city in citiesList" >{{city.name}}</option>
+                </datalist></li>
+            <li>Distance from city
+                <select class="form-control" ng-model="distance">
+                    <option ng-repeat="distance in distancesList" >{{distance.name}}</option>
+                </select>
+            </li>
+            <li style="margin-left: 2%">Show online trainings<br>
+                    <input type="checkbox" ng-model="showOnline">
+            </li>
+            <li style="margin-left: 2%">
+                <button ng-click="search()" class="btn categoriesb subitem">SEARCH
+                </button>
+            </li>
+        </ul>
+    </header>
+    <!-- /Header -->
+        <!-- Filters end -->
+
+        <div class="settingsform">
+        <!-- Categories bar -->
+        <aside class="col-md-4 sidebar sidebar-left container text-center">
+        <div class="sidenav">
+        <label style="font-size: 30px;margin-bottom: 5%;float: left; "><b>Category</b></label><br>
+            <div>
+                <ul class="btn-group-vertical">
+                    <li>
+                        <button ng-click="selectMainCategory(null)" class="categoriesb">All
+                        </button>
+                    </li>
+                    <li ng-repeat="x in categories">
+                        <button ng-click="selectMainCategory(x)" class="categoriesb">{{x.name}}
+                        </button>
+                        <ul>
+                            <li ng-repeat="y in getSubCategories(x)" ng-show="getVisibility(y.parent)">
+                                <button ng-click="setSelectedCategory(y)" class="categoriesb subitem">{{y.name}}
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div></aside>
+
+        <!-- Categories bar end-->
+
+        <!-- Trainings -->
+        <ul class="trainingsList" ng-show="trainingsFound.length > 0" >
+            <li class="trainingItem trainingItemMenu">
+                <img/>
+                <label>Training</label>
+                <label>Place</label>
+                <label>Price for hour</label>
+                <label>Date</label>
+                <label>Rate</label>
+            </li>
+            <li class="trainingItem" ng-repeat="trainingFound in trainingsFoundOnPage" ng-click="goToSchedule(trainingFound)"><a>
+                <img src={{trainingFound.owner.imageUrl}}
+                     alt="User image">
+                <label>{{trainingFound.description}}</label>
+                <label ng-hide="trainingFound.category.theoretical">{{trainingFound.place.name}}</label>
+                <label ng-show="trainingFound.category.theoretical">Theoretical</label>
+                <label>{{trainingFound.price}}</label>
+                <label ng-hide="trainingFound.category.theoretical">{{trainingFound.dateStartHumanForm}}</label>
+                <label ng-show="trainingFound.category.theoretical">Theoretical</label>
+                <label>5 stars</label>
+            </a> </li>
+        </ul>
+            <ul ng-show="pages.length > 0" class="pagination">
+                <li ng-repeat="page in pages" ng-click="selectPage(page.value)" ><button style="border:none;background: var(--dark); color:var(--cream)">{{page.name}}</button></li>
+            </ul>
+        <!-- Trainings end-->
+
+    </div>
+
+
+
+    <!-- Intro -->
+    <div class="container" ng-hide="authData">
+        <div class="container text-center">
+            <br> <br>
+            <h2 class="thin">Online Training Platform</h2>
+            <p class="text-muted">
+                The difference between involvement and commitment is like an eggs-and-ham breakfast:<br>
+                the chicken was involved; the pig was committed.
+            </p>
+        </div>
+        <div class="container text-center top-space" ng-show="authData">
+
+
+        </div>
+        <!-- /Intro-->
+
+        <!-- Highlights - jumbotron -->
+        <div class="jumbotron top-space">
+            <div class="container">
+
+
+            </div>
+        </div>
+        <!-- /Highlights -->
+
+        <!-- container -->
+        <div class="container">
+
+            <h2 class="text-center top-space">Frequently Asked Questions</h2>
+            <br>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>What do i need to start?</h3>
+                    <p>All you need is you email adress. Just register, confirm and enjoy.</p>
+                </div>
+                <div class="col-sm-6">
+                    <h3>Why do I need training template and instance? What is the difference?</h3>
+                    <p>Training template is overall schema for your trainings. EG: You want to provide lessons for chess begginners every monday.<br>
+                    You just create "Chess for begginners" (or whatever), define all data and after that just create instances for it
+                    on days you like. Simple as that</p>
+                </div>
+            </div> <!-- /row -->
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>Question 3</h3>
+                    <p>
+                        Answer 3
+                    </p>
+                </div>
+                <div class="col-sm-6">
+                    <h3>Question 4</h3>
+                    <p>Answer 4</p>
+                </div>
+            </div> <!-- /row -->
+
+            <div class="jumbotron top-space">
+                <h4>Dicta, nostrum nemo soluta sapiente sit dolor quae voluptas quidem doloribus recusandae facere magni
+                    ullam suscipit sunt atque rerum eaque iusto facilis esse nam veniam incidunt officia perspiciatis at
+                    voluptatibus. Libero, aliquid illum possimus numquam fuga.</h4>
+                <p class="text-right"><a href="about.html" class="btn btn-primary btn-large">Learn more »</a></p>
+            </div>
+
+        </div>    <!-- /container -->
+
+
+    </div>
+</div>
+</div>
+
+
+<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="assets/js/headroom.min.js"></script>
+<script src="assets/js/jQuery.headroom.min.js"></script>
+<script src="assets/js/html5shiv.js"></script>
+<script src="assets/js/respond.min.js"></script>
+<script src="assets/js/notify.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<script src="scripts/service/userService.js"></script>
+<script src="assets/js/template.js"></script>
+<script src="scripts/common/userController.js"></script>
+<script src="scripts/common/logOutScript.js"></script>
+<script src="scripts/searchEngine/searchEngineController.js"></script>
+</body>
+</html>

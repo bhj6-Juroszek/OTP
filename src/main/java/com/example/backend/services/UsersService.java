@@ -31,7 +31,7 @@ public class UsersService {
   private static final Logger LOGGER = LogManager.getLogger(UsersService.class);
   private final static String FROM = "OTP";
   private final static String SUBJECT = "Yor account registration";
-  private final static String CONTENT_TEMPLATE = "Your account has been created. Click http://%sconfirm.html?id=%s to" +
+  private final static String CONTENT_TEMPLATE = "Your account has been created. Click http://%sconfirmation.html?id=%s to" +
       " finish registration.";
 
   private final UsersDAO usersDAO;

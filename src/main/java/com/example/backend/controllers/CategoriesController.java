@@ -20,7 +20,7 @@ public class CategoriesController {
 
   private CategoriesService categoriesService;
 
-  @RequestMapping(value = "/categoryList", method = GET)
+  @RequestMapping(value = "/categories", method = GET)
   public @ResponseBody
   List<Category> getCategories() {
     return categoriesService.getCategories();

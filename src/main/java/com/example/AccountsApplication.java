@@ -1,6 +1,5 @@
 package com.example;
 
-import com.example.utils.SessionManager;
 import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -34,10 +33,6 @@ public class AccountsApplication extends SpringBootServletInitializer {
     registry.addResourceHandler("/**")
         .addResourceLocations("/")
         .setCachePeriod(0);
-  }
-
-  public static SessionManager getSessionManager() {
-    return context.getBean(SessionManager.class);
   }
 
 }

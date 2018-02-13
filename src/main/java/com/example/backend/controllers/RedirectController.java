@@ -24,7 +24,7 @@ public class RedirectController {
   private UsersService usersService;
   private static final String REDIRECT = String.format("://%sOTP.html", DOMAIN_NAME);
 
-  @RequestMapping(value = "/confirm", method = RequestMethod.GET)
+  @RequestMapping(value = "/confirmation", method = RequestMethod.GET)
   public String processForm(@RequestParam("id") String token, HttpServletRequest request) {
     final String redirectUrl ="redirect:"+ request.getScheme() + REDIRECT;
     if (!token.equals("")) {

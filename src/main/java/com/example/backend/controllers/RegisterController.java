@@ -18,7 +18,7 @@ public class RegisterController {
 
   private UsersService usersService;
 
-  @RequestMapping(value = "/register", method = POST, consumes = "application/json")
+  @RequestMapping(value = "/registration", method = POST, consumes = "application/json")
   public @ResponseBody
   int register(@RequestBody RegisterRequest request) {
 

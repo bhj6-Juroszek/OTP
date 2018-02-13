@@ -191,7 +191,7 @@
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>2.5</version>
 				<configuration>
-					<excludeDefaultDirectories>true</excludeDefaultDirectories>
+					<excludeDefaultDirectories>false</excludeDefaultDirectories>
 					<filesets>
 						<fileset>
 							<directory>target</directory>

@@ -16,8 +16,8 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 @Component
 public class SessionManager {
 
-  public static final String DOMAIN_NAME = "localhost:8181/executable/frontend/";
-  public static final String HOST_NAME = "localhost:8181/";
+  public static final String DOMAIN_NAME = "77.55.216.154:8181/frontend/";
+  public static final String HOST_NAME = "77.55.216.154:8181/";
 
   private Map<String, UserContext> loggedUsers;
 

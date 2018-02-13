@@ -17,8 +17,7 @@ import java.util.Date;
 
 import static com.example.utils.ResponseCode.NOT_AUTHENTICATED;
 import static com.example.utils.ResponseCode.SUCCESS;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @CrossOrigin
 @Controller
@@ -29,7 +28,7 @@ public class UserAccountController extends AuthenticatedController {
   private UsersService usersService;
   private TrainingsService trainingsService;
 
-  @RequestMapping(value = "/changeDetails", method = POST, consumes = "application/json")
+  @RequestMapping(value = "/details", method = POST, consumes = "application/json")
   public @ResponseBody
   int changeDetails(@RequestParam("uuid") final String uuid, @RequestBody final User user) {
     if (authenticate(uuid)) {
@@ -38,7 +37,7 @@ public class UserAccountController extends AuthenticatedController {
     return NOT_AUTHENTICATED;
   }
 
-  @RequestMapping(value = "/getUserTrainings", method = GET)
+  @RequestMapping(value = "/trainings", method = GET)
   public @ResponseBody
   TrainingsResponse getUserTrainings(@RequestParam("uuid") final String uuid) {
     final TrainingsResponse response = new TrainingsResponse();
@@ -51,7 +50,7 @@ public class UserAccountController extends AuthenticatedController {
     return response;
   }
 
-  @RequestMapping(value = "/updateTrainingTemplate", method = POST)
+  @RequestMapping(value = "/trainingTemplate", method = PUT)
   public @ResponseBody
   int updateTrainingTemplate(@RequestParam("uuid") final String uuid, @RequestParam("priceForHour") final double price,
       @RequestParam("description") final String description, @RequestParam("details") final String details,
@@ -63,7 +62,7 @@ public class UserAccountController extends AuthenticatedController {
     return NOT_AUTHENTICATED;
   }
 
-  @RequestMapping(value = "/saveTrainingTemplate", method = POST)
+  @RequestMapping(value = "/trainingTemplate", method = POST)
   public @ResponseBody
   int saveTrainingTemplate(@RequestParam("uuid") final String uuid, @RequestParam("placeName") final String place,
       @RequestParam("categoryId") final String categoryId, @RequestParam("price") final Double price,
@@ -82,7 +81,7 @@ public class UserAccountController extends AuthenticatedController {
     return NOT_AUTHENTICATED;
   }
 
-  @RequestMapping(value = "/saveTrainingInstance", method = POST)
+  @RequestMapping(value = "/trainingInstance", method = POST)
   public @ResponseBody
   int saveTrainingInstance(@RequestParam("uuid") final String uuid, @RequestParam("date") final long date,
       @RequestParam("trainingTemplate") final String templateId, @RequestParam("duration") final double duration) {
@@ -95,7 +94,7 @@ public class UserAccountController extends AuthenticatedController {
   }
 
   @CrossOrigin
-  @RequestMapping(value = "/fileUpload", method = POST)
+  @RequestMapping(value = "/file", method = POST)
   @ResponseBody
   public int fileUpload(final MultipartHttpServletRequest mRequest) {
     final String uuid = mRequest.getParameter("uuid");
@@ -105,7 +104,7 @@ public class UserAccountController extends AuthenticatedController {
     return NOT_AUTHENTICATED;
   }
 
-  @RequestMapping(value = "/getUnconfirmedReservations", method = GET)
+  @RequestMapping(value = "/unconfirmedReservations", method = GET)
   @ResponseBody
   public TrainingsResponse getUnconfirmedReservations(@RequestParam("uuid") @Nonnull final String uuid) {
 
@@ -118,7 +117,7 @@ public class UserAccountController extends AuthenticatedController {
     return response;
   }
 
-  @RequestMapping(value = "/confirmReservation", method = POST)
+  @RequestMapping(value = "/reservation/confirmation", method = POST)
   @ResponseBody
   public int getUnconfirmedReservatios(@RequestParam("uuid") @Nonnull final String uuid,
       @RequestParam("reservationId") @Nonnull final String reservationId) {

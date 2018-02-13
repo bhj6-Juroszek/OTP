@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @CrossOrigin
 @Controller
@@ -21,7 +21,7 @@ public class RemindPasswordController {
 
   private final PasswordReminderService passwordReminderService;
 
-  @RequestMapping(value = "/resetPassword", method = GET)
+  @RequestMapping(value = "/password", method = POST)
   public ResponseEntity<String> remindPassword(@RequestParam("mail") final String mail) {
     if (passwordReminderService.changePassword(mail)) {
       return new ResponseEntity<>(OK);

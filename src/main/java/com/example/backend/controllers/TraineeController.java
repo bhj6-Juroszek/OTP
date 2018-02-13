@@ -33,7 +33,7 @@ public class TraineeController extends AuthenticatedController {
   private RatesService ratesService;
   private TrainingsService trainingsService;
 
-  @RequestMapping(value = "/getTrainingsToRate", method = GET)
+  @RequestMapping(value = "/rate", method = GET)
   @ResponseBody
   public TrainingsResponse getTrainingsToRate(@RequestParam("uuid") final String uuid) {
     if (authenticate(uuid)) {
@@ -45,7 +45,7 @@ public class TraineeController extends AuthenticatedController {
     }
   }
 
-  @RequestMapping(value = "/getUpcomingTrainings", method = GET)
+  @RequestMapping(value = "/trainings/upcoming", method = GET)
   @ResponseBody
   public TrainingsResponse getUpcomingTrainings(@RequestParam("uuid") final String uuid) {
     if (authenticate(uuid)) {
@@ -57,7 +57,7 @@ public class TraineeController extends AuthenticatedController {
     }
   }
 
-  @RequestMapping(value = "/getMaterials", method = GET)
+  @RequestMapping(value = "/materials", method = GET)
   @ResponseBody
   public MaterialsResponse getMaterials(@RequestParam("uuid") final String uuid) {
     final MaterialsResponse response = new MaterialsResponse();
@@ -71,7 +71,7 @@ public class TraineeController extends AuthenticatedController {
 
   }
 
-  @RequestMapping(value = "/rateTrainer", method = POST)
+  @RequestMapping(value = "/rate", method = POST)
   @ResponseBody
   public int getTrainingsToRate(@RequestParam("uuid") final String uuid, @RequestBody Rate rate) {
     if (authenticate(uuid)) {
@@ -80,23 +80,13 @@ public class TraineeController extends AuthenticatedController {
     return NOT_AUTHENTICATED;
   }
 
-//  @RequestMapping(value = "/downloadFile", method = GET, produces = APPLICATION_OCTET_STREAM_VALUE)
-//  @ResponseBody
-//  public FileSystemResource getFile(@RequestParam("uuid") final String uuid,
-//      @RequestParam("filePath") final String filePath) {
-//    if (authenticate(uuid)) {
-//      return new FileSystemResource(filePath);
-//    }
-//    return null;
-//  }
 
-  @RequestMapping(value = "/downloadFile", method = GET)
+  @RequestMapping(value = "/file", method = GET)
   public void downloadFile(@RequestParam("uuid") final String uuid, @RequestParam("filePath") final String filePath,
       final HttpServletResponse response) {
     if (authenticate(uuid)) {
       try {
-        final File file = new File(filePath);
-        final InputStream inputStream = new FileInputStream(file);
+        final InputStream inputStream = new FileInputStream(new File(filePath));
         copy(inputStream, response.getOutputStream());
       } catch (Exception e) {
         LOGGER.error("Error occured while requesting for a file:{}", filePath, e);

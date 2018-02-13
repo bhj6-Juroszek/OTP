@@ -116,8 +116,8 @@ public class UsersDAO extends DAO {
   public void updateRecord(@Nonnull final User user) {
     asyncSaver.execute(() -> {
       final String SQL = "UPDATE " + USERS_TABLE_NAME + " SET userName = ?, adress = ?, mail = ?, login = ?, imageUrl" +
-          " = ? WHERE userId = ?;";
-      template.update(SQL, user.getName(), user.getAdress(), user.getMail(), user.getLogin(), user.getImageUrl(), user
+          " = ?, confirmation = ? WHERE userId = ?;";
+      template.update(SQL, user.getName(), user.getAdress(), user.getMail(), user.getLogin(), user.getImageUrl(), user.getConfirmation(), user
           .getId());
     });
   }
