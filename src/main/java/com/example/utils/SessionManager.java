@@ -27,12 +27,21 @@ public class SessionManager {
     scheduler.scheduleAtFixedRate(this::removeUnactiveSessions, 15, 15, MINUTES);
   }
 
+  public void removeUser(@Nonnull final User user) {
+    final UserContext userContext = new UserContext(user, currentTimeMillis());
+    removeUserContext(userContext);
+  }
+
+  public void removeUserContext(@Nonnull final UserContext userContext) {
+    if(loggedUsers.containsValue(userContext))
+    {
+      loggedUsers.values().remove(userContext);
+    }
+  }
+
   public boolean addToMap(@Nonnull final String uuid, @Nonnull User user) {
     final UserContext newUserContext = new UserContext(user, currentTimeMillis());
-    if(loggedUsers.containsValue(newUserContext))
-    {
-      loggedUsers.values().remove(newUserContext);
-    }
+    removeUserContext(newUserContext);
     loggedUsers.put(uuid, newUserContext);
     return true;
   }

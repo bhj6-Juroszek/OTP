@@ -17,16 +17,17 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @CrossOrigin
 @Controller
 @RequestMapping("/")
-public class RemindPasswordController {
+public class RemindPasswordController extends AuthenticatedController {
 
   private final PasswordReminderService passwordReminderService;
 
   @RequestMapping(value = "/password", method = POST)
-  public ResponseEntity<String> remindPassword(@RequestParam("mail") final String mail) {
-    if (passwordReminderService.changePassword(mail)) {
+  public ResponseEntity remindPassword(@RequestParam("mail") final String mail) {
+    return passwordReminderService.changePassword(mail).map(user -> {
+      manager.removeUser(user);
       return new ResponseEntity<>(OK);
-    }
-    return new ResponseEntity<>(UNAUTHORIZED);
+    })
+        .orElse(new ResponseEntity<>(UNAUTHORIZED));
   }
 
   @Autowired

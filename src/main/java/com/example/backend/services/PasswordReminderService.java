@@ -9,7 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 import java.util.Random;
+
+import static java.util.Optional.*;
 
 /**
  * Created by Bartek on 2017-03-09.
@@ -42,7 +45,7 @@ public class PasswordReminderService {
     return result.toString();
   }
 
-  public boolean changePassword(@Nonnull final String mail) {
+  public Optional<User> changePassword(@Nonnull final String mail) {
     final String newPassword = generatePassword();
     if (customersRep.existsAnother(mail, "mail", "")) {
       final User user = customersRep.getUserByMail(mail);
@@ -54,8 +57,8 @@ public class PasswordReminderService {
           mail,
           "Your password has been changed",
           "Your new Password: " + newPassword);
-      return true;
+      return of(user);
     }
-    return false;
+    return empty();
   }
 }

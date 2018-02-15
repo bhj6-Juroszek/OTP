@@ -34,8 +34,10 @@
             <div class="container">
                 <div class="navbar-header pull-right">
                     <!-- Button for smallest screens -->
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span
-                            class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse"
+                            data-target=".navbar-collapse"><span
+                            class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+                    </button>
                     <a class="navbar-brand" href="OTP.html"><img src="assets/images/favicon.ico"
                                                                  alt="Logo"></a>
                 </div>
@@ -43,14 +45,15 @@
                     <li class="active"><a href="OTP.html">Home</a></li>
                     <li ng-show="authData"><a href="settings.html">Account Settings </a></li>
                     <li ng-show="authData"><a href="#" ng-click="profile()">Profile</a></li>
-                    <li ng-show="authData"><a ng-click="goToScheduleAsOwner()"  href="#">Your schedule</a></li>
+                    <li ng-show="authData"><a ng-click="goToScheduleAsOwner()" href="#">Your schedule</a></li>
                     <li ng-show="authData"><a href="trainerDashboard.html" href="#">Trainer Dashboard</a></li>
                     <li ng-show="authData"><a href="traineeDashboard.html" href="#">Trainee Dashboard</a></li>
                     <li><a href="about.html">About</a></li>
 
                     <li>
                         <a class="btn" ng-hide="authData" href="logIn.html" title="LOG IN">LOG IN</a></li>
-                    <li ng-show="authData" ng-click="logOut()"  ng-controller="logOutController"><a href="#">Sign Out </a></li>
+                    <li ng-show="authData" ng-click="logOut()" ng-controller="logOutController"><a href="#">Sign
+                        Out </a></li>
                 </ul>
             </div>
         </div>
@@ -134,11 +137,13 @@
                         </li>
                         <li ng-show="isOwnerOfView">
                             Show trainings you own
-                            <input class="form-control " type="checkbox" ng-model="showOwned" ng-click = "visibilityChange()">
+                            <input class="form-control " type="checkbox" ng-model="showOwned"
+                                   ng-click="visibilityChange()">
                         </li>
                         <li ng-show="isOwnerOfView">
                             Show trainings you reserved
-                            <input class="form-control " type="checkbox" ng-model="showReserved" ng-click = "visibilityChange()">
+                            <input class="form-control " type="checkbox" ng-model="showReserved"
+                                   ng-click="visibilityChange()">
                         </li>
                     </ul>
                 </div>

@@ -5,6 +5,7 @@ import com.example.backend.controllersEntities.responses.TrainingsResponse;
 import com.example.backend.services.RatesService;
 import com.example.backend.services.TrainingsService;
 import com.example.daoLayer.entities.Rate;
+import com.example.daoLayer.entities.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.io.InputStream;
 
 import static com.example.utils.ResponseCode.NOT_AUTHENTICATED;
 import static com.example.utils.ResponseCode.SUCCESS;
+import static java.io.File.*;
 import static org.apache.commons.io.IOUtils.copy;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -80,13 +82,13 @@ public class TraineeController extends AuthenticatedController {
     return NOT_AUTHENTICATED;
   }
 
-
   @RequestMapping(value = "/file", method = GET)
   public void downloadFile(@RequestParam("uuid") final String uuid, @RequestParam("filePath") final String filePath,
       final HttpServletResponse response) {
     if (authenticate(uuid)) {
       try {
-        final InputStream inputStream = new FileInputStream(new File(filePath));
+        final String userId = manager.getLoggedUsers().get(uuid).getUser().getId();
+        final InputStream inputStream = new FileInputStream(new File(separator + userId + separator + filePath));
         copy(inputStream, response.getOutputStream());
       } catch (Exception e) {
         LOGGER.error("Error occured while requesting for a file:{}", filePath, e);

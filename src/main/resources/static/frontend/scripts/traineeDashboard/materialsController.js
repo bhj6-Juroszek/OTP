@@ -37,7 +37,7 @@ app.controller('materialsController', function ($scope, $http, $window, userServ
         }, function errorCallback(response) {
             $.notify('Could not connect to server. Please try again later', "error");
         });
-    }
+    };
 
 
     $scope.download = function (filePath) {
@@ -47,7 +47,7 @@ app.controller('materialsController', function ($scope, $http, $window, userServ
             responseType: 'arraybuffer',
             params: {
                 "uuid": userService.getUUID(),
-                filePath: filePath.fullName
+                filePath: filePath.fileName
             }
         })
             .then(function successCallback(response) {
