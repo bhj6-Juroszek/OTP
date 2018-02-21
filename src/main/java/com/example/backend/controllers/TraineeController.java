@@ -87,8 +87,7 @@ public class TraineeController extends AuthenticatedController {
       final HttpServletResponse response) {
     if (authenticate(uuid)) {
       try {
-        final String userId = manager.getLoggedUsers().get(uuid).getUser().getId();
-        final InputStream inputStream = new FileInputStream(new File(separator + userId + separator + filePath));
+        final InputStream inputStream = new FileInputStream(new File(filePath));
         copy(inputStream, response.getOutputStream());
       } catch (Exception e) {
         LOGGER.error("Error occured while requesting for a file:{}", filePath, e);

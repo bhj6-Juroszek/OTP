@@ -343,7 +343,6 @@ img.pull-left {
     color: var(--important);
     font-weight: bold;
     font-size: medium;
-    min-height: 1500px;
     width: 100%;
     background-color: var(--dark);
 }
@@ -413,6 +412,7 @@ img.pull-left {
 
 .sidenav {
     float: left;
+    min-height: 1500px;
 }
 
 .sidenav ul {

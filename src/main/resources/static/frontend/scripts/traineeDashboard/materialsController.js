@@ -47,7 +47,7 @@ app.controller('materialsController', function ($scope, $http, $window, userServ
             responseType: 'arraybuffer',
             params: {
                 "uuid": userService.getUUID(),
-                filePath: filePath.fileName
+                filePath: filePath.fullName
             }
         })
             .then(function successCallback(response) {
