@@ -41,7 +41,7 @@ var app = angular.module('myApp', []).factory('userService', function () {
     }
 
     function getHost() {
-        return 'http://localhost:8181/';
+        return 'http://77.55.216.154:8181/';
     }
 
     function getMainAdress() {
