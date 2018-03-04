@@ -214,8 +214,8 @@ app.controller('searchEngineController', function ($scope, $http, $window, userS
             }
         }
         $http({
-            method: 'GET',
-            url: userService.getHost() + 'trainings',
+            method: 'POST',
+            url: userService.getHost() + 'trainings/filters',
             data: {
                 uuid: userService.getUUID(),
                 city: city,
@@ -226,6 +226,7 @@ app.controller('searchEngineController', function ($scope, $http, $window, userS
                 maxPrice: 500,
                 sortBy: null,
                 showOnline: $scope.showOnline
+
             }
         }).then(function successCallback(response) {
             handleTrainingsResponse(response);

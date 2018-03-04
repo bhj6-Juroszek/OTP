@@ -15,6 +15,7 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @CrossOrigin
 @Controller
@@ -24,7 +25,7 @@ public class SearchController extends AuthenticatedController {
   private TrainingsService trainingsService;
   private PlacesDAO placesDAO;
 
-  @RequestMapping(value = "/trainings", method = GET)
+  @RequestMapping(value = "/trainings/filters", method = POST)
   @ResponseBody public List<Training> getTrainingsWithFilters(@RequestBody TrainingsWithFilterRequest request) {
     if(authenticate(request.getUuid())) {
       return trainingsService

@@ -236,7 +236,7 @@ app.controller('initialScheduleController', function ($scope, userService, $http
             };
             $http({
                 method: 'POST',
-                url: userService.getHost() + 'schedule/trainings',
+                url: userService.getHost() + 'schedule/training/book',
                 data: requestData,
                 headers: {'Content-Type': 'application/json'}
             }).then(function successCallback(response) {

@@ -47,7 +47,7 @@ public class ScheduleController extends AuthenticatedController {
     return false;
   }
 
-  @RequestMapping(value = "/trainings", method = POST)
+  @RequestMapping(value = "/training/book", method = POST)
   public @ResponseBody
   BookingResponse bookTraining(@RequestBody BookingRequest bookingRequest) {
     if (authenticate(bookingRequest.getUuid())) {

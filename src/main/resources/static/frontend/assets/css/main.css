@@ -417,7 +417,6 @@ img.pull-left {
 
 .sidenav ul {
     background-color: var(--dark);
-    min-height: 1500px;
     overflow: hidden;
     color: var(--important);
     font-weight: bold;
