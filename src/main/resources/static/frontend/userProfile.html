@@ -78,13 +78,13 @@
                     <li><br><br><br><br>
                         <label>Social Media</label>
                     </li>
-                    <a ng-show="profile.facebookLink !== ''" href="{{profile.facebookLink}}" class="loginBtn loginBtn--facebook"> </a>
+                    <a ng-show="profile.facebookLink !== ''" href="//{{profile.facebookLink}}" class="loginBtn loginBtn--facebook"> </a>
                     </li>
                     <li>
                         <button ng-show="profile.linkedInLink !== null" class="loginBtn loginBtn--google" href="profile.linkedInLink"> </button>
                     </li>
                     <li ng-repeat="link in profile.socialMediaLinks">
-                        <a href="link">{{link}}</a>
+                        <a href="//{{link}}">{{link}}</a>
                     </li>
 
 
